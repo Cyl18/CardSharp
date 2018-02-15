@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CardSharp
+﻿namespace CardSharp
 {
     public class Constants
     {
@@ -12,7 +6,7 @@ namespace CardSharp
         public const int AmountCardMax = 10 - 2 /*3456789[10]*/ + 3 /*JQK*/ + 2 /*A2*/;
         public const int AmountCardNum = 4; /*每种牌4张*/
         public const int MaxPlayer = 3; /*最多3人*/
-        
+
         public class Cards
         {
             public const int C3 = 0;

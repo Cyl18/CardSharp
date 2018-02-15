@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CardSharp.Rules
 {
@@ -10,7 +7,7 @@ namespace CardSharp.Rules
     {
         public override bool IsMatch(List<CardGroup> cards, List<CardGroup> lastCards)
         {
-            return cards.Count == 2 && 
+            return cards.Count == 2 &&
                    cards.First().Amount == Constants.Cards.CGhost &&
                    cards.Last().Amount == Constants.Cards.CKing;
         }

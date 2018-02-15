@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace CardSharp
 {
@@ -23,21 +20,24 @@ namespace CardSharp
         public static IEnumerable<Card> ToCards(this string source)
         {
             const int px = 3;
-            for (var index = 0; index < source.Length; index++) {
+            for (var index = 0; index < source.Length; index++)
+            {
                 var chara = source[index];
-                if (int.TryParse(chara.ToString(), out var num)) {
-                    if (num >= 3 && num <= 9) {
+                if (int.TryParse(chara.ToString(), out var num))
+                    if (num >= 3 && num <= 9)
+                    {
                         yield return new Card(num - px);
                         continue;
-
-                    } else if (num == 1) {
+                    }
+                    else if (num == 1)
+                    {
                         index++;
                         yield return new Card(Constants.Cards.C10);
                         continue;
                     }
-                }
 
-                switch (chara) {
+                switch (chara)
+                {
                     case 'J':
                         yield return new Card(Constants.Cards.CJ);
                         continue;

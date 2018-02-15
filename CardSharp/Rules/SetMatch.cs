@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CardSharp.Rules
 {
@@ -22,6 +19,5 @@ namespace CardSharp.Rules
 
             return source.First().Amount > dest.First().Amount;
         }
-
     }
 }

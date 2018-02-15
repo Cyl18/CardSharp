@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CardSharp.Rules
 {
@@ -11,7 +9,8 @@ namespace CardSharp.Rules
         public override bool IsMatch(List<CardGroup> cards, List<CardGroup> lastCards)
         {
             var first = cards.First(card => card.Count == 3);
-            if (lastCards != null) {
+            if (lastCards != null)
+            {
                 if (cards.Count != lastCards.Count) // 与之前张数必须相同
                     return false;
                 if (first.Amount <= lastCards.First(card => card.Count == 3).Amount) // 必须比前面的大
@@ -19,8 +18,9 @@ namespace CardSharp.Rules
             }
 
             var count = cards.Count(card => card.Count == 3);
-            for (var index = first.Amount; index < count + first.Amount; index++) {
-                var cardGroup = cards[index- first.Amount];
+            for (var index = first.Amount; index < count + first.Amount; index++)
+            {
+                var cardGroup = cards[index - first.Amount];
                 if (cardGroup.Count != 3) // 必须只有3张
                     return false;
                 if (index != cardGroup.Amount) // 必须连起来

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CardSharp.Rules
 {
     /// <summary>
-    /// 3333
+    ///     3333
     /// </summary>
     public class RuleBomb : RuleBase
     {
@@ -16,11 +13,9 @@ namespace CardSharp.Rules
             // ensure single group
             if (cards.Count != 1)
                 return false;
-            if (lastCards != null && lastCards.Count == 1 && lastCards.First().Count == 4) {
+            if (lastCards != null && lastCards.Count == 1 && lastCards.First().Count == 4)
                 return SingleGroupMatch.IsMatch(cards, lastCards, 4);
-            } else {
-                return true;
-            }
+            return true;
         }
 
         public override string ToString(List<CardGroup> cards)

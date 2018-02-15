@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CardSharp.Rules
 {
@@ -15,7 +12,8 @@ namespace CardSharp.Rules
                 return false;
             if (!(cards.Any(card => card.Count == 3) && cards.Any(card => card.Count == 1))) // 匹配牌形
                 return false;
-            return lastCards == null || cards.First(card => card.Count == 3).Amount > lastCards.First(card => card.Count == 3).Amount; // 匹配大小
+            return lastCards == null || cards.First(card => card.Count == 3).Amount >
+                   lastCards.First(card => card.Count == 3).Amount; // 匹配大小
         }
 
         public override string ToString(List<CardGroup> cards)

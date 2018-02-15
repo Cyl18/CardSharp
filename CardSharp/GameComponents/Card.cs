@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CardSharp
 {
@@ -19,12 +17,7 @@ namespace CardSharp
 
         public int CompareTo(Card other)
         {
-            return ((int)Amount).CompareTo(other.Amount);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Card);
+            return ((int) Amount).CompareTo(other.Amount);
         }
 
         public bool Equals(Card other)
@@ -33,15 +26,27 @@ namespace CardSharp
                    EqualityComparer<CardAmount>.Default.Equals(Amount, other.Amount);
         }
 
+        public override int GetHashCode()
+        {
+            return Amount.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Card);
+        }
+
         public override string ToString()
         {
             const int px = 3;
-            var nmax = 10 - px + 1;
+            const int nmax = 10 - px + 1;
             if (Amount < nmax)
                 return (px + Amount).ToString(); //3456789[10]
-            switch (Type) {
+            switch (Type)
+            {
                 case CardType.Amount:
-                    switch (Amount.Amount) {
+                    switch (Amount.Amount)
+                    {
                         case Constants.Cards.CJ:
                             return "J";
                         case Constants.Cards.CQ:
@@ -56,7 +61,8 @@ namespace CardSharp
                             throw new IndexOutOfRangeException("Not supported!");
                     }
                 case CardType.King:
-                    switch (Amount.Amount) {
+                    switch (Amount.Amount)
+                    {
                         case Constants.Cards.CGhost:
                             return "鬼";
                         case Constants.Cards.CKing:
@@ -97,33 +103,24 @@ namespace CardSharp
         private static unsafe List<CardGroup> ExtractCardGroupsInternal(this List<Card> cards)
         {
             var enumerable = cards;
-            var cardnums = enumerable.Select(card => (int)card.Amount);
+            var cardnums = enumerable.Select(card => (int) card.Amount);
             var length = enumerable.Last().Amount + 1;
             var array = stackalloc int[length];
             SetAll0(array, length);
-            foreach (var num in cardnums)
-            {
-                array[num]++;
-            }
+            foreach (var num in cardnums) array[num]++;
             var o = new List<CardGroup>(length);
             for (var i = 0; i < length; i++)
             {
                 var num = array[i];
-                if (num!=0) {
-                    o.Add(new CardGroup(i, num));
-                }
+                if (num != 0) o.Add(new CardGroup(i, num));
             }
 
             return o;
+
             void SetAll0(int* source, int len)
             {
-                for (int i = 0; i < len; i++)
-                {
-                    source[i] = 0;
-                }
+                for (var i = 0; i < len; i++) source[i] = 0;
             }
         }
-
-        
     }
 }

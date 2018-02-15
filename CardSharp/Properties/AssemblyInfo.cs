@@ -36,4 +36,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: InternalsVisibleTo("CardSharp.Tests2")]
 [assembly: InternalsVisibleTo("CardSharp.Explorables")]
-

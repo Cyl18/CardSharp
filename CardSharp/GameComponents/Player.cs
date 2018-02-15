@@ -5,22 +5,22 @@ namespace CardSharp
 {
     public class Player : IEquatable<Player>
     {
-        public string PlayerId { get; }
-
         public Player(string playerId)
         {
             PlayerId = playerId;
         }
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Player);
-        }
+        public string PlayerId { get; }
 
         public bool Equals(Player other)
         {
             return other != null &&
                    PlayerId == other.PlayerId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Player);
         }
 
         public static bool operator ==(Player player1, Player player2)

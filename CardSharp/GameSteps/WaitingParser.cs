@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CardSharp.GameSteps
+﻿namespace CardSharp.GameSteps
 {
-    class WaitingParser : Samsara, ICommandParser
+    internal class WaitingParser : Samsara, ICommandParser
     {
         public string Parse(Desk desk, Player player, string command)
         {

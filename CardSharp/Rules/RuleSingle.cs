@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CardSharp.Rules
 {
     /// <summary>
-    /// 3
+    ///     3
     /// </summary>
     public class RuleSingle : RuleBase
     {
