@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardSharp", "CardSharp\CardSharp.csproj", "{90D28A68-F43B-4127-8166-3F54FAC05C6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardSharp.Tests", "CardSharp.Tests\CardSharp.Tests.csproj", "{0AF6659C-8F03-467D-A470-E0B130D12C6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90D28A68-F43B-4127-8166-3F54FAC05C6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90D28A68-F43B-4127-8166-3F54FAC05C6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90D28A68-F43B-4127-8166-3F54FAC05C6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90D28A68-F43B-4127-8166-3F54FAC05C6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AF6659C-8F03-467D-A470-E0B130D12C6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AF6659C-8F03-467D-A470-E0B130D12C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AF6659C-8F03-467D-A470-E0B130D12C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AF6659C-8F03-467D-A470-E0B130D12C6E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE27C0C5-9992-44F9-ADC8-31BABFE67401}
+	EndGlobalSection
+EndGlobal
