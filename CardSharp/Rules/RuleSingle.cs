@@ -12,7 +12,7 @@ namespace CardSharp.Rules
             return SingleGroupMatch.IsMatch(cards, lastCards, 1);
         }
 
-        public override string ToString(List<CardGroup> cards)
+        public override string ToString()
         {
             return "单张";
         }

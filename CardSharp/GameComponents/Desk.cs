@@ -4,10 +4,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using CardSharp.GameSteps;
 using CardSharp.Rules;
+// ReSharper disable PossibleMultipleEnumeration
 
 namespace CardSharp
 {
-    public class Desk
+    public class Desk : IMessageSender, IDesk
     {
         #region Static Members
 
@@ -29,8 +30,7 @@ namespace CardSharp
         {
             get
             {
-                switch (_currentParser)
-                {
+                switch (_currentParser) {
                     case WaitingParser _:
                         return GameState.Wait;
                     case LandlordDiscuss _:
@@ -46,10 +46,11 @@ namespace CardSharp
         public IEnumerable<Player> Players => _playersDictionary.Values;
         public List<Player> PlayerList => Players.ToList();
         public string DeskId { get; }
-        public Player LastSuccessfulSender { get; set; }
-        public IEnumerable<Card> LastCards { get; set; }
+        public Player LastSuccessfulSender { get; internal set; }
+        public IEnumerable<Card> LastCards { get; internal set; }
         public IRule CurrentRule { get; set; }
-        public Player CurrentPlayer => GetPlayerFromIndex(((Samsara) _currentParser).CurrentIndex);
+        public Player CurrentPlayer => GetPlayerFromIndex(((Samsara)_currentParser).CurrentIndex);
+        public string Message { get; private set; }
 
         public Player Landlord { get; private set; }
 
@@ -57,8 +58,8 @@ namespace CardSharp
         {
             var list = new List<Card>();
             for (var i = 0; i < Constants.AmountCardNum; i++)
-            for (var num = 0; num < Constants.AmountCardMax; num++)
-                list.Add(new Card(num));
+                for (var num = 0; num < Constants.AmountCardMax; num++)
+                    list.Add(new Card(num));
             list.Add(new Card(Constants.AmountCardMax)); //鬼
             list.Add(new Card(Constants.AmountCardMax + 1)); //王
 
@@ -83,6 +84,7 @@ namespace CardSharp
                 return false;
 
             _playersDictionary.Add(player.PlayerId, player);
+            AddMessage($"加入成功: {player.ToAtCode()}");
             return true;
         }
 
@@ -103,13 +105,25 @@ namespace CardSharp
             if (Players.Count() != Constants.MaxPlayer)
                 return false;
 
-            _currentParser = new LandlordDiscuss();
             SendCards();
+            SendCardsMessage();
             return true;
+        }
+
+        public void SendCardsMessage()
+        {
+            PlayerList.ForEach(player => player.AddMessage(this.DeskId + string.Join(string.Empty, player.Cards.Select(card => $"[{card}]"))));
         }
 
         private void SendCards()
         {
+            var cards = GenerateDefaultCards();
+            foreach (var player in Players) {
+                var pCards = cards.Take(17);
+                player.Cards = pCards.ToListAndSort();
+                cards = cards.Skip(17);
+            }
+            _currentParser = new LandlordDiscuss(cards, this);
         }
 
         public Player GetPlayerFromIndex(int index)
@@ -117,16 +131,33 @@ namespace CardSharp
             return PlayerList[index];
         }
 
-        public string ParseCommand(string playerid, string command)
+        public void ParseCommand(string playerid, string command)
         {
-            return _currentParser.Parse(this, GetPlayer(playerid), command);
+            _currentParser.Parse(this, GetPlayer(playerid), command);
         }
 
         public void SetLandlord(Player player)
         {
             Landlord = player;
+            this._currentParser = new CommandParser(this);
+        }
+
+        public void AddMessage(string msg)
+        {
+            Message += msg;
+        }
+
+        public void ClearMessage()
+        {
+            Message = null;
+        }
+
+        public void FinishGame()
+        {
+            Desks.Remove(this.DeskId);
         }
     }
+
 
     public enum GameState
     {

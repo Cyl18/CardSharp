@@ -12,7 +12,7 @@ namespace CardSharp.Rules
             return first.Count == 3 && (lastCards == null || lastCards.First().Amount < first.Amount);
         }
 
-        public override string ToString(List<CardGroup> cards)
+        public override string ToString()
         {
             return "3带0";
         }

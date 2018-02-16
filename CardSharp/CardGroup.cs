@@ -9,6 +9,6 @@
         }
 
         public int Amount { get; }
-        public int Count { get; }
+        public int Count { get; internal set; }
     }
 }

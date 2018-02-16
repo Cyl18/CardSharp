@@ -12,7 +12,7 @@ namespace CardSharp.Rules
                    cards.Last().Amount == Constants.Cards.CKing;
         }
 
-        public override string ToString(List<CardGroup> cards)
+        public override string ToString()
         {
             return "火箭";
         }

@@ -8,7 +8,9 @@ namespace CardSharp.Rules
     {
         public override bool IsMatch(List<CardGroup> cards, List<CardGroup> lastCards)
         {
-            var first = cards.First(card => card.Count == 3);
+            var first = cards.FirstOrDefault(card => card.Count == 3);
+            if (first == null) return false;
+            
             if (lastCards != null)
             {
                 if (cards.Count != lastCards.Count) // 与之前张数必须相同
@@ -41,7 +43,7 @@ namespace CardSharp.Rules
             return true;
         }
 
-        public override string ToString(List<CardGroup> cards)
+        public override string ToString()
         {
             return "飞机带大翅膀";
         }

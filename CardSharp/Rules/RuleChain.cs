@@ -33,7 +33,7 @@ namespace CardSharp.Rules
         }
 
 
-        public override string ToString(List<CardGroup> cards)
+        public override string ToString()
         {
             return "单顺";
         }

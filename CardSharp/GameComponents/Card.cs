@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace CardSharp
 {
@@ -93,11 +94,28 @@ namespace CardSharp
             return card.Amount >= Constants.AmountCardMax ? CardType.King : CardType.Amount;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static List<CardGroup> ExtractCardGroups(this List<Card> cards)
         {
             return ExtractCardGroupsInternal(cards);
         }
 
+        public static (bool isVaild, List<Card> result) IsTargetVaildAndRemove(this List<Card> cards, List<Card> target)
+        {
+            var cardGroups = cards.ExtractCardGroups();
+            var targetGroups = target.ExtractCardGroups();
+            foreach (var targetGroup in targetGroups)
+            {
+                var group = cardGroups.FirstOrDefault(g => g.Amount == targetGroup.Amount);
+                if (group == null) return (false, null);
+                group.Count -= targetGroup.Count;
+                if (group.Count < 0)
+                    return (false, null);
+            }
+
+            cardGroups.RemoveAll(cardgroup => cardgroup.Count == 0); // remove all 0
+            return (true, cardGroups.ToCards().ToList());
+        }
 
         // MUST SORT
         private static unsafe List<CardGroup> ExtractCardGroupsInternal(this List<Card> cards)

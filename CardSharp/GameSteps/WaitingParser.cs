@@ -2,22 +2,24 @@
 {
     internal class WaitingParser : Samsara, ICommandParser
     {
-        public string Parse(Desk desk, Player player, string command)
+        public void Parse(Desk desk, Player player, string command)
         {
             switch (command)
             {
                 case "上桌":
                     desk.AddPlayer(player);
-                    return "";
+                    break;
                 case "下桌":
                     desk.RemovePlayer(player);
-                    return "";
+                    break;
                 case "开始游戏":
-                    desk.Start();
-                    return "";
+                    if (desk.PlayerList.Count == 3)
+                        desk.Start();
+                    else
+                        desk.AddMessage("人数不够.");
+                    break;
             }
-
-            return null;
+            
         }
     }
 }

@@ -11,14 +11,14 @@ namespace CardSharp.Rules
         public override bool IsMatch(List<CardGroup> cards, List<CardGroup> lastCards)
         {
             // ensure single group
-            if (cards.Count != 1)
+            if (cards.Count != 1 || cards.First().Count != 4)
                 return false;
             if (lastCards != null && lastCards.Count == 1 && lastCards.First().Count == 4)
                 return SingleGroupMatch.IsMatch(cards, lastCards, 4);
             return true;
         }
 
-        public override string ToString(List<CardGroup> cards)
+        public override string ToString()
         {
             return "炸弹";
         }

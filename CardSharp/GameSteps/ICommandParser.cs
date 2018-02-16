@@ -2,6 +2,6 @@
 {
     public interface ICommandParser
     {
-        string Parse(Desk desk, Player player, string command);
+        void Parse(Desk desk, Player player, string command);
     }
 }

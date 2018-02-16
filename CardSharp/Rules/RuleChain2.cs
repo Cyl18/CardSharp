@@ -34,7 +34,7 @@ namespace CardSharp.Rules
             return true;
         }
 
-        public override string ToString(List<CardGroup> cards)
+        public override string ToString()
         {
             throw new NotImplementedException();
         }

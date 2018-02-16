@@ -3,14 +3,21 @@ using System.Collections.Generic;
 
 namespace CardSharp
 {
-    public class Player : IEquatable<Player>
+    public class Player : IEquatable<Player>, IMessageSender
     {
+        public override int GetHashCode()
+        {
+            return PlayerId.GetHashCode();
+        }
+
         public Player(string playerId)
         {
             PlayerId = playerId;
         }
 
         public string PlayerId { get; }
+        public string Message { get; private set; }
+        public List<Card> Cards { get; internal set; }
 
         public bool Equals(Player other)
         {
@@ -36,6 +43,16 @@ namespace CardSharp
         public string ToAtCode()
         {
             return $"[CQ:at,qq={PlayerId}]";
+        }
+
+        public void AddMessage(string msg)
+        {
+            Message += msg;
+        }
+
+        public void ClearMessage()
+        {
+            Message = null;
         }
     }
 }
