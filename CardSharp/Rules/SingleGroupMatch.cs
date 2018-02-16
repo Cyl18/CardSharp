@@ -11,10 +11,10 @@ namespace CardSharp.Rules
 
             if (lastCards == null)
             {
-                return card1.Count == count; // 单张
+                return cards.Count == 1 && card1.Count == count; // 单张
             }
 
-            if (cards.Count != 1 && lastCards.Count != 1)
+            if (cards.Count != 1 || lastCards.Count != 1)
                 return false; // 只有一组
             var card2 = lastCards.First();
             return card1.Amount > card2.Amount && // 大小比较

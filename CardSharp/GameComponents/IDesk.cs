@@ -8,7 +8,6 @@ namespace CardSharp
         Player CurrentPlayer { get; }
         IRule CurrentRule { get; set; }
         string DeskId { get; }
-        Player Landlord { get; }
         IEnumerable<Card> LastCards { get; }
         Player LastSuccessfulSender { get; }
         string Message { get; }
@@ -23,7 +22,6 @@ namespace CardSharp
         void ParseCommand(string playerid, string command);
         void RemovePlayer(Player player);
         void SendCardsMessage();
-        void SetLandlord(Player player);
         bool Start();
     }
 }

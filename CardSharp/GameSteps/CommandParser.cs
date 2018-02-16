@@ -9,6 +9,10 @@ namespace CardSharp.GameSteps
             if (!IsValidPlayer(desk, player))
                 return;
 
+            if (desk.LastSuccessfulSender == desk.CurrentPlayer) {
+                desk.CurrentRule = null;
+                desk.LastCards = null;
+            }
 
             if (command.StartsWith("出")) {
                 var cardsCommand = command.Substring(1).ToUpper();
@@ -52,15 +56,14 @@ namespace CardSharp.GameSteps
 
         private static void PlayerWin(Desk desk, Player player)
         {
-            desk.FinishGame();
-            desk.AddMessage($"{player.ToAtCode()}赢了.");
-            return;
+            desk.FinishGame(player);
+            
         }
 
         public CommandParser(Desk desk)
         {
-            CurrentIndex = desk.PlayerList.FindIndex(p => p == desk.Landlord);
-            desk.AddMessage($"请{desk.Landlord.ToAtCode()}出牌");
+            CurrentIndex = desk.PlayerList.FindIndex(p => p.Type == PlayerType.Landlord);
+            desk.AddMessage($"请{desk.GetPlayerFromIndex(CurrentIndex).ToAtCode()}出牌");
         }
     }
 }

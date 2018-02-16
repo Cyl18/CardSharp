@@ -36,7 +36,7 @@ namespace CardSharp.Rules
 
         public override string ToString()
         {
-            throw new NotImplementedException();
+            return "双顺";
         }
 
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)

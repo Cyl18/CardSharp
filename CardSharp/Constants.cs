@@ -2,10 +2,12 @@
 {
     public class Constants
     {
-        public const int CardAmount = 10 - 2 /*3456789[10]*/ + 3 /*JQK*/ + 2 /*A2*/ + 2 /*王*/;
         public const int AmountCardMax = 10 - 2 /*3456789[10]*/ + 3 /*JQK*/ + 2 /*A2*/;
         public const int AmountCardNum = 4; /*每种牌4张*/
         public const int MaxPlayer = 3; /*最多3人*/
+        public const string ConfigDir = "CardSharp";
+        public const int PointAdd = 10000;
+        public const int BaseScore = 1000;
 
         public class Cards
         {

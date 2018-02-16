@@ -18,6 +18,7 @@ namespace CardSharp
         public string PlayerId { get; }
         public string Message { get; private set; }
         public List<Card> Cards { get; internal set; }
+        public PlayerType Type { get; internal set; } = PlayerType.Farmer;
 
         public bool Equals(Player other)
         {
@@ -59,5 +60,11 @@ namespace CardSharp
         {
             AddMessage($"{desk.DeskId} {Cards.ToFormatString()}");
         }
+    }
+
+    public enum PlayerType
+    {
+        Farmer,
+        Landlord
     }
 }

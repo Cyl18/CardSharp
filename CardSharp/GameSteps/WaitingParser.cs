@@ -1,13 +1,20 @@
-﻿namespace CardSharp.GameSteps
+﻿using CardSharp.GameComponents;
+
+namespace CardSharp.GameSteps
 {
     internal class WaitingParser : Samsara, ICommandParser
     {
         public void Parse(Desk desk, Player player, string command)
         {
-            switch (command)
-            {
+            switch (command) {
                 case "上桌":
-                    desk.AddPlayer(player);
+                case "fork table":
+                    var point = PlayerConfig.GetConfig(player).Point;
+                    if (point <= 0) {
+                        desk.AddMessage($"你的积分不足! 你现在有{point}点积分.");
+                    } else {
+                        desk.AddPlayer(player);
+                    }
                     break;
                 case "下桌":
                     desk.RemovePlayer(player);
@@ -19,7 +26,7 @@
                         desk.AddMessage("人数不够.");
                     break;
             }
-            
+
         }
     }
 }

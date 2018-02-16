@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CardSharp.GameComponents;
 
 namespace CardSharp.Rules
 {
@@ -47,6 +48,7 @@ namespace CardSharp.Rules
                             desk.CurrentRule = rule;
                             desk.LastCards = list;
                             player.Cards = result.result;
+                            Multiplier.Multiplie(desk, rule);
                             return true;
                         }
                     }
