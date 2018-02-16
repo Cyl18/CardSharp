@@ -20,6 +20,10 @@ namespace CardSharp
         public List<Card> Cards { get; internal set; }
         public PlayerType Type { get; internal set; } = PlayerType.Farmer;
         public bool GiveUp { get; internal set; }
+        public bool FirstBlood { get; internal set; } = true;
+        public bool Multiplied { get; internal set; }
+        public bool PublicCards { get; internal set; }
+        public bool HostedEnabled { get; internal set; }
 
         public bool Equals(Player other)
         {

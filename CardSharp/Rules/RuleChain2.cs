@@ -41,7 +41,7 @@ namespace CardSharp.Rules
 
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
         {
-            throw new NotImplementedException();
+            return sourceGroups.ExtractChain(lastCardGroups?.Count ?? 3, 2, lastCardGroups?.First().Amount ?? -1);
         }
     }
 }

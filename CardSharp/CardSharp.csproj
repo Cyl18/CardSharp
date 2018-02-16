@@ -84,6 +84,7 @@
     <Compile Include="ListExtensions.cs" />
     <Compile Include="GameComponents\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rules\Chain.cs" />
     <Compile Include="Rules\IRule.cs" />
     <Compile Include="Rules\Rule3.cs" />
     <Compile Include="Rules\Rule3With1.cs" />

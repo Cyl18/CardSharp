@@ -9,9 +9,10 @@ namespace CardSharp.GameSteps
             switch (command) {
                 case "上桌":
                 case "fork table":
+                case "法克忒薄": // By Charlie Jiang
                     var point = PlayerConfig.GetConfig(player).Point;
                     if (point <= 0) {
-                        desk.AddMessage($"你的积分不足! 你现在有{point}点积分.");
+                        desk.AddMessage($"你的积分不足以进行游戏! 你现在有{point}点积分.");
                     } else {
                         desk.AddPlayer(player);
                     }

@@ -9,16 +9,14 @@ namespace CardSharp.Rules
         public override bool IsMatch(List<CardGroup> cardGroups, List<CardGroup> lastCardGroups)
         {
             var first = cardGroups.First();
-            if (lastCardGroups != null)
-            {
+            if (lastCardGroups != null) {
                 if (cardGroups.Count != lastCardGroups.Count) // 与之前张数必须相同
                     return false;
                 if (first.Amount <= lastCardGroups.First().Amount) // 必须比前面的大
                     return false;
             }
 
-            for (var index = first.Amount; index < cardGroups.Count + first.Amount; index++)
-            {
+            for (var index = first.Amount; index < cardGroups.Count + first.Amount; index++) {
                 var cardGroup = cardGroups[index - first.Amount];
                 if (cardGroup.Count != 3) // 必须只有3张
                     return false;
@@ -41,28 +39,7 @@ namespace CardSharp.Rules
 
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
         {
-            var c3s = sourceGroups.Where(group => group.Count == 3).ToList();
-            if (lastCardGroups == null)
-            {
-
-            } else
-            {
-                var lastPattern = lastCardGroups.Count;
-
-            }
-
-            List<Card> ExtractChain(List<CardGroup> from, int chainNum)
-            {
-                var num = 0;
-                var firstCard = -1;
-                var lastCard = -1;
-                foreach (var cardGroup in from)
-                {
-                    
-                }
-                throw new NotImplementedException();
-            }
-            throw new NotImplementedException();
+            return sourceGroups.ExtractChain(lastCardGroups?.Count ?? 2, 3, lastCardGroups?.First().Amount ?? -1);
         }
     }
 }

@@ -50,7 +50,29 @@ namespace CardSharp.Rules
 
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
         {
-            throw new NotImplementedException();
+            if (lastCardGroups != null) {
+                var last = lastCardGroups.ExtractChain(3, 2, -1).result;
+                var min = last.First().Amount;
+                var c3s = last.Count;
+                var chain = sourceGroups.ExtractChain(c3s, 3, min);
+                if (!chain.exists)
+                    return default;
+                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result.ExtractCardGroups().Where(cg => cg.Count > 1).ToList();
+                if (nonchains.Count < c3s)
+                    return default;
+                var c3 = nonchains.Take(c3s).ToCards();
+                return (true, chain.result.Concat(c3).ToList());
+            } else {
+                var chain = sourceGroups.ExtractChain(3, 2, -1);
+                if (!chain.exists)
+                    return default;
+                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result.ExtractCardGroups().Where(cg => cg.Count > 1).ToList();
+                var c3s = 2;
+                if (nonchains.Count < c3s)
+                    return default;
+                var c3 = nonchains.Take(c3s).ToCards();
+                return (true, chain.result.Concat(c3).ToList());
+            }
         }
     }
 }

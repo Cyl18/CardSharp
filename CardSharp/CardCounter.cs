@@ -22,7 +22,7 @@ namespace CardSharp
             for (var index = 0; index < dcardGroups.Count; index++)
             {
                 var dcardGroup = dcardGroups[index];
-                var allcardGroup = allcardsGroups[index]; // BUG
+                var allcardGroup = allcardsGroups[index];
                 counts[index] = dcardGroup.Count - (dcardGroup.Count - allcardGroup.Count);
             }
             var sb = new StringBuilder();

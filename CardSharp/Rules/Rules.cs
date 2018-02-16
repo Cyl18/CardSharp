@@ -28,22 +28,17 @@ namespace CardSharp.Rules
         {
             var list = cards.ToListAndSort();
             var player = desk.CurrentPlayer;
-            
+
             if (list.Count == 0)
                 return false;
 
             var lastCardList = desk.LastCards?.ToList();
 
             foreach (var rule in RulesList)
-                if (desk.CurrentRule == null || desk.CurrentRule == rule || rule is RuleBomb || rule is RuleRocket)
-                {
-                    if (desk.CurrentRule is RuleRocket && rule is RuleBomb)
-                        continue;
-                    if (rule.IsMatch(list.ExtractCardGroups(), lastCardList?.ExtractCardGroups()))
-                    {
+                if (desk.CurrentRule == null || desk.CurrentRule == rule || (rule is RuleBomb && !(desk.CurrentRule is RuleRocket)) || rule is RuleRocket) {
+                    if (rule.IsMatch(list.ExtractCardGroups(), lastCardList?.ExtractCardGroups())) {
                         var result = player.Cards.IsTargetVaildAndRemove(list);
-                        if (result.isVaild)
-                        {
+                        if (result.isVaild) {
                             desk.LastSuccessfulSender = desk.CurrentPlayer;
                             desk.CurrentRule = rule;
                             desk.LastCards = list;
@@ -54,6 +49,19 @@ namespace CardSharp.Rules
                     }
                 }
             return false;
+        }
+
+        public static (bool exists, List<Card> cards) FirstMatch(Player player, Desk desk)
+        {
+            foreach (var rule in RulesList)
+                if (desk.CurrentRule == null || desk.CurrentRule == rule || (rule is RuleBomb && !(desk.CurrentRule is RuleRocket)) || rule is RuleRocket) {
+                    var result = rule.FirstMatchedCards(player.Cards.ExtractCardGroups(),
+                        desk.LastCards?.ToList().ExtractCardGroups());
+                    if (result.exists)
+                        return result;
+                }
+
+            return default;
         }
     }
 }

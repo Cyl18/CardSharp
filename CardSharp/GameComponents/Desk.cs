@@ -56,11 +56,11 @@ namespace CardSharp
         public Player CurrentPlayer => GetPlayerFromIndex(((Samsara)_currentParser).CurrentIndex);
         public string Message { get; private set; }
         public int Multiplier { get; internal set; }
+        public bool SuddenDeathEnabled { get; internal set; }
 
         public IEnumerable<Card> GeneratePlayCards()
         {
             var list = GenerateCards();
-
             list.Shuffle();
             return list;
         }
@@ -68,11 +68,10 @@ namespace CardSharp
         public static List<Card> GenerateCards()
         {
             var list = new List<Card>();
-            for (var i1 = 0; i1 < 1; i1++)
-            {
+            for (var i1 = 0; i1 < 1; i1++) {
                 for (var i = 0; i < Constants.AmountCardNum; i++)
-                for (var num = 0; num < Constants.AmountCardMax; num++)
-                    list.Add(new Card(num));
+                    for (var num = 0; num < Constants.AmountCardMax; num++)
+                        list.Add(new Card(num));
                 list.Add(new Card(Constants.AmountCardMax)); //鬼
                 list.Add(new Card(Constants.AmountCardMax + 1)); //王
             }
@@ -99,13 +98,15 @@ namespace CardSharp
             }
 
             _playersDictionary.Add(player.PlayerId, player);
-            AddMessage($"加入成功: {player.ToAtCode()}");
+            AddMessage($"加入成功: {player.ToAtCode()}" + Environment.NewLine);
+            AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
             return true;
         }
 
         public void RemovePlayer(Player player)
         {
-            AddMessage($"移除成功: {player.ToAtCode()}");
+            AddMessage($"移除成功: {player.ToAtCode()}" + Environment.NewLine);
+            AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
             _playersDictionary.Remove(player.PlayerId);
         }
 
@@ -123,6 +124,7 @@ namespace CardSharp
 
             SendCards();
             SendCardsMessage();
+            AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令.");
             return true;
         }
 
@@ -149,17 +151,14 @@ namespace CardSharp
 
         public void ParseCommand(string playerid, string command)
         {
-            try
-            {
+            try {
                 var player = GetPlayer(playerid);
                 _currentParser.Parse(this, player, command);
                 _standardParser.Parse(this, player, command);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 AddMessage($"抱歉 我们在处理你的命令时发生了错误{e}");
             }
-            
+
         }
 
         public void SetLandlord(Player player)
@@ -182,9 +181,16 @@ namespace CardSharp
 
         public void BoardcastCards()
         {
-            AddMessage(CurrentRule == null
-                ? $"{CurrentPlayer.ToAtCode()}请出牌"
-                : $"{CurrentRule.ToString()}-{string.Join(string.Empty, LastCards.Select(card => $"[{card}]"))} {CurrentPlayer.ToAtCode()}请出牌");
+            if (CurrentRule == null) {
+                if (CurrentPlayer.FirstBlood) {
+                    CurrentPlayer.FirstBlood = false;
+                    AddMessage($"{CurrentPlayer.ToAtCode()}请开始你的表演");
+                } else {
+                    AddMessage($"{CurrentPlayer.ToAtCode()}请出牌");
+                }
+            } else {
+                AddMessage($"{CurrentRule.ToString()}-{string.Join(string.Empty, LastCards.Select(card => $"[{card}]"))} {CurrentPlayer.ToAtCode()}请出牌");
+            }
         }
 
         public void FinishGame(Player player)
@@ -192,20 +198,43 @@ namespace CardSharp
             var mult = GameComponents.Multiplier.CalcResult(this);
             var farmerDif = mult;
             var landlordDif = mult * 2;
-            switch (player.Type) {
-                case PlayerType.Farmer:
-                    AddMessage("农民赢了.");
-                    landlordDif *= -1;
-                    break;
-                case PlayerType.Landlord:
-                    AddMessage("地主赢了.");
-                    farmerDif *= -1;
-                    break;
-            }
 
-            var sb = new StringBuilder();
             var farmers = Players.Where(p => p.Type == PlayerType.Farmer);
             var landlords = Players.Where(p => p.Type == PlayerType.Landlord);
+
+            if (SuddenDeathEnabled)
+            {
+                switch (player.Type) {
+                    case PlayerType.Farmer:
+                        AddMessage("农民赢了.");
+                        var n1 = landlords.Sum(p => PlayerConfig.GetConfig(p).Point);
+                        landlordDif = -n1;
+                        farmerDif = n1 / 2;
+                        break;
+                    case PlayerType.Landlord:
+                        AddMessage("地主赢了.");
+                        var n2 = farmers.Sum(p => PlayerConfig.GetConfig(p).Point);
+                        landlordDif = n2;
+                        farmerDif = 0;
+                        break;
+                }
+            }
+            else
+            {
+                switch (player.Type) {
+                    case PlayerType.Farmer:
+                        AddMessage("农民赢了.");
+                        landlordDif *= -1;
+                        break;
+                    case PlayerType.Landlord:
+                        AddMessage("地主赢了.");
+                        farmerDif *= -1;
+                        break;
+                }
+            }
+            
+            var sb = new StringBuilder();
+            
             foreach (var landlord in landlords) {
                 sb.AppendLine($"-{landlord.ToAtCode()} {landlordDif}");
                 SaveScore(landlord, landlordDif);
@@ -215,14 +244,21 @@ namespace CardSharp
                 sb.AppendLine($"-{farmer.ToAtCode()} {farmerDif}");
                 SaveScore(farmer, farmerDif);
             }
-            
+
             AddMessage(sb.ToString());
             FinishGame();
 
             void SaveScore(Player p, int dif)
             {
                 var playerConf = PlayerConfig.GetConfig(p);
-                playerConf.Point += dif;
+                if (SuddenDeathEnabled && player.Type == PlayerType.Landlord)
+                {
+                    playerConf.Point = 0;
+                }
+                else
+                {
+                    playerConf.Point += dif;
+                }
                 playerConf.Save();
             }
         }

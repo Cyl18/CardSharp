@@ -9,6 +9,11 @@ namespace CardSharp.GameSteps
         {
             if (!desk.Players.Contains(player))
                 return;
+            if (desk.LastSuccessfulSender == desk.CurrentPlayer) {
+                desk.CurrentRule = null;
+                desk.LastCards = null;
+            }
+
             switch (command) {
                 case "结束游戏":
                     desk.AddMessage("CNM");
@@ -20,18 +25,22 @@ namespace CardSharp.GameSteps
                 case "全场牌数":
                     desk.AddMessage(string.Join(Environment.NewLine, desk.PlayerList.Select(p => $"{p.ToAtCode()}: {p.Cards.Count}")));
                     break;
+                case "弃牌":
+                    player.GiveUp = true;
+                    desk.AddMessage("弃牌成功");
+                    return;
+                case "托管":
+                    player.HostedEnabled = true;
+                    desk.AddMessage("托管成功");
+                    return;
             }
 
             if (!IsValidPlayer(desk, player))
                 return;
 
-            if (desk.LastSuccessfulSender == desk.CurrentPlayer) {
-                desk.CurrentRule = null;
-                desk.LastCards = null;
-            }
-
             switch (command) {
                 case "过":
+                #region Pass
                 case "pass":
                 case "passs":
                 case "passss":
@@ -52,6 +61,7 @@ namespace CardSharp.GameSteps
                 case "passsssssssssssssssss":
                 case "passssssssssssssssssss":
                 case "passsssssssssssssssssss":
+                #endregion
                 case "不出":
                 case "不要":
                 case "出你妈":
@@ -63,9 +73,7 @@ namespace CardSharp.GameSteps
                         desk.BoardcastCards();
                     }
                     return;
-                case "弃牌":
-                    player.GiveUp = true;
-                    break;
+                
             }
 
             if (command.StartsWith("出")) {
@@ -80,12 +88,23 @@ namespace CardSharp.GameSteps
                         player.SendCards(desk);
                         if (player.Cards.Count <= Constants.BoardcastCardNumThreshold) {
                             desk.AddMessage($"{player.ToAtCode()} 只剩{player.Cards.Count}张牌啦~{Environment.NewLine}");
-                        }// TODO 请开始你的表演
-                        MoveNext();
+                        }
+
+                        if (desk.SuddenDeathEnabled)
+                        {
+                            desk.AddMessage("WARNING: SUDDEN DEATH ENABLED" + Environment.NewLine);
+                        }
+
+                        if (player.PublicCards)
+                        {
+                            desk.AddMessage($"明牌:{player.Cards.ToFormatString()}" + Environment.NewLine);
+                        }
                         if (desk.LastSuccessfulSender == desk.CurrentPlayer) {
                             desk.CurrentRule = null;
                             desk.LastCards = null;
                         }
+                        AnalyzeGiveUpAndMoveNext(desk);
+                        
                         desk.BoardcastCards();
                     } else {
                         desk.AddMessage("无法匹配到你想出的牌哟~");
@@ -97,6 +116,35 @@ namespace CardSharp.GameSteps
         {
             desk.FinishGame(player);
 
+        }
+
+        private void AnalyzeGiveUpAndMoveNext(Desk desk)
+        {
+            do
+            {
+                MoveNext();
+            } while (desk.CurrentPlayer.GiveUp);
+
+            var farmers = desk.Players.Where(p => p.Type == PlayerType.Farmer);
+            var landlords = desk.Players.Where(p => p.Type == PlayerType.Landlord);
+            if (farmers.All(p => p.GiveUp) || landlords.All(p => p.GiveUp))
+                desk.FinishGame(desk.Players.First(p => !p.GiveUp));
+
+            var cp = desk.CurrentPlayer;
+            if (cp.HostedEnabled)
+            {
+                var result = Rules.Rules.FirstMatch(cp, desk);
+                switch (result.exists)
+                {
+                    case true:
+                        Parse(desk, cp, $"出{string.Join("", result.cards.Select(card => card.ToString()))}");
+                        // desk.AddMessage($"调试: {result.cards.ToFormatString()}");
+                        return;
+                    case false:
+                        Parse(desk, cp, "pass");
+                        return;
+                }
+            }
         }
 
         public CommandParser(Desk desk)

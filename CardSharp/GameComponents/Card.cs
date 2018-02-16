@@ -104,12 +104,19 @@ namespace CardSharp
         {
             var cardGroups = cards.ExtractCardGroups();
             var targetGroups = target.ExtractCardGroups();
+            return IsTargetVaildAndRemove(targetGroups, cardGroups);
+        }
+
+        public static (bool isVaild, List<Card> result) IsTargetVaildAndRemove(this List<CardGroup> tG, List<CardGroup> cG)
+        {
+            var targetGroups = new List<CardGroup>(tG);
+            var cardGroups = new List<CardGroup>(cG);
             foreach (var targetGroup in targetGroups)
             {
                 var group = cardGroups.FirstOrDefault(g => g.Amount == targetGroup.Amount);
-                if (group == null) return (false, null);
-                group.Count -= targetGroup.Count;
-                if (group.Count < 0)
+                if (@group == null) return (false, null);
+                @group.Count -= targetGroup.Count;
+                if (@group.Count < 0)
                     return (false, null);
             }
 

@@ -13,7 +13,7 @@ namespace CardSharp.GameSteps
             return desk.Players.ToList().FindIndex(p => p == player) == CurrentIndex;
         }
 
-        protected void MoveNext()
+        protected virtual void MoveNext()
         {
             CurrentIndex = (CurrentIndex + 1) % Constants.MaxPlayer;
         }
