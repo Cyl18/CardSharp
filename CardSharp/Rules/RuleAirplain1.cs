@@ -31,8 +31,8 @@ namespace CardSharp.Rules
                     return false;
             }
 
-            if (cardGroups.Count < 6)
-                return false; // 必须大于6张
+            if (cardGroups.Count <= 4)
+                return false; // 必须大于等于4组
 
             if (Math.Abs(cardGroups.Count / 2.0 - count) > 0.1)
                 return false; // 单张的张数必须与多张的相同

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace CardSharp.GameSteps
 {
@@ -6,6 +7,21 @@ namespace CardSharp.GameSteps
     {
         public void Parse(Desk desk, Player player, string command)
         {
+            if (!desk.Players.Contains(player))
+                return;
+            switch (command) {
+                case "结束游戏":
+                    desk.AddMessage("CNM");
+                    desk.FinishGame();
+                    break;
+                case "记牌器":
+                    desk.AddMessage(CardCounter.GenerateCardString(desk));
+                    break;
+                case "全场牌数":
+                    desk.AddMessage(string.Join(Environment.NewLine, desk.PlayerList.Select(p => $"{p.ToAtCode()}: {p.Cards.Count}")));
+                    break;
+            }
+
             if (!IsValidPlayer(desk, player))
                 return;
 
@@ -41,15 +57,14 @@ namespace CardSharp.GameSteps
                 case "出你妈":
                 case "要你妈":
                     if (desk.CurrentRule == null) {
-                        desk.AddMessage("你必须出牌");
+                        desk.AddMessage("为什么会这样呢...为什么你不出牌呢...");
                     } else {
                         MoveNext();
                         desk.BoardcastCards();
                     }
                     return;
-                case "结束游戏":
-                    desk.AddMessage("CNM");
-                    desk.FinishGame();
+                case "弃牌":
+                    player.GiveUp = true;
                     break;
             }
 
@@ -63,10 +78,9 @@ namespace CardSharp.GameSteps
                         }
 
                         player.SendCards(desk);
-                        if (player.Cards.Count <= Constants.BoardcastCardNumThreshold)
-                        {
-                            desk.AddMessage($"{player.ToAtCode()} 还剩{player.Cards.Count}张牌");
-                        }
+                        if (player.Cards.Count <= Constants.BoardcastCardNumThreshold) {
+                            desk.AddMessage($"{player.ToAtCode()} 只剩{player.Cards.Count}张牌啦~{Environment.NewLine}");
+                        }// TODO 请开始你的表演
                         MoveNext();
                         if (desk.LastSuccessfulSender == desk.CurrentPlayer) {
                             desk.CurrentRule = null;
@@ -74,7 +88,7 @@ namespace CardSharp.GameSteps
                         }
                         desk.BoardcastCards();
                     } else {
-                        desk.AddMessage("匹配失败");
+                        desk.AddMessage("无法匹配到你想出的牌哟~");
                     }
             }
         }
@@ -82,7 +96,7 @@ namespace CardSharp.GameSteps
         private static void PlayerWin(Desk desk, Player player)
         {
             desk.FinishGame(player);
-            
+
         }
 
         public CommandParser(Desk desk)

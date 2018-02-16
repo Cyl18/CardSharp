@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CardCounter.cs" />
     <Compile Include="GameComponents\CardGroup.cs" />
     <Compile Include="CardGroupExtensions.cs" />
     <Compile Include="GameComponents\Card.cs" />

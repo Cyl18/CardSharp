@@ -16,7 +16,7 @@ namespace CardSharp
         GameState State { get; }
 
         bool AddPlayer(Player player);
-        IEnumerable<Card> GenerateDefaultCards();
+        IEnumerable<Card> GeneratePlayCards();
         Player GetPlayer(string playerid);
         Player GetPlayerFromIndex(int index);
         void ParseCommand(string playerid, string command);

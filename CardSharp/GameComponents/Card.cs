@@ -95,9 +95,9 @@ namespace CardSharp
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static List<CardGroup> ExtractCardGroups(this List<Card> cards)
+        public static List<CardGroup> ExtractCardGroups(this List<Card> cards, bool keepZero = false)
         {
-            return ExtractCardGroupsInternal(cards);
+            return ExtractCardGroupsInternal(cards, keepZero);
         }
 
         public static (bool isVaild, List<Card> result) IsTargetVaildAndRemove(this List<Card> cards, List<Card> target)
@@ -123,19 +123,19 @@ namespace CardSharp
         }
 
         // MUST SORT
-        private static unsafe List<CardGroup> ExtractCardGroupsInternal(this List<Card> cards)
+        private static unsafe List<CardGroup> ExtractCardGroupsInternal(this List<Card> cards, bool keepZero)
         {
             var enumerable = cards;
             var cardnums = enumerable.Select(card => (int) card.Amount);
             var length = enumerable.Last().Amount + 1;
-            var array = stackalloc int[length];
+            var array = stackalloc int[keepZero ? 15 : length];
             SetAll0(array, length);
             foreach (var num in cardnums) array[num]++;
             var o = new List<CardGroup>(length);
             for (var i = 0; i < length; i++)
             {
                 var num = array[i];
-                if (num != 0) o.Add(new CardGroup(i, num));
+                if (num != 0 || keepZero) o.Add(new CardGroup(i, num));
             }
 
             return o;

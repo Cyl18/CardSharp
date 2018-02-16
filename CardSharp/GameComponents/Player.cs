@@ -19,6 +19,7 @@ namespace CardSharp
         public string Message { get; private set; }
         public List<Card> Cards { get; internal set; }
         public PlayerType Type { get; internal set; } = PlayerType.Farmer;
+        public bool GiveUp { get; internal set; }
 
         public bool Equals(Player other)
         {

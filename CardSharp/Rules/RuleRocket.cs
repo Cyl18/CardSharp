@@ -7,9 +7,19 @@ namespace CardSharp.Rules
     {
         public override bool IsMatch(List<CardGroup> cardGroups, List<CardGroup> lastCardGroups)
         {
-            return cardGroups.Count == 2 &&
-                   cardGroups.First().Amount == Constants.Cards.CGhost &&
-                   cardGroups.Last().Amount == Constants.Cards.CKing;
+            if (cardGroups.Count != 2) {
+                return false;
+            }
+
+            if (cardGroups.First().Amount != Constants.Cards.CGhost) {
+                return false;
+            }
+
+            if (cardGroups.Last().Amount != Constants.Cards.CKing) {
+                return false;
+            }
+
+            return true;
         }
 
         public override string ToString()

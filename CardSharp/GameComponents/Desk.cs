@@ -57,7 +57,15 @@ namespace CardSharp
         public string Message { get; private set; }
         public int Multiplier { get; internal set; }
 
-        public IEnumerable<Card> GenerateDefaultCards()
+        public IEnumerable<Card> GeneratePlayCards()
+        {
+            var list = GenerateCards();
+
+            list.Shuffle();
+            return list;
+        }
+
+        public static List<Card> GenerateCards()
         {
             var list = new List<Card>();
             for (var i1 = 0; i1 < 1; i1++)
@@ -69,7 +77,6 @@ namespace CardSharp
                 list.Add(new Card(Constants.AmountCardMax + 1)); //王
             }
 
-            list.Shuffle();
             return list;
         }
 
@@ -126,7 +133,7 @@ namespace CardSharp
 
         private void SendCards()
         {
-            var cards = GenerateDefaultCards();
+            var cards = GeneratePlayCards();
             foreach (var player in Players) {
                 var pCards = cards.Take(17 * 1);
                 player.Cards = pCards.ToListAndSort();
@@ -142,9 +149,17 @@ namespace CardSharp
 
         public void ParseCommand(string playerid, string command)
         {
-            var player = GetPlayer(playerid);
-            _currentParser.Parse(this, player, command);
-            _standardParser.Parse(this, player, command);
+            try
+            {
+                var player = GetPlayer(playerid);
+                _currentParser.Parse(this, player, command);
+                _standardParser.Parse(this, player, command);
+            }
+            catch (Exception e)
+            {
+                AddMessage($"抱歉 我们在处理你的命令时发生了错误{e}");
+            }
+            
         }
 
         public void SetLandlord(Player player)

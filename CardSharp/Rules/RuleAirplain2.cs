@@ -31,7 +31,7 @@ namespace CardSharp.Rules
                     return false;
             }
 
-            if (cardGroups.Count < 4)
+            if (cardGroups.Count <= 4)
                 return false; // 必须大于4组
 
             if (Math.Abs(cardGroups.Count / 2.0 - count) > 0.1)
