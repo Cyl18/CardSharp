@@ -8,25 +8,24 @@ namespace CardSharp.GameSteps
         {
             if (!IsValidPlayer(desk, player))
                 return;
-            
+
 
             if (command.StartsWith("出")) {
                 var cardsCommand = command.Substring(1).ToUpper();
                 if (cardsCommand.IsValidCardString())
                     if (Rules.Rules.IsCardsMatch(cardsCommand.ToCards(), desk)) {
                         if (player.Cards.Count == 0) {
-                            desk.AddMessage($"{player.ToAtCode()}赢了.");
-                            desk.FinishGame();
+                            PlayerWin(desk, player);
                             return;
                         }
 
-                        player.AddMessage(desk.DeskId + string.Join(string.Empty, player.Cards.Select(card => $"[{card}]")));
+                        player.SendCards(desk);
                         MoveNext();
                         if (desk.LastSuccessfulSender == desk.CurrentPlayer) {
                             desk.CurrentRule = null;
                             desk.LastCards = null;
                         }
-                        SendCards(desk);
+                        desk.BoardcastCards();
                     } else {
                         desk.AddMessage("匹配失败");
                     }
@@ -41,7 +40,7 @@ namespace CardSharp.GameSteps
                         desk.AddMessage("你必须出牌");
                     } else {
                         MoveNext();
-                        SendCards(desk);
+                        desk.BoardcastCards();
                     }
                     break;
                 case "结束游戏":
@@ -51,9 +50,11 @@ namespace CardSharp.GameSteps
             }
         }
 
-        private void SendCards(Desk desk)
+        private static void PlayerWin(Desk desk, Player player)
         {
-            desk.AddMessage($"{desk.CurrentRule.ToString()}-{string.Join(string.Empty, desk.LastCards.Select(card => $"[{card}]"))} {desk.CurrentPlayer.ToAtCode()}请出牌");
+            desk.FinishGame();
+            desk.AddMessage($"{player.ToAtCode()}赢了.");
+            return;
         }
 
         public CommandParser(Desk desk)

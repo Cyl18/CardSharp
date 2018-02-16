@@ -27,11 +27,7 @@ namespace CardSharp.Rules
         {
             var list = cards.ToListAndSort();
             var player = desk.CurrentPlayer;
-            if (desk.LastSuccessfulSender == player)
-            {
-                desk.CurrentRule = null;
-                desk.LastCards = null;
-            }
+            
             if (list.Count == 0)
                 return false;
 

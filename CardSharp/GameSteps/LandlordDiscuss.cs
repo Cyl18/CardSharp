@@ -16,16 +16,16 @@ namespace CardSharp
 
         public void Parse(Desk desk, Player player, string command)
         {
-            if (!IsValidPlayer(desk, player)) return;
+            if (!IsValidPlayer(desk, player))
+                return;
 
-            switch (command)
-            {
+            switch (command) {
                 case "抢地主":
                     player.Cards.AddRange(_landlordCards);
                     player.Cards.Sort();
                     desk.SetLandlord(player);
                     desk.SendCardsMessage();
-                    desk.AddMessage($"{player.ToAtCode()}抢地主成功. 为{string.Join("", _landlordCards.Select(card=>$"[{card}]"))}");
+                    desk.AddMessage($"{player.ToAtCode()}抢地主成功. 为{string.Join("", _landlordCards.Select(card => $"[{card}]"))}");
                     break;
                 case "不抢":
                     MoveNext();
@@ -33,6 +33,6 @@ namespace CardSharp
                     break;
             }
         }
-        
+
     }
 }

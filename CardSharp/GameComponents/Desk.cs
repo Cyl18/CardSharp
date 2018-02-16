@@ -112,7 +112,7 @@ namespace CardSharp
 
         public void SendCardsMessage()
         {
-            PlayerList.ForEach(player => player.AddMessage(this.DeskId + string.Join(string.Empty, player.Cards.Select(card => $"[{card}]"))));
+            PlayerList.ForEach(player => player.SendCards(this));
         }
 
         private void SendCards()
@@ -155,6 +155,13 @@ namespace CardSharp
         public void FinishGame()
         {
             Desks.Remove(this.DeskId);
+        }
+
+        public void BoardcastCards()
+        {
+            AddMessage(CurrentRule == null
+                ? $"{CurrentPlayer.ToAtCode()}请出牌"
+                : $"{CurrentRule.ToString()}-{string.Join(string.Empty, LastCards.Select(card => $"[{card}]"))} {CurrentPlayer.ToAtCode()}请出牌");
         }
     }
 

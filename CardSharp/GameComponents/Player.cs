@@ -54,5 +54,10 @@ namespace CardSharp
         {
             Message = null;
         }
+
+        public void SendCards(Desk desk)
+        {
+            AddMessage($"{desk.DeskId} {Cards.ToFormatString()}");
+        }
     }
 }

@@ -1,24 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CardSharp.Rules
 {
     public class RuleAirplane : RuleBase
     {
-        public override bool IsMatch(List<CardGroup> cards, List<CardGroup> lastCards)
+        public override bool IsMatch(List<CardGroup> cardGroups, List<CardGroup> lastCardGroups)
         {
-            var first = cards.First();
-            if (lastCards != null)
+            var first = cardGroups.First();
+            if (lastCardGroups != null)
             {
-                if (cards.Count != lastCards.Count) // 与之前张数必须相同
+                if (cardGroups.Count != lastCardGroups.Count) // 与之前张数必须相同
                     return false;
-                if (first.Amount <= lastCards.First().Amount) // 必须比前面的大
+                if (first.Amount <= lastCardGroups.First().Amount) // 必须比前面的大
                     return false;
             }
 
-            for (var index = first.Amount; index < cards.Count + first.Amount; index++)
+            for (var index = first.Amount; index < cardGroups.Count + first.Amount; index++)
             {
-                var cardGroup = cards[index - first.Amount];
+                var cardGroup = cardGroups[index - first.Amount];
                 if (cardGroup.Count != 3) // 必须只有3张
                     return false;
                 if (index != cardGroup.Amount) // 必须连起来
@@ -27,8 +28,8 @@ namespace CardSharp.Rules
                     return false;
             }
 
-            if (cards.Count < 2)
-                return false; // 必须大于等于两组
+            if (cardGroups.Count < 2)
+                return false; // 必须大于两组
 
             return true;
         }
@@ -36,6 +37,32 @@ namespace CardSharp.Rules
         public override string ToString()
         {
             return "飞机";
+        }
+
+        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
+        {
+            var c3s = sourceGroups.Where(group => group.Count == 3).ToList();
+            if (lastCardGroups == null)
+            {
+
+            } else
+            {
+                var lastPattern = lastCardGroups.Count;
+
+            }
+
+            List<Card> ExtractChain(List<CardGroup> from, int chainNum)
+            {
+                var num = 0;
+                var firstCard = -1;
+                var lastCard = -1;
+                foreach (var cardGroup in from)
+                {
+                    
+                }
+                throw new NotImplementedException();
+            }
+            throw new NotImplementedException();
         }
     }
 }

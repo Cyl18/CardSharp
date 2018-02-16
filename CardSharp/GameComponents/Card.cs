@@ -117,6 +117,11 @@ namespace CardSharp
             return (true, cardGroups.ToCards().ToList());
         }
 
+        public static string ToFormatString(this IEnumerable<Card> cards)
+        {
+            return string.Join(string.Empty, cards.Select(card => $"[{card}]"));
+        }
+
         // MUST SORT
         private static unsafe List<CardGroup> ExtractCardGroupsInternal(this List<Card> cards)
         {

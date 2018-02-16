@@ -4,7 +4,8 @@ namespace CardSharp.Rules
 {
     public abstract class RuleBase : IRule
     {
-        public abstract bool IsMatch(List<CardGroup> cards, List<CardGroup> lastCards);
+        public abstract bool IsMatch(List<CardGroup> cardGroups, List<CardGroup> lastCardGroups);
         public abstract string ToString();
+        public abstract (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups);
     }
 }
