@@ -8,6 +8,7 @@
         public const string ConfigDir = "CardSharp";
         public const int PointAdd = 10000;
         public const int BaseScore = 1000;
+        public const int BoardcastCardNumThreshold = 5;
 
         public class Cards
         {

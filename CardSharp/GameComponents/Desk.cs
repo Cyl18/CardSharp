@@ -60,11 +60,14 @@ namespace CardSharp
         public IEnumerable<Card> GenerateDefaultCards()
         {
             var list = new List<Card>();
-            for (var i = 0; i < Constants.AmountCardNum; i++)
+            for (var i1 = 0; i1 < 1; i1++)
+            {
+                for (var i = 0; i < Constants.AmountCardNum; i++)
                 for (var num = 0; num < Constants.AmountCardMax; num++)
                     list.Add(new Card(num));
-            list.Add(new Card(Constants.AmountCardMax)); //鬼
-            list.Add(new Card(Constants.AmountCardMax + 1)); //王
+                list.Add(new Card(Constants.AmountCardMax)); //鬼
+                list.Add(new Card(Constants.AmountCardMax + 1)); //王
+            }
 
             list.Shuffle();
             return list;
@@ -125,9 +128,9 @@ namespace CardSharp
         {
             var cards = GenerateDefaultCards();
             foreach (var player in Players) {
-                var pCards = cards.Take(17);
+                var pCards = cards.Take(17 * 1);
                 player.Cards = pCards.ToListAndSort();
-                cards = cards.Skip(17);
+                cards = cards.Skip(17 * 1);
             }
             _currentParser = new LandlordDiscuss(cards, this);
         }

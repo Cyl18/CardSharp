@@ -48,6 +48,7 @@ namespace Origind.Card.Game
             {
                 base.Load(builder);
                 builder.RegisterType<GroupMessageReceivedMahuaEvent1>().As<IGroupMessageReceivedMahuaEvent>();
+                builder.RegisterType<FriendAddingRequestMahuaEvent1>().As<IFriendAddingRequestMahuaEvent>();
                 // 将需要监听的事件注册，若缺少此注册，则不会调用相关的实现类
             }
         }

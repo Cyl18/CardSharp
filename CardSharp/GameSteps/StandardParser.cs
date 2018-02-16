@@ -32,6 +32,10 @@ namespace CardSharp.GameSteps
                 case "我的信息":
                     desk.AddMessage($"你的积分为 {pconfig.Point}");
                     break;
+                case "重新发牌":
+                    if (desk.State == GameState.StartGame)
+                        desk.SendCardsMessage();
+                    break;
             }
         }
     }
