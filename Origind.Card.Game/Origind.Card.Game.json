@@ -1,114 +1,114 @@
 {
     "ret":  1,
     "apiver":  9,
-    "name":  "æ’ä»¶åç§°",
+    "name":  "²å¼şÃû³Æ",
     "version":  "1.0.0",
     "version_id":  1000,
     "author":  "Newbe",
-    "description":  "æ’ä»¶æè¿°",
+    "description":  "²å¼şÃèÊö",
     "event":  [
                   {
                       "id":  1,
                       "type":  21,
-                      "name":  "ç§èŠæ¶ˆæ¯å¤„ç†",
+                      "name":  "Ë½ÁÄÏûÏ¢´¦Àí",
                       "function":  "_eventPrivateMsg",
                       "priority":  30000
                   },
                   {
                       "id":  2,
                       "type":  2,
-                      "name":  "ç¾¤æ¶ˆæ¯å¤„ç†",
+                      "name":  "ÈºÏûÏ¢´¦Àí",
                       "function":  "_eventGroupMsg",
                       "priority":  30000
                   },
                   {
                       "id":  3,
                       "type":  4,
-                      "name":  "è®¨è®ºç»„æ¶ˆæ¯å¤„ç†",
+                      "name":  "ÌÖÂÛ×éÏûÏ¢´¦Àí",
                       "function":  "_eventDiscussMsg",
                       "priority":  30000
                   },
                   {
                       "id":  4,
                       "type":  11,
-                      "name":  "ç¾¤æ–‡ä»¶ä¸Šä¼ äº‹ä»¶å¤„ç†",
+                      "name":  "ÈºÎÄ¼şÉÏ´«ÊÂ¼ş´¦Àí",
                       "function":  "_eventGroupUpload",
                       "priority":  30000
                   },
                   {
                       "id":  5,
                       "type":  101,
-                      "name":  "ç¾¤ç®¡ç†å˜åŠ¨äº‹ä»¶å¤„ç†",
+                      "name":  "Èº¹ÜÀí±ä¶¯ÊÂ¼ş´¦Àí",
                       "function":  "_eventSystem_GroupAdmin",
                       "priority":  30000
                   },
                   {
                       "id":  6,
                       "type":  102,
-                      "name":  "ç¾¤æˆå‘˜å‡å°‘äº‹ä»¶å¤„ç†",
+                      "name":  "Èº³ÉÔ±¼õÉÙÊÂ¼ş´¦Àí",
                       "function":  "_eventSystem_GroupMemberDecrease",
                       "priority":  30000
                   },
                   {
                       "id":  7,
                       "type":  103,
-                      "name":  "ç¾¤æˆå‘˜å¢åŠ äº‹ä»¶å¤„ç†",
+                      "name":  "Èº³ÉÔ±Ôö¼ÓÊÂ¼ş´¦Àí",
                       "function":  "_eventSystem_GroupMemberIncrease",
                       "priority":  30000
                   },
                   {
                       "id":  10,
                       "type":  201,
-                      "name":  "å¥½å‹å·²æ·»åŠ äº‹ä»¶å¤„ç†",
+                      "name":  "ºÃÓÑÒÑÌí¼ÓÊÂ¼ş´¦Àí",
                       "function":  "_eventFriend_Add",
                       "priority":  30000
                   },
                   {
                       "id":  8,
                       "type":  301,
-                      "name":  "å¥½å‹æ·»åŠ è¯·æ±‚å¤„ç†",
+                      "name":  "ºÃÓÑÌí¼ÓÇëÇó´¦Àí",
                       "function":  "_eventRequest_AddFriend",
                       "priority":  30000
                   },
                   {
                       "id":  9,
                       "type":  302,
-                      "name":  "ç¾¤æ·»åŠ è¯·æ±‚å¤„ç†",
+                      "name":  "ÈºÌí¼ÓÇëÇó´¦Àí",
                       "function":  "_eventRequest_AddGroup",
                       "priority":  30000
                   },
                   {
                       "id":  1001,
                       "type":  1001,
-                      "name":  "é…·Qå¯åŠ¨äº‹ä»¶",
+                      "name":  "¿áQÆô¶¯ÊÂ¼ş",
                       "priority":  30000,
                       "function":  "_eventStartup"
                   },
                   {
                       "id":  1002,
                       "type":  1002,
-                      "name":  "é…·Qå…³é—­äº‹ä»¶",
+                      "name":  "¿áQ¹Ø±ÕÊÂ¼ş",
                       "priority":  30000,
                       "function":  "_eventExit"
                   },
                   {
                       "id":  1003,
                       "type":  1003,
-                      "name":  "åº”ç”¨å·²è¢«å¯ç”¨",
+                      "name":  "Ó¦ÓÃÒÑ±»ÆôÓÃ",
                       "priority":  30000,
                       "function":  "_eventEnable"
                   },
                   {
                       "id":  1004,
                       "type":  1004,
-                      "name":  "åº”ç”¨å°†è¢«åœç”¨",
+                      "name":  "Ó¦ÓÃ½«±»Í£ÓÃ",
                       "priority":  30000,
                       "function":  "_eventDisable"
                   }
               ],
     "menu":  [
                  {
-                     "name":  "è®¾ç½®ä¸­å¿ƒ",
+                     "name":  "ÉèÖÃÖĞĞÄ",
                      "function":  "_menuA"
                  }
              ],
