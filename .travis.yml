@@ -1,15 +1,15 @@
 language: csharp
 solution: CardSharp.sln
 install:
-  - sudo apt-get install -y gtk-sharp2
-  - nuget restore CardSharp.sln
+- sudo apt-get install -y gtk-sharp2
+- nuget restore CardSharp.sln
 script:
-  - xbuild /p:Configuration=Release CardSharp.sln
-  - ./pack.sh
+- xbuild /p:Configuration=Release CardSharp.sln
+- "./pack.sh"
 deploy:
   provider: releases
   api_key:
-    secure: eX8U2VwCHS9lWS1k+hR6riIAwgz6UHB1Pk/Aarojn3UMVCRD2l2D6d7aAS+Cucd0PNlG+hOz5hM+VMev0r+uVn5xQZCiCu8OqlbS8wTmxzFEYogj6J9pHW2FOngPB3znnT1PUbeD0O1Ks1UvunIHIKw7uSFmhc3rEb0KCI6iu0cNm/M193Ox3EUs/O4zRjyb+Fer0ZZuzRZIItMMqvvgyN3A0nae6ixIZO0Zii2EFB+zqS1M7d/5NxMCy/l5hBP2XgY0HV6snjD3mXfXdJmn7kjXfnUWX0yYUyH4i5COTQT6jGYABAWqTKR1ZYzzgRYEDocL51L5dTZGhf2GIFJlQKAwvvtWozRh5XaSfcrrDwX/tJAXIPsLXn+RnLDjUyW/OPlb69GaaijRARF3GD/nkMwGZVj0nS5o6ZxYivB3E9MqSrBvW017QvMFoUgNp4BvCbSyVGEnOuHxmL+7joy55jTj00HiQE8PqFTJbQ4ZkoinxsyhiUQiaF0ZiJRMYc8e9rQU4+7+zHIAlHpL00u79DhXF4wb7pixRkuQIGFoW/u8fBtzhNbHpCc3LJ8JSq/OLKOjCJO7afRXOjiTik8IK2DcA/hk99R2/muQUIIv9Tmt9oiiv7CE1kBhAeTIUFgoL/1VBzqAm7Zpnu2dBhKFsVKctrIiajuhGHvoFcLgXVA=
+    secure: cgXtFsR8W2V84Q+aVcoHyb91V7vw2Jm4lgH4R4BTO5yIEJodlh5sbjJii3xycblrbkC1LUXzylzNZ/QhFIBqAjIB806AXfdHCnPrc/ZaWwaLDz7/NwAhgcY7mbX8e3dBv9stLvPjCFvyM9ovtpa2lbhqGENWPfwoafkyZVszEAknFXnAJZg5jgFLk7UDhY2I8GerapfCoAlyMCtPfgEYOkazav7jU4Wlc1l+8t0s98Zg8tgn6C+d6ZYRSq8kXHZBcE1d6BgqBGT7eC1e1Dr7kDXY9YNyFwAulkK3oPA/yJjMYJ5BQD1uubGZVVfdQAapeWAoRF6y+YMwJudJI2OFo3k90zbHYda6/xCLrXFtNcgGDE7e2m9Cqfy1DbtMlSQun0zv7m1G+AfBPMUzFZN6OfZUmFwTxuThSzHwhHcOgh3kSxkHSa3WMEXdjhMO5iLTLmt4h42Q48y7cbkgCidHwxyx/eZy4EeY1ndikH85HhxQq47pIeLJn5Ztbtxb/clY6SfJPJPP24vNzhEDTKtxJFTEoCz+iUCF8/u9+W0RO2LxI6YjFJ50enAiYrf5lmKXg7g2PasC5v7rUXltulv36U/u4jlhsdqTVR4Bq0Gi6iBdikrEq3p6uv4IJUtoG9kbl1WlpFQ97SgBNvAlmPFgSGdov7aMsLVCBoMrOH8iCa8=
   file:
     - "CardSharp/bin/Release/CardSharp.dll"
     - "Origind.Card.Game/bin/CQP-All.zip"
