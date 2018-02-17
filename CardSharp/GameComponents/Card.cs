@@ -58,9 +58,9 @@ namespace CardSharp
                             return "A";
                         case Constants.Cards.C2:
                             return "2";
-                        default:
-                            throw new IndexOutOfRangeException("Not supported!");
                     }
+
+                    break;
                 case CardType.King:
                     switch (Amount.Amount)
                     {
@@ -68,12 +68,12 @@ namespace CardSharp
                             return "鬼";
                         case Constants.Cards.CKing:
                             return "王";
-                        default:
-                            throw new IndexOutOfRangeException("Not supported!");
                     }
-                default:
-                    throw new ArgumentOutOfRangeException();
+
+                    break;
             }
+
+            return null;
         }
 
         public static bool operator ==(Card card1, Card card2)

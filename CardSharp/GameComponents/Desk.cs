@@ -20,6 +20,7 @@ namespace CardSharp
         #endregion
 
         private readonly Dictionary<string, Player> _playersDictionary = new Dictionary<string, Player>();
+
         private readonly StandardParser _standardParser;
 
         private ICommandParser _currentParser;
@@ -32,7 +33,9 @@ namespace CardSharp
         }
 
         public int Multiplier { get; internal set; }
+
         public bool SuddenDeathEnabled { get; internal set; }
+
         public bool Silence { get; internal set; }
 
         public GameState State
@@ -50,18 +53,24 @@ namespace CardSharp
                         return GameState.DiscussLandlord;
                     case CommandParser _:
                         return GameState.StartGame;
-                    default:
-                        throw new IndexOutOfRangeException();
                 }
+
+                return GameState.Unknown;
             }
         }
 
         public IEnumerable<Player> Players => _playersDictionary.Values;
+
         public List<Player> PlayerList => Players.ToList();
+
         public string DeskId { get; }
+
         public Player LastSuccessfulSender { get; internal set; }
+
         public IEnumerable<Card> LastCards { get; internal set; }
+
         public IRule CurrentRule { get; set; }
+
         public Player CurrentPlayer => GetPlayerFromIndex(((Samsara) _currentParser).CurrentIndex);
 
         public IEnumerable<Card> GeneratePlayCards()
@@ -139,6 +148,11 @@ namespace CardSharp
         {
             return other != null &&
                    DeskId == other.DeskId;
+        }
+
+        public override int GetHashCode()
+        {
+            return DeskId.GetHashCode();
         }
 
         public static List<Card> GenerateCards()
@@ -222,13 +236,13 @@ namespace CardSharp
                 switch (player.Type)
                 {
                     case PlayerType.Farmer:
-                        AddMessage("农民赢了.");
+                        AddMessageLine("农民赢了.");
                         var n1 = landlords.Sum(p => PlayerConfig.GetConfig(p).Point);
                         landlordDif = -n1;
                         farmerDif = n1 / 2;
                         break;
                     case PlayerType.Landlord:
-                        AddMessage("地主赢了.");
+                        AddMessageLine("地主赢了.");
                         var n2 = farmers.Sum(p => PlayerConfig.GetConfig(p).Point);
                         landlordDif = n2;
                         farmerDif = 0;
@@ -238,11 +252,11 @@ namespace CardSharp
                 switch (player.Type)
                 {
                     case PlayerType.Farmer:
-                        AddMessage("农民赢了.");
+                        AddMessageLine("农民赢了.");
                         landlordDif *= -1;
                         break;
                     case PlayerType.Landlord:
-                        AddMessage("地主赢了.");
+                        AddMessageLine("地主赢了.");
                         farmerDif *= -1;
                         break;
                 }
@@ -293,10 +307,6 @@ namespace CardSharp
             return Equals(obj as Desk);
         }
 
-        public override int GetHashCode()
-        {
-            return 882457901 + EqualityComparer<string>.Default.GetHashCode(DeskId);
-        }
 
         public static bool operator ==(Desk desk1, Desk desk2)
         {

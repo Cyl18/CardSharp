@@ -9,10 +9,15 @@
 
         public int Amount { get; }
 
+
         public override bool Equals(object obj)
         {
-            var amount = obj as CardAmount?;
-            return Amount == amount?.Amount;
+            return obj != null && Amount == ((CardAmount) obj).Amount;
+        }
+
+        public override int GetHashCode()
+        {
+            return Amount;
         }
 
         public static implicit operator int(CardAmount amount)
@@ -23,6 +28,16 @@
         public static implicit operator CardAmount(int amount)
         {
             return new CardAmount(amount);
+        }
+
+        public static bool operator ==(CardAmount card1, CardAmount card2)
+        {
+            return card1.Equals(card2);
+        }
+
+        public static bool operator !=(CardAmount card1, CardAmount card2)
+        {
+            return !(card1 == card2);
         }
     }
 }

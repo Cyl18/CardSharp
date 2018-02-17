@@ -25,10 +25,8 @@ namespace CardSharp.Rules
             if (bombs.Count == 0)
                 return (false, null); //没有炸弹
             if (lastCardGroups == null)
-            {
                 return (true,
                     bombs.First().ToEnumerable().Select(cg => new CardGroup(cg.Amount, 2)).ToCards().ToList());
-            }
 
             var sbombs = bombs.Where(bomb => bomb.Amount > lastCardGroups.First().Amount).ToList();
             if (sbombs.Count == 0)

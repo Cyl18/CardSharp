@@ -139,22 +139,28 @@ namespace CardSharp.GameSteps
             var cp = desk.CurrentPlayer;
             if (!cp.HostedEnabled) return;
 
-            var result = Rules.Rules.FirstMatch(cp, desk);
+            if (desk.LastSuccessfulSender == cp)
+            {
+                desk.CurrentRule = null;
+                desk.LastCards = null;
+            }
+
+            var (exists, cards) = Rules.Rules.FirstMatch(cp, desk);
 #if DEBUG
             if (new StackTrace().FrameCount > 500)
             {
                 Debugger.Break();
             }
 #endif
-            switch (result.exists)
+            switch (exists)
             {
                 case true:
-                    Parse(desk, cp, $"出{string.Join("", result.cards.Select(card => card.ToString()))}");
-                    desk.AddMessageLine($"{cp.ToAtCode()} 托管出牌 {result.cards.ToFormatString()}");
+                    desk.AddMessageLine($" {cp.ToAtCode()} 托管出牌 {cards.ToFormatString()}");
+                    Parse(desk, cp, $"出{string.Join("", cards.Select(card => card.ToString()))}");
                     return;
                 case false:
+                    desk.AddMessageLine($" {cp.ToAtCode()} 托管过牌");
                     Parse(desk, cp, "pass");
-                    desk.AddMessageLine($"{cp.ToAtCode()} 托管过牌");
                     return;
             }
         }

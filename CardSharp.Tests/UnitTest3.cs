@@ -11,7 +11,7 @@ namespace CardSharp.Tests
         [TestMethod]
         public void TestMethod1()
         {
-            "333444555666".ToCards().ToList().ExtractCardGroups().ExtractChain(4, 3, -1);
+            //"333444555666".ToCards().ToList().ExtractCardGroups().ExtractChain(4, 3, -1);
         }
     }
 }

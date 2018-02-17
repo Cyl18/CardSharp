@@ -57,28 +57,28 @@ namespace CardSharp.Rules
                 var last = lastCardGroups.ExtractChain(2, 3, -1).result;
                 var min = last.First().Amount;
                 var c3s = last.Count;
-                var chain = sourceGroups.Where(g => g.Count == 3).ToList().ExtractChain(c3s, 3, min);
-                if (!chain.exists)
+                var (exists, result) = sourceGroups.Where(g => g.Count == 3).ToList().ExtractChain(c3s, 3, min);
+                if (!exists)
                     return default;
-                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result
+                var nonchains = sourceGroups.IsTargetVaildAndRemove(result.ExtractCardGroups()).result
                     .ExtractCardGroups().Where(cg => cg.Count == 2).ToList();
                 if (nonchains.Count < c3s)
                     return default;
                 var c3 = nonchains.Take(c3s).ToCards();
-                return (true, chain.result.Concat(c3).ToList());
+                return (true, result.Concat(c3).ToList());
             }
             else
             {
-                var chain = sourceGroups.Where(g => g.Count == 3).ToList().ExtractChain(2, 3, -1);
-                if (!chain.exists)
+                var (exists, result) = sourceGroups.Where(g => g.Count == 3).ToList().ExtractChain(2, 3, -1);
+                if (!exists)
                     return default;
-                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result
+                var nonchains = sourceGroups.IsTargetVaildAndRemove(result.ExtractCardGroups()).result
                     .ExtractCardGroups().Where(cg => cg.Count == 2).ToList();
                 var c3s = 2;
                 if (nonchains.Count < c3s)
                     return default;
                 var c3 = nonchains.Take(c3s).ToCards();
-                return (true, chain.result.Concat(c3).ToList());
+                return (true, result.Concat(c3).ToList());
             }
         }
     }
