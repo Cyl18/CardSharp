@@ -24,7 +24,20 @@ namespace CardSharp.Rules
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
             List<CardGroup> lastCardGroups)
         {
-            return (false, null);
+            var gr = sourceGroups.Any(g => g.Amount == Constants.Cards.CGhost) &&
+                     sourceGroups.Any(g => g.Amount == Constants.Cards.CKing);
+            if (gr)
+            {
+                return (true, new List<Card>
+                {
+                    new Card(Constants.Cards.CGhost),
+                    new Card(Constants.Cards.CKing)
+                });
+            }
+            else
+            {
+                return default;
+            }
         }
     }
 }
