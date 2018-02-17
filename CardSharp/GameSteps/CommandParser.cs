@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 
 namespace CardSharp.GameSteps
 {
@@ -32,7 +33,7 @@ namespace CardSharp.GameSteps
                 case "托管":
                     player.HostedEnabled = true;
                     desk.AddMessage("托管成功");
-                    return;
+                    goto hosted;
             }
 
             if (!IsValidPlayer(desk, player))
@@ -69,11 +70,11 @@ namespace CardSharp.GameSteps
                     if (desk.CurrentRule == null) {
                         desk.AddMessage("为什么会这样呢...为什么你不出牌呢...");
                     } else {
-                        MoveNext();
+                        AnalyzeGiveUpAndMoveNext(desk);
                         desk.BoardcastCards();
                     }
-                    return;
-                
+
+                    break;
             }
 
             if (command.StartsWith("出")) {
@@ -87,28 +88,48 @@ namespace CardSharp.GameSteps
 
                         player.SendCards(desk);
                         if (player.Cards.Count <= Constants.BoardcastCardNumThreshold) {
-                            desk.AddMessage($"{player.ToAtCode()} 只剩{player.Cards.Count}张牌啦~{Environment.NewLine}");
+                            desk.AddMessageLine($"{player.ToAtCode()} 只剩{player.Cards.Count}张牌啦~");
                         }
 
                         if (desk.SuddenDeathEnabled)
                         {
-                            desk.AddMessage("WARNING: SUDDEN DEATH ENABLED" + Environment.NewLine);
+                            desk.AddMessageLine("WARNING: SUDDEN DEATH ENABLED");
                         }
 
                         if (player.PublicCards)
                         {
-                            desk.AddMessage($"明牌:{player.Cards.ToFormatString()}" + Environment.NewLine);
+                            desk.AddMessageLine($"明牌:{player.Cards.ToFormatString()}");
                         }
+
+                        AnalyzeGiveUpAndMoveNext(desk);
+
                         if (desk.LastSuccessfulSender == desk.CurrentPlayer) {
                             desk.CurrentRule = null;
                             desk.LastCards = null;
                         }
-                        AnalyzeGiveUpAndMoveNext(desk);
-                        
+
                         desk.BoardcastCards();
                     } else {
                         desk.AddMessage("无法匹配到你想出的牌哟~");
                     }
+            }
+
+
+            hosted:
+            var cp = desk.CurrentPlayer;
+            if (!cp.HostedEnabled) return;
+
+            var result = Rules.Rules.FirstMatch(cp, desk);
+            Thread.Sleep(10);
+            switch (result.exists) {
+                case true:
+                    Parse(desk, cp, $"出{string.Join("", result.cards.Select(card => card.ToString()))}");
+                    desk.AddMessageLine();
+                    return;
+                case false:
+                    Parse(desk, cp, "pass");
+                    desk.AddMessageLine();
+                    return;
             }
         }
 
@@ -130,21 +151,7 @@ namespace CardSharp.GameSteps
             if (farmers.All(p => p.GiveUp) || landlords.All(p => p.GiveUp))
                 desk.FinishGame(desk.Players.First(p => !p.GiveUp));
 
-            var cp = desk.CurrentPlayer;
-            if (cp.HostedEnabled)
-            {
-                var result = Rules.Rules.FirstMatch(cp, desk);
-                switch (result.exists)
-                {
-                    case true:
-                        Parse(desk, cp, $"出{string.Join("", result.cards.Select(card => card.ToString()))}");
-                        // desk.AddMessage($"调试: {result.cards.ToFormatString()}");
-                        return;
-                    case false:
-                        Parse(desk, cp, "pass");
-                        return;
-                }
-            }
+            
         }
 
         public CommandParser(Desk desk)

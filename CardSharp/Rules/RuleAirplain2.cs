@@ -51,7 +51,7 @@ namespace CardSharp.Rules
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
         {
             if (lastCardGroups != null) {
-                var last = lastCardGroups.ExtractChain(3, 2, -1).result;
+                var last = lastCardGroups.ExtractChain(2, 3, -1).result;
                 var min = last.First().Amount;
                 var c3s = last.Count;
                 var chain = sourceGroups.ExtractChain(c3s, 3, min);
@@ -63,7 +63,7 @@ namespace CardSharp.Rules
                 var c3 = nonchains.Take(c3s).ToCards();
                 return (true, chain.result.Concat(c3).ToList());
             } else {
-                var chain = sourceGroups.ExtractChain(3, 2, -1);
+                var chain = sourceGroups.ExtractChain(2, 3, -1);
                 if (!chain.exists)
                     return default;
                 var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result.ExtractCardGroups().Where(cg => cg.Count > 1).ToList();

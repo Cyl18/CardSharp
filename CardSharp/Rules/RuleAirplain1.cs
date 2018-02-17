@@ -52,7 +52,7 @@ namespace CardSharp.Rules
         {
             if (lastCardGroups != null)
             {
-                var last = lastCardGroups.ExtractChain(3, 2, -1).result;
+                var last = lastCardGroups.ExtractChain(2, 3, -1).result;
                 var min = last.First().Amount;
                 var c3s = last.Count;
                 var chain = sourceGroups.ExtractChain(c3s, 3, min);
@@ -64,7 +64,7 @@ namespace CardSharp.Rules
             }
             else
             {
-                var chain = sourceGroups.ExtractChain(3, 2, -1);
+                var chain = sourceGroups.ExtractChain(2, 3, -1);
                 if (!chain.exists) return default;
                 var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result.ExtractCardGroups();
                 var c3s = 2;

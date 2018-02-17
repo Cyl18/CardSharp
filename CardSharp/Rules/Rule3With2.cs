@@ -22,8 +22,8 @@ namespace CardSharp.Rules
 
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
         {
-            var c3s = sourceGroups.Where(group => group.Amount == 3).ToList();
-            var coth = sourceGroups.Where(group => group.Amount != 3 && group.Amount > 1).ToList();
+            var c3s = sourceGroups.Where(group => group.Count == 3).ToList();
+            var coth = sourceGroups.Where(group => group.Count != 3 && group.Count > 1).ToList();
             if (c3s.Count == 0 || coth.Count == 0)
                 return (false, null);
             if (lastCardGroups == null) {

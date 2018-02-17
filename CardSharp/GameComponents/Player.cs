@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CardSharp
 {
-    public class Player : IEquatable<Player>, IMessageSender
+    public class Player : MessageSenderBase, IEquatable<Player>
     {
         public override int GetHashCode()
         {
@@ -16,7 +16,6 @@ namespace CardSharp
         }
 
         public string PlayerId { get; }
-        public string Message { get; private set; }
         public List<Card> Cards { get; internal set; }
         public PlayerType Type { get; internal set; } = PlayerType.Farmer;
         public bool GiveUp { get; internal set; }
@@ -48,18 +47,13 @@ namespace CardSharp
 
         public string ToAtCode()
         {
+#if !DEBUG
             return $"[CQ:at,qq={PlayerId}]";
+#else
+            return $"{PlayerId}";
+#endif
         }
-
-        public void AddMessage(string msg)
-        {
-            Message += msg;
-        }
-
-        public void ClearMessage()
-        {
-            Message = null;
-        }
+        
 
         public void SendCards(Desk desk)
         {

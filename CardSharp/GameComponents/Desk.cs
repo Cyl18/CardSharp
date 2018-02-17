@@ -10,7 +10,7 @@ using CardSharp.Rules;
 
 namespace CardSharp
 {
-    public class Desk : IMessageSender, IDesk
+    public class Desk : MessageSenderBase, IDesk, IEquatable<Desk>
     {
         #region Static Members
 
@@ -34,6 +34,9 @@ namespace CardSharp
         {
             get
             {
+                if (!Desks.ContainsValue(this))
+                    return GameState.Unknown;
+                
                 switch (_currentParser) {
                     case WaitingParser _:
                         return GameState.Wait;
@@ -54,7 +57,6 @@ namespace CardSharp
         public IEnumerable<Card> LastCards { get; internal set; }
         public IRule CurrentRule { get; set; }
         public Player CurrentPlayer => GetPlayerFromIndex(((Samsara)_currentParser).CurrentIndex);
-        public string Message { get; private set; }
         public int Multiplier { get; internal set; }
         public bool SuddenDeathEnabled { get; internal set; }
 
@@ -98,16 +100,16 @@ namespace CardSharp
             }
 
             _playersDictionary.Add(player.PlayerId, player);
-            AddMessage($"加入成功: {player.ToAtCode()}" + Environment.NewLine);
+            AddMessageLine($"加入成功: {player.ToAtCode()}");
             AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
             return true;
         }
 
         public void RemovePlayer(Player player)
         {
-            AddMessage($"移除成功: {player.ToAtCode()}" + Environment.NewLine);
-            AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
+            AddMessageLine($"移除成功: {player.ToAtCode()}");
             _playersDictionary.Remove(player.PlayerId);
+            AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
         }
 
         public Player GetPlayer(string playerid)
@@ -167,18 +169,6 @@ namespace CardSharp
             this._currentParser = new CommandParser(this);
         }
 
-        public void AddMessage(string msg)
-        {
-            Message += msg;
-        }
-
-        public void ClearMessage()
-        {
-            Message = null;
-        }
-
-
-
         public void BoardcastCards()
         {
             if (CurrentRule == null) {
@@ -186,10 +176,10 @@ namespace CardSharp
                     CurrentPlayer.FirstBlood = false;
                     AddMessage($"{CurrentPlayer.ToAtCode()}请开始你的表演");
                 } else {
-                    AddMessage($"{CurrentPlayer.ToAtCode()}请出牌");
+                    AddMessageLine($"{CurrentPlayer.ToAtCode()}请出牌");
                 }
             } else {
-                AddMessage($"{CurrentRule.ToString()}-{string.Join(string.Empty, LastCards.Select(card => $"[{card}]"))} {CurrentPlayer.ToAtCode()}请出牌");
+                AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCode()}请出牌");
             }
         }
 
@@ -268,6 +258,32 @@ namespace CardSharp
             AddMessage("游戏结束.");
             Desks.Remove(this.DeskId);
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Desk);
+        }
+
+        public bool Equals(Desk other)
+        {
+            return other != null &&
+                   DeskId == other.DeskId;
+        }
+
+        public override int GetHashCode()
+        {
+            return 882457901 + EqualityComparer<string>.Default.GetHashCode(DeskId);
+        }
+
+        public static bool operator ==(Desk desk1, Desk desk2)
+        {
+            return EqualityComparer<Desk>.Default.Equals(desk1, desk2);
+        }
+
+        public static bool operator !=(Desk desk1, Desk desk2)
+        {
+            return !(desk1 == desk2);
+        }
     }
 
 
@@ -275,6 +291,7 @@ namespace CardSharp
     {
         Wait,
         DiscussLandlord,
-        StartGame
+        StartGame,
+        Unknown
     }
 }

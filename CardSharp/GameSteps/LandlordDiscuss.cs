@@ -17,6 +17,42 @@ namespace CardSharp
 
         public void Parse(Desk desk, Player player, string command)
         {
+            if (!desk.Players.Contains(player))
+                return;
+            switch (command)
+            {
+                case "加倍":
+                    if (!player.Multiplied) {
+                        desk.AddMessage("加倍完成.");
+                        desk.Multiplier += 1;
+                        player.Multiplied = true;
+                    }
+                    break;
+                case "超级加倍":
+                    if (!player.Multiplied) {
+                        desk.AddMessage("超级加倍完成.");
+                        desk.Multiplier += 2;
+                        player.Multiplied = true;
+                    }
+                    break;
+                case "SUDDEN_DEATH_DUEL_CARD":
+                    if (!player.Multiplied && !desk.SuddenDeathEnabled) {
+                        desk.AddMessage("SUDDEN DEATH ENABLED.");
+                        desk.SuddenDeathEnabled = true;
+                        player.Multiplied = true;
+                    }
+                    break;
+                case "明牌":
+                    if (!player.PublicCards) {
+                        player.PublicCards = true;
+                        desk.Multiplier += 1;
+                        desk.AddMessage("明牌成功.");
+                    }
+                    break;
+                case "结束游戏":
+                    desk.FinishGame();
+                    return;
+            }
             if (!IsValidPlayer(desk, player))
                 return;
 
@@ -44,35 +80,6 @@ namespace CardSharp
                     MoveNext();
                     desk.AddMessage($"{player.ToAtCode()}不抢地主, {desk.GetPlayerFromIndex(CurrentIndex).ToAtCode()}你要抢地主嘛?");
                     _count++;
-                    break;
-                case "加倍":
-                    if (!player.Multiplied){
-                        desk.AddMessage("加倍完成.");
-                        desk.Multiplier += 1;
-                        player.Multiplied = true;
-                    }
-                    break;
-                case "超级加倍":
-                    if (!player.Multiplied) {
-                        desk.AddMessage("超级加倍完成.");
-                        desk.Multiplier += 2;
-                        player.Multiplied = true;
-                    }
-                    break;
-                case "SUDDEN_DEATH_DUEL_CARD":
-                    if (!player.Multiplied && !desk.SuddenDeathEnabled) {
-                        desk.AddMessage("SUDDEN DEATH ENABLED.");
-                        desk.SuddenDeathEnabled = true;
-                        player.Multiplied = true;
-                    }
-                    break;
-                case "明牌":
-                    if (!player.PublicCards)
-                    {
-                        player.PublicCards = true;
-                        desk.Multiplier += 1;
-                        desk.AddMessage("明牌成功.");
-                    }
                     break;
             }
         }
