@@ -15,4 +15,5 @@ deploy:
     - "Origind.Card.Game/bin/CQP-All.zip"
   on:
     repo: Cyl18/CardSharp
+    all_branches: true
   skip_cleanup: true
