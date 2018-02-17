@@ -19,10 +19,11 @@ namespace CardSharp.Rules
                     return false;
             }
 
-            var count = cardGroups.Count(card => card.Count == 3);
+            var c3s = cardGroups.Where(card => card.Count == 3).ToList();
+            var count = c3s.Count;
             for (var index = first.Amount; index < count + first.Amount; index++)
             {
-                var cardGroup = cardGroups[index - first.Amount];
+                var cardGroup = c3s[index - first.Amount];
                 if (cardGroup.Count != 3) // 必须只有3张
                     return false;
                 if (index != cardGroup.Amount) // 必须连起来
@@ -31,7 +32,7 @@ namespace CardSharp.Rules
                     return false;
             }
 
-            if (cardGroups.Count <= 4)
+            if (cardGroups.Count < 4)
                 return false; // 必须大于等于4组
 
             if (Math.Abs(cardGroups.Count / 2.0 - count) > 0.1)
@@ -55,18 +56,18 @@ namespace CardSharp.Rules
                 var last = lastCardGroups.ExtractChain(2, 3, -1).result;
                 var min = last.First().Amount;
                 var c3s = last.Count;
-                var chain = sourceGroups.ExtractChain(c3s, 3, min);
+                var chain = sourceGroups.Where(g => g.Count == 3).ToList().ExtractChain(c3s, 3, min);
                 if (!chain.exists) return default;
-                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result.ExtractCardGroups();
+                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result.ExtractCardGroups().Select(g => new CardGroup(g.Amount, 1)).ToList();
                 if (nonchains.Count < c3s) return default;
                 var c3 = nonchains.Take(c3s).ToCards();
                 return (true, chain.result.Concat(c3).ToList());
             }
             else
             {
-                var chain = sourceGroups.ExtractChain(2, 3, -1);
+                var chain = sourceGroups.Where(g => g.Count == 3).ToList().ExtractChain(2, 3, -1);
                 if (!chain.exists) return default;
-                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result.ExtractCardGroups();
+                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result.ExtractCardGroups().Select(g => new CardGroup(g.Amount, 1)).ToList();
                 var c3s = 2;
                 if (nonchains.Count < c3s)
                     return default;

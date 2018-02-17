@@ -36,7 +36,7 @@ namespace CardSharp
             {
                 if (!Desks.ContainsValue(this))
                     return GameState.Unknown;
-                
+
                 switch (_currentParser) {
                     case WaitingParser _:
                         return GameState.Wait;
@@ -59,6 +59,7 @@ namespace CardSharp
         public Player CurrentPlayer => GetPlayerFromIndex(((Samsara)_currentParser).CurrentIndex);
         public int Multiplier { get; internal set; }
         public bool SuddenDeathEnabled { get; internal set; }
+        public bool Silence { get; internal set; }
 
         public IEnumerable<Card> GeneratePlayCards()
         {
@@ -135,6 +136,15 @@ namespace CardSharp
             PlayerList.ForEach(player => player.SendCards(this));
         }
 
+        public override void AddMessage(string msg)
+        {
+            if (Silence) {
+                SendToAllPlayers(msg);
+            } else {
+                base.AddMessage(msg);
+            }
+        }
+
         private void SendCards()
         {
             var cards = GeneratePlayCards();
@@ -192,8 +202,7 @@ namespace CardSharp
             var farmers = Players.Where(p => p.Type == PlayerType.Farmer);
             var landlords = Players.Where(p => p.Type == PlayerType.Landlord);
 
-            if (SuddenDeathEnabled)
-            {
+            if (SuddenDeathEnabled) {
                 switch (player.Type) {
                     case PlayerType.Farmer:
                         AddMessage("农民赢了.");
@@ -208,9 +217,7 @@ namespace CardSharp
                         farmerDif = 0;
                         break;
                 }
-            }
-            else
-            {
+            } else {
                 switch (player.Type) {
                     case PlayerType.Farmer:
                         AddMessage("农民赢了.");
@@ -222,9 +229,9 @@ namespace CardSharp
                         break;
                 }
             }
-            
+
             var sb = new StringBuilder();
-            
+
             foreach (var landlord in landlords) {
                 sb.AppendLine($"-{landlord.ToAtCode()} {landlordDif}");
                 SaveScore(landlord, landlordDif);
@@ -240,6 +247,7 @@ namespace CardSharp
 
             void SaveScore(Player p, int dif)
             {
+#if !DEBUG
                 var playerConf = PlayerConfig.GetConfig(p);
                 if (SuddenDeathEnabled && player.Type == PlayerType.Landlord)
                 {
@@ -250,6 +258,7 @@ namespace CardSharp
                     playerConf.Point += dif;
                 }
                 playerConf.Save();
+#endif
             }
         }
 
@@ -257,6 +266,11 @@ namespace CardSharp
         {
             AddMessage("游戏结束.");
             Desks.Remove(this.DeskId);
+        }
+
+        public void SendToAllPlayers(string message)
+        {
+            PlayerList.ForEach(player => player.AddMessage(message));
         }
 
         public override bool Equals(object obj)

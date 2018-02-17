@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -33,7 +34,8 @@ namespace CardSharp.GameSteps
                 case "托管":
                     player.HostedEnabled = true;
                     desk.AddMessage("托管成功");
-                    goto hosted;
+                    RunHostedCheck(desk);
+                    return;
             }
 
             if (!IsValidPlayer(desk, player))
@@ -114,21 +116,31 @@ namespace CardSharp.GameSteps
                     }
             }
 
+            
+            RunHostedCheck(desk);
+        }
 
-            hosted:
+        private void RunHostedCheck(Desk desk)
+        {
             var cp = desk.CurrentPlayer;
             if (!cp.HostedEnabled) return;
 
             var result = Rules.Rules.FirstMatch(cp, desk);
-            Thread.Sleep(10);
-            switch (result.exists) {
+#if DEBUG
+            if (new StackTrace().FrameCount > 500)
+            {
+                Debugger.Break();
+            }
+#endif
+            switch (result.exists)
+            {
                 case true:
                     Parse(desk, cp, $"出{string.Join("", result.cards.Select(card => card.ToString()))}");
-                    desk.AddMessageLine();
+                    desk.AddMessageLine($"{cp.ToAtCode()} 托管出牌 {result.cards.ToFormatString()}");
                     return;
                 case false:
                     Parse(desk, cp, "pass");
-                    desk.AddMessageLine();
+                    desk.AddMessageLine($"{cp.ToAtCode()} 托管过牌");
                     return;
             }
         }

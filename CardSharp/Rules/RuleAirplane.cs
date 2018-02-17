@@ -39,7 +39,7 @@ namespace CardSharp.Rules
 
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
         {
-            return sourceGroups.ExtractChain(lastCardGroups?.Count ?? 2, 3, lastCardGroups?.First().Amount ?? -1);
+            return sourceGroups.Where(g => g.Amount != 2).ToList().ExtractChain(lastCardGroups?.Count ?? 2, 3, lastCardGroups?.First().Amount ?? -1);
         }
     }
 }

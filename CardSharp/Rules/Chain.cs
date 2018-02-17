@@ -14,9 +14,13 @@ namespace CardSharp.Rules
             var cardIndex = -1; // 累加: 当前应该是的牌
             var firstCard = -1; // 第一张对子的面值
             var lastCard = -1;
-            foreach (var cardGroup in from.Where(cg => cg.Amount > min)) {
+            foreach (var cardGroup in from.Where(cg => cg.Amount > min && cg.Amount != Constants.Cards.C2)) {
                 if (cardGroup.Count < singleChainCardsNum)
+                {
+                    matches = 0;
+                    cardIndex = -1;
                     continue;
+                }
 
                 var currentAmount = cardGroup.Amount; // 当前面值
                 if (cardIndex == currentAmount) {
