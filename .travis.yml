@@ -13,5 +13,4 @@ deploy:
   file: 'Origind.Card.Game/bin/release.zip'
   on:
     repo: Cyl18/CardSharp
-    tags: true
   skip_cleanup: true
