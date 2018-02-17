@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CardSharp.GameSteps
@@ -43,6 +44,9 @@ namespace CardSharp.GameSteps
                     desk.AddMessage("托管成功");
                     RunHostedCheck(desk);
                     return;
+                case "结束托管":
+                    player.HostedEnabled = false;
+                    break;
             }
 
             if (!IsValidPlayer(desk, player))

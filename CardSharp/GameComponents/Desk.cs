@@ -266,29 +266,29 @@ namespace CardSharp
             foreach (var landlord in landlords)
             {
                 sb.AppendLine($"-{landlord.ToAtCode()} {landlordDif}");
-                SaveScore(landlord, landlordDif);
+                SaveScore(landlord, landlordDif, player);
             }
 
             foreach (var farmer in farmers)
             {
                 sb.AppendLine($"-{farmer.ToAtCode()} {farmerDif}");
-                SaveScore(farmer, farmerDif);
+                SaveScore(farmer, farmerDif, player);
             }
 
             AddMessage(sb.ToString());
             FinishGame();
+        }
 
-            void SaveScore(Player p, int dif)
-            {
+        private void SaveScore(Player p, int dif, Player playerWinner)
+        {
 #if !DEBUG
-                var playerConf = PlayerConfig.GetConfig(p);
-                if (SuddenDeathEnabled && player.Type == PlayerType.Landlord)
-                    playerConf.Point = 0;
-                else
-                    playerConf.Point += dif;
-                playerConf.Save();
+            var playerConf = PlayerConfig.GetConfig(p);
+            if (SuddenDeathEnabled && playerWinner.Type == PlayerType.Landlord)
+                playerConf.Point = 0;
+            else
+                playerConf.Point += dif;
+            playerConf.Save();
 #endif
-            }
         }
 
         public void FinishGame()

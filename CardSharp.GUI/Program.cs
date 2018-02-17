@@ -15,16 +15,16 @@ namespace CardSharp.GUI
         {
             var count = 0;
             //Parallel.For(0, 2000, (i) => { RunTest(ref count); });
-            for (int i = 0; i < 2000; i++)
+            for (int i = 0; i < 25000; i++)
             {
                 RunTest(ref count);
             }
         }
-        private static  Random _rng = new Random("fork you kamijoutoma".GetHashCode());
+        private static readonly Random Rng = new Random("fork you kamijoutoma".GetHashCode());
         private static void RunTest(ref int count)
         {
             var sw = Stopwatch.StartNew();
-            var desk = Desk.GetOrCreateDesk(_rng.NextDouble().ToString(CultureInfo.InvariantCulture));
+            var desk = Desk.GetOrCreateDesk(Rng.NextDouble().ToString(CultureInfo.InvariantCulture));
             desk.AddPlayer(new Player("Player1"));
             desk.AddPlayer(new Player("Player2"));
             desk.AddPlayer(new Player("Player3"));
@@ -39,7 +39,8 @@ namespace CardSharp.GUI
             desk.ParseCommand(desk.CurrentPlayer.PlayerId, "托管");
             desk.ParseCommand(desk.CurrentPlayer.PlayerId, "托管");
 
-            Console.WriteLine($"Test successful: {count} / 2000, used {sw.ElapsedMilliseconds}ms");
+            Console.WriteLine($"Test successful: {count} / 20000, used {sw.ElapsedMilliseconds}ms");
+            //Console.WriteLine(desk.Message);
 
             Interlocked.Increment(ref count);
         }

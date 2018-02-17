@@ -20,7 +20,7 @@ namespace Origind.Card.Game.MahuaEvents
 
         public void ProcessAddingFriendRequest(FriendAddingRequestContext context)
         {
-            _mahuaApi.AcceptFriendAddingRequest(context.AddingFriendRequestId, context.FromQq, context.FromQq);
+            _mahuaApi.AcceptFriendAddingRequest(context.AddingFriendRequestId, context.FromQq, "");
             // 不要忘记在MahuaModule中注册
         }
     }

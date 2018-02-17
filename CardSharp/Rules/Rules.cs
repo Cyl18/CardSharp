@@ -15,13 +15,13 @@ namespace CardSharp.Rules
             new RuleAirplane(), // 飞机   => 333444
             new Rule3With1(), // 三带一 => 3334
             new Rule3With2(), // 三带二 => 33344
-            new Rule3(), // 三张   => 333
-            new RuleBomb(), // 炸弹   => 3333
-            new RuleRocket(), // 火箭   => 这还用说?
+            new Rule3(), // 三张   => 333            
             new Rule4With2(), // 四带二 => 333344
             new Rule4With4(), // 四带四 => 33334455
             new RuleDouble(), // 对子   => 33
-            new RuleSingle() // 单张   => 3
+            new RuleSingle(), // 单张   => 3
+            new RuleBomb(), // 炸弹   => 3333
+            new RuleRocket(), // 火箭   => 这还用说?
         };
 
         public static bool IsCardsMatch(IEnumerable<Card> cards, Desk desk)
