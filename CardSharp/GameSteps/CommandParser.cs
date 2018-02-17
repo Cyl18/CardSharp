@@ -9,7 +9,12 @@ namespace CardSharp.GameSteps
         public CommandParser(Desk desk)
         {
             CurrentIndex = desk.PlayerList.FindIndex(p => p.Type == PlayerType.Landlord);
-            desk.AddMessage($"请{desk.GetPlayerFromIndex(CurrentIndex).ToAtCode()}出牌");
+        }
+
+        public void Prepare(Desk desk)
+        {
+            desk.AddMessage($"请{desk.CurrentPlayer.ToAtCode()}出牌");
+            RunHostedCheck(desk);
         }
 
         public void Parse(Desk desk, Player player, string command)
@@ -105,12 +110,6 @@ namespace CardSharp.GameSteps
                 if (cardsCommand.IsValidCardString())
                     if (Rules.Rules.IsCardsMatch(cardsCommand.ToCards(), desk))
                     {
-                        if (player.Cards.Count == 0)
-                        {
-                            PlayerWin(desk, player);
-                            return;
-                        }
-
                         player.SendCards(desk);
                         if (player.Cards.Count <= Constants.BoardcastCardNumThreshold)
                             desk.AddMessageLine($"{player.ToAtCode()} 只剩{player.Cards.Count}张牌啦~");
@@ -135,8 +134,14 @@ namespace CardSharp.GameSteps
                     }
             }
 
+            if (desk.CurrentPlayer.Cards.Count == 0) {
+                PlayerWin(desk, player);
+                return;
+            }
 
-            RunHostedCheck(desk);
+            if (RunHostedCheck(desk))
+                return;
+            
             RunAutoPassCheck(desk);
         }
 
@@ -152,10 +157,10 @@ namespace CardSharp.GameSteps
             }
         }
 
-        private void RunHostedCheck(Desk desk)
+        private bool RunHostedCheck(Desk desk)
         {
             var cp = desk.CurrentPlayer;
-            if (!cp.HostedEnabled) return;
+            if (!cp.HostedEnabled) return false;
 
             if (desk.LastSuccessfulSender == cp)
             {
@@ -175,12 +180,14 @@ namespace CardSharp.GameSteps
                 case true:
                     desk.AddMessageLine($" {cp.ToAtCode()} 托管出牌 {cards.ToFormatString()}");
                     Parse(desk, cp, $"出{string.Join("", cards.Select(card => card.ToString()))}");
-                    return;
+                    return true;
                 case false:
                     desk.AddMessageLine($" {cp.ToAtCode()} 托管过牌");
                     Parse(desk, cp, "pass");
-                    return;
+                    return true;
             }
+
+            return true;
         }
 
         private static void PlayerWin(Desk desk, Player player)

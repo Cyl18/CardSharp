@@ -45,7 +45,7 @@ namespace CardSharp
             return !(player1 == player2);
         }
 
-        public string ToAtCode()
+        public virtual string ToAtCode()
         {
 #if !DEBUG
             return $"[CQ:at,qq={PlayerId}]";

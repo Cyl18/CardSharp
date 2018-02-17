@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CardSharp.GameComponents;
 using CardSharp.GameSteps;
 
 namespace CardSharp
@@ -12,7 +13,12 @@ namespace CardSharp
         public LandlordDiscuss(IEnumerable<Card> landlordCards, Desk desk)
         {
             _landlordCards = landlordCards;
-            desk.AddMessage($"开始游戏, {desk.GetPlayerFromIndex(CurrentIndex).ToAtCode()}你要抢地主吗?[抢地主/不抢]");
+            var player = desk.GetPlayerFromIndex(CurrentIndex);
+            desk.AddMessage($"开始游戏, {player.ToAtCode()}你要抢地主吗?[抢地主/不抢]");
+            if (player is FakePlayer)
+            {
+                Parse(desk, player, "抢");
+            }
         }
 
         public void Parse(Desk desk, Player player, string command)

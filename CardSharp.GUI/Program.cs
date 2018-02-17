@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CardSharp.GameComponents;
 
 namespace CardSharp.GUI
 {
@@ -25,19 +26,14 @@ namespace CardSharp.GUI
         {
             var sw = Stopwatch.StartNew();
             var desk = Desk.GetOrCreateDesk(Rng.NextDouble().ToString(CultureInfo.InvariantCulture));
-            desk.AddPlayer(new Player("Player1"));
-            desk.AddPlayer(new Player("Player2"));
-            desk.AddPlayer(new Player("Player3"));
+            desk.AddPlayer(new FakePlayer());
+            desk.AddPlayer(new FakePlayer());
+            desk.AddPlayer(new FakePlayer());
 
             //Task.Run(() => { ShowMessage(desk); });
 
             //ParseMessage(desk);
-
-            desk.ParseCommand(desk.CurrentPlayer.PlayerId, "开始游戏");
-            desk.ParseCommand(desk.CurrentPlayer.PlayerId, "抢地主");
-            desk.ParseCommand(desk.CurrentPlayer.PlayerId, "托管");
-            desk.ParseCommand(desk.CurrentPlayer.PlayerId, "托管");
-            desk.ParseCommand(desk.CurrentPlayer.PlayerId, "托管");
+            desk.Start();
 
             Console.WriteLine($"Test successful: {count} / 20000, used {sw.ElapsedMilliseconds}ms");
             //Console.WriteLine(desk.Message);

@@ -69,6 +69,7 @@
     <Compile Include="GameComponents\CardType.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="GameComponents\Desk.cs" />
+    <Compile Include="GameComponents\FakePlayer.cs" />
     <Compile Include="GameComponents\IDesk.cs" />
     <Compile Include="GameComponents\IMessageSender.cs" />
     <Compile Include="GameComponents\IPlayerConfig.cs" />

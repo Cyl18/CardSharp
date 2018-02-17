@@ -1,4 +1,5 @@
-﻿using CardSharp.GameComponents;
+﻿using System.Linq;
+using CardSharp.GameComponents;
 
 namespace CardSharp.GameSteps
 {
@@ -25,6 +26,13 @@ namespace CardSharp.GameSteps
                         desk.Start();
                     else
                         desk.AddMessage("人数不够.");
+                    break;
+                case "添加机器人":
+                    desk.AddPlayer(new FakePlayer());
+                    break;
+                case "移除机器人":
+                    if (desk.Players.Any(p => p is FakePlayer))
+                        desk.RemovePlayer(desk.Players.First(p=> p is FakePlayer));
                     break;
             }
         }

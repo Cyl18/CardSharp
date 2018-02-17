@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using CardSharp;
+using CardSharp.GameComponents;
 using Newbe.Mahua;
 
 namespace Origind.Card.Game.MahuaEvents
@@ -27,7 +28,7 @@ namespace Origind.Card.Game.MahuaEvents
             var message = context.Message;
             var desk = Desk.GetOrCreateDesk(deskid);
             desk.ParseCommand(playerid, message);
-            desk.PlayerList.Where(player => player.Message != null).ToList().ForEach(player =>
+            desk.PlayerList.Where(player => player.Message != null && !(player is FakePlayer)).ToList().ForEach(player =>
             {
                 _mahuaApi.SendPrivateMessage(player.PlayerId, player.Message);
                 player.ClearMessage();

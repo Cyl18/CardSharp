@@ -204,7 +204,9 @@ namespace CardSharp
         public void SetLandlord(Player player)
         {
             player.Type = PlayerType.Landlord;
-            _currentParser = new CommandParser(this);
+            var parser = new CommandParser(this);
+            _currentParser = parser;
+            parser.Prepare(this);
         }
 
         public void BoardcastCards()
