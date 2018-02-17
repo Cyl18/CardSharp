@@ -46,6 +46,7 @@ namespace CardSharp.GameSteps
                     return;
                 case "结束托管":
                     player.HostedEnabled = false;
+                    desk.AddMessage("结束成功");
                     break;
             }
 
@@ -136,6 +137,19 @@ namespace CardSharp.GameSteps
 
 
             RunHostedCheck(desk);
+            RunAutoPassCheck(desk);
+        }
+
+        private void RunAutoPassCheck(Desk desk)
+        {
+            var cp = desk.CurrentPlayer;
+            var (exists, _) = Rules.Rules.FirstMatch(cp, desk);
+
+            if (!exists)
+            {
+                desk.AddMessageLine($"{cp.ToAtCode()} 没有检测到你想要出的牌, 已为你自动pass.");
+                Parse(desk, cp, "pass");
+            }
         }
 
         private void RunHostedCheck(Desk desk)
