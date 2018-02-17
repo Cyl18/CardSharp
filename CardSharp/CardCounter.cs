@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CardSharp
 {
@@ -25,6 +23,7 @@ namespace CardSharp
                 var allcardGroup = allcardsGroups[index];
                 counts[index] = dcardGroup.Count - (dcardGroup.Count - allcardGroup.Count);
             }
+
             var sb = new StringBuilder();
             for (var index = 0; index < counts.Length; index++)
             {

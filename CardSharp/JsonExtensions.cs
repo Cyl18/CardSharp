@@ -1,23 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace CardSharp
 {
-
     public static class JsonExtensions
     {
         private static readonly SerializeSettings SerializeSettings = new SerializeSettings();
 
-        public static string ToJsonString(this object source) => JsonConvert.SerializeObject(source, SerializeSettings);
-        public static T JsonDeserialize<T>(this string source) => JsonConvert.DeserializeObject<T>(source, SerializeSettings);
+        public static string ToJsonString(this object source)
+        {
+            return JsonConvert.SerializeObject(source, SerializeSettings);
+        }
 
-        public static string ToJsonString(this object source, JsonSerializerSettings settings) => JsonConvert.SerializeObject(source, settings);
-        public static T JsonDeserialize<T>(this string source, JsonSerializerSettings settings) => JsonConvert.DeserializeObject<T>(source, settings);
+        public static T JsonDeserialize<T>(this string source)
+        {
+            return JsonConvert.DeserializeObject<T>(source, SerializeSettings);
+        }
 
+        public static string ToJsonString(this object source, JsonSerializerSettings settings)
+        {
+            return JsonConvert.SerializeObject(source, settings);
+        }
+
+        public static T JsonDeserialize<T>(this string source, JsonSerializerSettings settings)
+        {
+            return JsonConvert.DeserializeObject<T>(source, settings);
+        }
     }
 
     public class SerializeSettings : JsonSerializerSettings
@@ -29,5 +36,4 @@ namespace CardSharp
             MissingMemberHandling = MissingMemberHandling.Ignore;
         }
     }
-
 }

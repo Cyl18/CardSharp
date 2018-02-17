@@ -20,15 +20,16 @@ namespace CardSharp.Rules
             return "4带2对";
         }
 
-        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
+        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
+            List<CardGroup> lastCardGroups)
         {
             var c3s = sourceGroups.Where(group => group.Count == 4).ToList();
             var coth = sourceGroups.Where(group => group.Count != 4 && group.Count > 2).ToList();
             if (c3s.Count == 0 || coth.Count < 2)
                 return (false, null);
-            if (lastCardGroups == null) {
-                return (true, ToList(c3s, coth));
-            } else {
+            if (lastCardGroups == null) return (true, ToList(c3s, coth));
+
+            {
                 var sc3s = c3s.Where(group => group.Amount > lastCardGroups.First(g => g.Count == 4).Amount).ToList();
                 if (sc3s.Count == 0)
                     return (false, null);

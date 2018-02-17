@@ -5,11 +5,6 @@ namespace CardSharp
 {
     public class Player : MessageSenderBase, IEquatable<Player>
     {
-        public override int GetHashCode()
-        {
-            return PlayerId.GetHashCode();
-        }
-
         public Player(string playerId)
         {
             PlayerId = playerId;
@@ -28,6 +23,11 @@ namespace CardSharp
         {
             return other != null &&
                    PlayerId == other.PlayerId;
+        }
+
+        public override int GetHashCode()
+        {
+            return PlayerId.GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -53,7 +53,7 @@ namespace CardSharp
             return $"{PlayerId}";
 #endif
         }
-        
+
 
         public void SendCards(Desk desk)
         {

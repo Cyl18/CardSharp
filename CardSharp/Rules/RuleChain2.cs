@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace CardSharp.Rules
@@ -39,9 +38,11 @@ namespace CardSharp.Rules
             return "双顺";
         }
 
-        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
+        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
+            List<CardGroup> lastCardGroups)
         {
-            return sourceGroups.Where(group => group.Amount != Constants.Cards.C2).ToList().ExtractChain(lastCardGroups?.Count ?? 3, 2, lastCardGroups?.First().Amount ?? -1);
+            return sourceGroups.Where(group => group.Amount != Constants.Cards.C2).ToList()
+                .ExtractChain(lastCardGroups?.Count ?? 3, 2, lastCardGroups?.First().Amount ?? -1);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace CardSharp.Rules
             new Rule4With2(), // 四带二 => 333344
             new Rule4With4(), // 四带四 => 33334455
             new RuleDouble(), // 对子   => 33
-            new RuleSingle(), // 单张   => 3
+            new RuleSingle() // 单张   => 3
         };
 
         public static bool IsCardsMatch(IEnumerable<Card> cards, Desk desk)
@@ -35,10 +35,13 @@ namespace CardSharp.Rules
             var lastCardList = desk.LastCards?.ToList();
 
             foreach (var rule in RulesList)
-                if (desk.CurrentRule == null || desk.CurrentRule == rule || (rule is RuleBomb && !(desk.CurrentRule is RuleRocket)) || rule is RuleRocket) {
-                    if (rule.IsMatch(list.ExtractCardGroups(), lastCardList?.ExtractCardGroups())) {
+                if (desk.CurrentRule == null || desk.CurrentRule == rule ||
+                    rule is RuleBomb && !(desk.CurrentRule is RuleRocket) || rule is RuleRocket)
+                    if (rule.IsMatch(list.ExtractCardGroups(), lastCardList?.ExtractCardGroups()))
+                    {
                         var result = player.Cards.IsTargetVaildAndRemove(list);
-                        if (result.isVaild) {
+                        if (result.isVaild)
+                        {
                             desk.LastSuccessfulSender = desk.CurrentPlayer;
                             desk.CurrentRule = rule;
                             desk.LastCards = list;
@@ -47,14 +50,16 @@ namespace CardSharp.Rules
                             return true;
                         }
                     }
-                }
+
             return false;
         }
 
         public static (bool exists, List<Card> cards) FirstMatch(Player player, Desk desk)
         {
             foreach (var rule in RulesList)
-                if (desk.CurrentRule == null || desk.CurrentRule == rule || (rule is RuleBomb && !(desk.CurrentRule is RuleRocket)) || rule is RuleRocket) {
+                if (desk.CurrentRule == null || desk.CurrentRule == rule ||
+                    rule is RuleBomb && !(desk.CurrentRule is RuleRocket) || rule is RuleRocket)
+                {
                     var result = rule.FirstMatchedCards(player.Cards.ExtractCardGroups(),
                         desk.LastCards?.ToList().ExtractCardGroups());
                     if (result.exists)

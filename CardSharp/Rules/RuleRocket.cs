@@ -7,17 +7,11 @@ namespace CardSharp.Rules
     {
         public override bool IsMatch(List<CardGroup> cardGroups, List<CardGroup> lastCardGroups)
         {
-            if (cardGroups.Count != 2) {
-                return false;
-            }
+            if (cardGroups.Count != 2) return false;
 
-            if (cardGroups.First().Amount != Constants.Cards.CGhost) {
-                return false;
-            }
+            if (cardGroups.First().Amount != Constants.Cards.CGhost) return false;
 
-            if (cardGroups.Last().Amount != Constants.Cards.CKing) {
-                return false;
-            }
+            if (cardGroups.Last().Amount != Constants.Cards.CKing) return false;
 
             return true;
         }
@@ -27,7 +21,8 @@ namespace CardSharp.Rules
             return "火箭";
         }
 
-        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
+        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
+            List<CardGroup> lastCardGroups)
         {
             return (false, null);
         }

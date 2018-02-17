@@ -10,7 +10,7 @@ namespace CardSharp.Rules
         {
             var first = cardGroups.FirstOrDefault(card => card.Count == 3);
             if (first == null) return false;
-            
+
             if (lastCardGroups != null)
             {
                 if (cardGroups.Count != lastCardGroups.Count) // 与之前张数必须相同
@@ -49,25 +49,31 @@ namespace CardSharp.Rules
             return "飞机带大翅膀";
         }
 
-        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
+        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
+            List<CardGroup> lastCardGroups)
         {
-            if (lastCardGroups != null) {
+            if (lastCardGroups != null)
+            {
                 var last = lastCardGroups.ExtractChain(2, 3, -1).result;
                 var min = last.First().Amount;
                 var c3s = last.Count;
                 var chain = sourceGroups.Where(g => g.Count == 3).ToList().ExtractChain(c3s, 3, min);
                 if (!chain.exists)
                     return default;
-                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result.ExtractCardGroups().Where(cg => cg.Count == 2).ToList();
+                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result
+                    .ExtractCardGroups().Where(cg => cg.Count == 2).ToList();
                 if (nonchains.Count < c3s)
                     return default;
                 var c3 = nonchains.Take(c3s).ToCards();
                 return (true, chain.result.Concat(c3).ToList());
-            } else {
+            }
+            else
+            {
                 var chain = sourceGroups.Where(g => g.Count == 3).ToList().ExtractChain(2, 3, -1);
                 if (!chain.exists)
                     return default;
-                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result.ExtractCardGroups().Where(cg => cg.Count ==2).ToList();
+                var nonchains = sourceGroups.IsTargetVaildAndRemove(chain.result.ExtractCardGroups()).result
+                    .ExtractCardGroups().Where(cg => cg.Count == 2).ToList();
                 var c3s = 2;
                 if (nonchains.Count < c3s)
                     return default;

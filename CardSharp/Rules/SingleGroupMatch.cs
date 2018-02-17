@@ -9,10 +9,7 @@ namespace CardSharp.Rules
         {
             var card1 = cards.First();
 
-            if (lastCards == null)
-            {
-                return cards.Count == 1 && card1.Count == count; // 单张
-            }
+            if (lastCards == null) return cards.Count == 1 && card1.Count == count; // 单张
 
             if (cards.Count != 1 || lastCards.Count != 1)
                 return false; // 只有一组

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace CardSharp.Rules
@@ -9,14 +8,16 @@ namespace CardSharp.Rules
         public override bool IsMatch(List<CardGroup> cardGroups, List<CardGroup> lastCardGroups)
         {
             var first = cardGroups.First();
-            if (lastCardGroups != null) {
+            if (lastCardGroups != null)
+            {
                 if (cardGroups.Count != lastCardGroups.Count) // 与之前张数必须相同
                     return false;
                 if (first.Amount <= lastCardGroups.First().Amount) // 必须比前面的大
                     return false;
             }
 
-            for (var index = first.Amount; index < cardGroups.Count + first.Amount; index++) {
+            for (var index = first.Amount; index < cardGroups.Count + first.Amount; index++)
+            {
                 var cardGroup = cardGroups[index - first.Amount];
                 if (cardGroup.Count != 3) // 必须只有3张
                     return false;
@@ -37,9 +38,11 @@ namespace CardSharp.Rules
             return "飞机";
         }
 
-        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
+        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
+            List<CardGroup> lastCardGroups)
         {
-            return sourceGroups.Where(g => g.Amount != 2).ToList().ExtractChain(lastCardGroups?.Count ?? 2, 3, lastCardGroups?.First().Amount ?? -1);
+            return sourceGroups.Where(g => g.Amount != 2).ToList()
+                .ExtractChain(lastCardGroups?.Count ?? 2, 3, lastCardGroups?.First().Amount ?? -1);
         }
     }
 }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CardSharp.GameComponents;
 using Humanizer;
 using Humanizer.Localisation;
@@ -26,8 +22,10 @@ namespace CardSharp.GameSteps
                     }
                     else
                     {
-                        desk.AddMessage($"你现在不能这么做. 你可以在{(12.Hours() - px).Humanize(culture: new CultureInfo("zh-CN"), maxUnit: TimeUnit.Hour)}后领取.");
+                        desk.AddMessage(
+                            $"你现在不能这么做. 你可以在{(12.Hours() - px).Humanize(culture: new CultureInfo("zh-CN"), maxUnit: TimeUnit.Hour)}后领取.");
                     }
+
                     break;
                 case "我的信息":
                     desk.AddMessage($"你的积分为 {pconfig.Point}");

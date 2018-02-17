@@ -20,15 +20,16 @@ namespace CardSharp.Rules
             return "3带2";
         }
 
-        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups, List<CardGroup> lastCardGroups)
+        public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
+            List<CardGroup> lastCardGroups)
         {
             var c3s = sourceGroups.Where(group => group.Count == 3).ToList();
             var coth = sourceGroups.Where(group => group.Count != 3 && group.Count > 1).ToList();
             if (c3s.Count == 0 || coth.Count == 0)
                 return (false, null);
-            if (lastCardGroups == null) {
-                return (true, ToList(c3s, coth));
-            } else {
+            if (lastCardGroups == null) return (true, ToList(c3s, coth));
+
+            {
                 var sc3s = c3s.Where(group => group.Amount > lastCardGroups.First(g => g.Count == 3).Amount).ToList();
                 if (sc3s.Count == 0)
                     return (false, null);
@@ -37,7 +38,8 @@ namespace CardSharp.Rules
 
             List<Card> ToList(List<CardGroup> sc3s, List<CardGroup> cardGroups)
             {
-                return sc3s.First().ToEnumerable().ToCards().Concat(new CardGroup(cardGroups.First().Amount, 2).ToEnumerable().ToCards()).ToList();
+                return sc3s.First().ToEnumerable().ToCards()
+                    .Concat(new CardGroup(cardGroups.First().Amount, 2).ToEnumerable().ToCards()).ToList();
             }
         }
     }
