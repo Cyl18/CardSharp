@@ -13,8 +13,8 @@ cp ../../../Origind.Card.Game.json .
 cd ..
 
 cd Origind.Card.Game
-cp -r ../Release/* .
-cp ../../NewbeLibs/Platform/CQP/CLR/* .
+cp -r ../../Release/* .
+cp ../../../NewbeLibs/Platform/CQP/CLR/* .
 cd ..
 
 cp ../../NewbeLibs/Framework/* .
