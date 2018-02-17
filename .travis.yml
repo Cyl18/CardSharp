@@ -10,7 +10,9 @@ deploy:
   provider: releases
   api_key:
     secure: K3RZeHUPFHuBCZWU435xRHBeg0s675Ai3YMungMYuA6QJLc66nvghfLYyv6763ekhGylyvO73rsp3wCrG9Yuy2K9KSLMoCHIGk/LLt93r0Riaut+pCAgYsTXkj4LmAkc0WEFfVFN27FdmC8lHtI04AWe9Su5wPFjQ8ZUvTLKk9QcJ92hDG2/OVL/qGkXKPAXiLqPyAWIq10gdjpPi0gEt0TtlTV4B1zvuCKBqRVFiHZMCEiZNodvqVrP7xU04KlKBX40pXe5iZpXoZtVXzHNL7WUkoLT5Rs3YDzX2EXCKLFM7+cLqHgUEgKBqkMBghOLIj7iA4+t6TlCd5Ub74ZMX+b5FfovtewAkAVIMUu1MHyNAJDCP6ec5MerB4PZNBad3opAfJve6NwFI6Wczu5X+YnytbP97EBWcf5cchTSU3VxXOHw4O0j4HARTQupF69SQN0J6D5CC2f4MV+buFfVJLjomYhdiQj9cO2buLrR61O/EU6x1mkG8idGZiBu7b24tgGVLtPsRgUv3OVoDGsRy9D+QZK9eJEQ1xckPeJp7et1UFf/YK642czRYpR6+8fha4bnjUm/oNW59O/BEdI91mNM1LPkfRoPSemkTl3FrzA/lyYapPToa94Z5y8WDH4gXTXG0iEWqRABS26X/Dd4l2btBVZxjwx0r4AaVb0V4/s=
-  file: 'Origind.Card.Game/bin/release.zip'
+  file:
+    - "CardSharp/bin/Release/CardSharp.dll"
+    - "Origind.Card.Game/bin/CQP-All.zip"
   on:
     repo: Cyl18/CardSharp
   skip_cleanup: true
