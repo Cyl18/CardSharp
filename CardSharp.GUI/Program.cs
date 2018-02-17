@@ -14,31 +14,26 @@ namespace CardSharp.GUI
     {
         static void Main(string[] args)
         {
-            var count = 0;
-            //Parallel.For(0, 2000, (i) => { RunTest(ref count); });
-            for (int i = 0; i < 25000; i++)
-            {
-                RunTest(ref count);
-            }
+            
+                RunTest();
+            
+
         }
         private static readonly Random Rng = new Random("fork you kamijoutoma".GetHashCode());
-        private static void RunTest(ref int count)
+        private static void RunTest()
         {
-            var sw = Stopwatch.StartNew();
             var desk = Desk.GetOrCreateDesk(Rng.NextDouble().ToString(CultureInfo.InvariantCulture));
-            desk.AddPlayer(new FakePlayer());
-            desk.AddPlayer(new FakePlayer());
-            desk.AddPlayer(new FakePlayer());
+            desk.AddPlayer(new Player("1"));
+            desk.AddPlayer(new Player("2"));
+            desk.AddPlayer(new Player("3"));
 
-            //Task.Run(() => { ShowMessage(desk); });
-
-            //ParseMessage(desk);
             desk.Start();
 
-            Console.WriteLine($"Test successful: {count} / 20000, used {sw.ElapsedMilliseconds}ms");
-            //Console.WriteLine(desk.Message);
-
-            Interlocked.Increment(ref count);
+            Task.Run(() => { ShowMessage(desk); });
+            
+            ParseMessage(desk);
+            
+            
         }
 
         private static void ParseMessage(Desk desk)
@@ -47,6 +42,7 @@ namespace CardSharp.GUI
             {
                 var line = Console.ReadLine();
                 desk.ParseCommand(desk.CurrentPlayer.PlayerId, line);
+                Thread.Sleep(10);
             }
         }
 
@@ -60,7 +56,7 @@ namespace CardSharp.GUI
                 foreach (var player in desk.Players)
                     ShowMessage(player, $"[{player.PlayerId}]: ");
 
-                //Thread.Sleep(10);
+                Thread.Sleep(10);
             }
         }
 

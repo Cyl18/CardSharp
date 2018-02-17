@@ -85,10 +85,10 @@ namespace CardSharp
                 case "抢这个鸡毛掸子": // 应irol的要求. 开心就好啦.
                     player.Cards.AddRange(_landlordCards);
                     player.Cards.Sort();
-                    desk.SetLandlord(player);
-                    desk.SendCardsMessage();
                     desk.AddMessage(
                         $"{player.ToAtCode()}抢地主成功. 为{string.Join("", _landlordCards.Select(card => $"[{card}]"))}");
+                    desk.SetLandlord(player);
+                    desk.SendCardsMessage();
                     break;
                 case "不抢":
                 case "抢你妈":

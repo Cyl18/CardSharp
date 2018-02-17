@@ -98,6 +98,7 @@ namespace CardSharp.GameSteps
                     else
                     {
                         AnalyzeGiveUpAndMoveNext(desk);
+                        player = desk.CurrentPlayer;
                         desk.BoardcastCards();
                     }
 
@@ -119,12 +120,7 @@ namespace CardSharp.GameSteps
                         if (player.PublicCards) desk.AddMessageLine($"明牌:{player.Cards.ToFormatString()}");
 
                         AnalyzeGiveUpAndMoveNext(desk);
-
-                        if (desk.LastSuccessfulSender == desk.CurrentPlayer)
-                        {
-                            desk.CurrentRule = null;
-                            desk.LastCards = null;
-                        }
+                        player = desk.CurrentPlayer;
 
                         desk.BoardcastCards();
                     }
@@ -139,10 +135,15 @@ namespace CardSharp.GameSteps
                 return;
             }
 
+            if (desk.LastSuccessfulSender == desk.CurrentPlayer) {
+                desk.CurrentRule = null;
+                desk.LastCards = null;
+            }
+
             if (RunHostedCheck(desk))
                 return;
-            
-            RunAutoPassCheck(desk);
+            if (desk.CurrentRule != null)
+                RunAutoPassCheck(desk);
         }
 
         private void RunAutoPassCheck(Desk desk)
@@ -152,7 +153,7 @@ namespace CardSharp.GameSteps
 
             if (!exists)
             {
-                desk.AddMessageLine($"{cp.ToAtCode()} 没有检测到你想要出的牌, 已为你自动pass.");
+                desk.AddMessageLine($"{cp.ToAtCode()} 没有检测到你能出的牌, 已为你自动pass.");
                 Parse(desk, cp, "pass");
             }
         }

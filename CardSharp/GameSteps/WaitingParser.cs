@@ -28,7 +28,7 @@ namespace CardSharp.GameSteps
                         desk.AddMessage("人数不够.");
                     break;
                 case "添加机器人":
-                    desk.AddPlayer(new FakePlayer());
+                    desk.AddPlayer(new FakePlayer(desk));
                     break;
                 case "移除机器人":
                     if (desk.Players.Any(p => p is FakePlayer))
