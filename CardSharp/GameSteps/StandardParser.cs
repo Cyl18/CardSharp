@@ -25,7 +25,7 @@ namespace CardSharp.GameSteps
                 Desk.ShutedGroups.Add(desk.DeskId);
                 desk.AddMessage($"已经关闭斗地主. 重新恢复为[恢复机器人{RandomBotId}]");
             }
-            else if (command == $"关闭机器人{RandomBotId}")
+            else if (command == $"恢复机器人{RandomBotId}")
             {
                 Desk.ShutedGroups.RemoveAll(d => d == desk.DeskId);
                 desk.AddMessage("已经重启斗地主.");
