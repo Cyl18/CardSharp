@@ -16,8 +16,12 @@ namespace CardSharp
             _landlordCards = landlordCards;
             var player = desk.GetPlayerFromIndex(CurrentIndex);
             desk.AddMessage($"开始游戏, {player.ToAtCode()}你要抢地主吗?[抢地主/不抢]");
-            if (player is FakePlayer) {
-                Parse(desk, player, "不抢");
+        }
+
+        public void Prepare(Desk desk)
+        {
+            if (desk.CurrentPlayer is FakePlayer) {
+                Parse(desk, desk.CurrentPlayer, "不抢");
             }
         }
 
@@ -86,6 +90,7 @@ namespace CardSharp
             }
 
             switch (command) {
+                case "y":
                 case "抢":
                 case "抢地主":
                 case "抢他妈的":
@@ -97,18 +102,20 @@ namespace CardSharp
                     desk.SetLandlord(player);
                     desk.SendCardsMessage();
                     break;
+                case "n":
+                case "不":
                 case "不抢":
                 case "抢你妈":
                 case "抢个鸡毛掸子": // 应LG的要求。你开心就好
                 case "抢你妈的飞旋回踢张大麻子苟枫凌他当妈rbq":
                     MoveNext();
                     desk.AddMessage(
-                        $"{player.ToAtCode()}不抢地主, {desk.CurrentPlayer.ToAtCode()}你要抢地主嘛?");
+                        $"{player.ToAtCode()}不抢地主, {desk.CurrentPlayer.ToAtCode()}你要抢地主嘛? ");
                     _count++;
                     break;
             }
             if (desk.CurrentPlayer is FakePlayer) {
-                Parse(desk, player, "不抢");
+                Parse(desk, desk.CurrentPlayer, "不抢");
             }
         }
     }

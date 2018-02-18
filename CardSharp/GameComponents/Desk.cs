@@ -199,7 +199,9 @@ namespace CardSharp
                 cards = cards.Skip(17 * 1);
             }
 
-            _currentParser = new LandlordDiscuss(cards, this);
+            var landlordDiscuss = new LandlordDiscuss(cards, this);
+            _currentParser = landlordDiscuss;
+            landlordDiscuss.Prepare(this);
         }
 
         public void SetLandlord(Player player)
@@ -223,7 +225,7 @@ namespace CardSharp
                     AddMessageLine($"{CurrentPlayer.ToAtCodeWithRole()}请出牌");
                 }
             else
-                AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCode()}请出牌");
+                AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCodeWithRole()}请出牌");
         }
 
         public void FinishGame(Player player)
