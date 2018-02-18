@@ -16,9 +16,23 @@ namespace CardSharp.GUI
         {
             while (true)
             {
-                RunTest();
+                //RunTest();
+                RunAutoTest();
             }
         }
+
+        private static void RunAutoTest()
+        {
+            var desk = Desk.GetOrCreateDesk(Rng.NextDouble().ToString(CultureInfo.InvariantCulture));
+            desk.AddPlayer(new FakePlayer(desk));
+            desk.AddPlayer(new FakePlayer(desk));
+            desk.AddPlayer(new FakePlayer(desk));
+
+            desk.Start();
+            Console.WriteLine(desk.Message);
+            Console.ReadLine();
+        }
+
         private static readonly Random Rng = new Random("fork you kamijoutoma".GetHashCode());
         private static void RunTest()
         {

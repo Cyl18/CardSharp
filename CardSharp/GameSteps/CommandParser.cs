@@ -29,45 +29,65 @@ namespace CardSharp.GameSteps
 
         private bool ParseInternal(Desk desk, Player player, string command)
         {
-            if (!desk.Players.Contains(player))
-                return true;
-            if (desk.LastSuccessfulSender == desk.CurrentPlayer)
-            {
-                desk.CurrentRule = null;
-                desk.LastCards = null;
-            }
+            if (!desk.Players.Contains(player)) return true;
 
-            switch (command)
-            {
-                case "结束游戏":
-                    desk.AddMessage("CNM");
-                    desk.FinishGame();
-                    return true;
-                case "记牌器":
-                    desk.AddMessage(CardCounter.GenerateCardString(desk));
-                    return true;
-                case "全场牌数":
-                    desk.AddMessage(string.Join(Environment.NewLine,
-                        desk.PlayerList.Select(p => $"{p.ToAtCode()}: {p.Cards.Count}")));
-                    return true;
-                case "弃牌":
-                    player.GiveUp = true;
-                    desk.AddMessage("弃牌成功");
-                    return true;
-                case "托管":
-                    player.HostedEnabled = true;
-                    desk.AddMessage("托管成功");
-                    RunHostedCheck(desk);
-                    return true;
-                case "结束托管":
-                    player.HostedEnabled = false;
-                    desk.AddMessage("结束成功");
-                    return true;
-            }
+            if (ParseStandardCommand(desk, player, command)) return true;
+
+            RefreshCurrentRule(desk);
 
             if (!IsValidPlayer(desk, player))
                 return true;
 
+            ParsePassCommand(desk, command);
+
+            ParsePlayerSubmitCard(desk, player, command);
+            RefreshCurrentRule(desk);
+            if (CheckPlayerWin(desk)) return true;
+
+            return false;
+        }
+
+        private void ParsePlayerSubmitCard(Desk desk, Player player, string command)
+        {
+            if (command.StartsWith("出"))
+            {
+                var cardsCommand = command.Substring(1).ToUpper();
+                if (cardsCommand.IsValidCardString())
+                    if (Rules.Rules.IsCardsMatch(cardsCommand.ToCards(), desk))
+                    {
+                        player.SendCards(desk);
+                        if (CheckPlayerWin(desk))  return;
+                        if (player.Cards.Count <= Constants.BoardcastCardNumThreshold)
+                            desk.AddMessageLine($"{player.ToAtCode()} 只剩{player.Cards.Count}张牌啦~");
+
+                        if (desk.SuddenDeathEnabled) desk.AddMessageLine("WARNING: SUDDEN DEATH ENABLED");
+
+                        if (player.PublicCards) desk.AddMessageLine($"明牌:{player.Cards.ToFormatString()}");
+
+                        AnalyzeGiveUpAndMoveNext(desk);
+
+                        desk.BoardcastCards();
+                    }
+                    else
+                    {
+                        desk.AddMessage("你似乎不能出这些牌哟~");
+                    }
+            }
+        }
+
+        private static bool CheckPlayerWin(Desk desk)
+        {
+            if (desk.CurrentPlayer.Cards.Count == 0 && desk.State != GameState.Unknown)
+            {
+                PlayerWin(desk, desk.CurrentPlayer);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void ParsePassCommand(Desk desk, string command)
+        {
             switch (command)
             {
                 case "过":
@@ -108,54 +128,49 @@ namespace CardSharp.GameSteps
                     else
                     {
                         AnalyzeGiveUpAndMoveNext(desk);
-                        player = desk.CurrentPlayer;
                         desk.BoardcastCards();
                     }
-
                     break;
             }
+        }
 
-            if (desk.CurrentPlayer.Cards.Count == 0)
-            {
-                PlayerWin(desk, player);
-                return true;
-            }
-
-            if (command.StartsWith("出"))
-            {
-                var cardsCommand = command.Substring(1).ToUpper();
-                if (cardsCommand.IsValidCardString())
-                    if (Rules.Rules.IsCardsMatch(cardsCommand.ToCards(), desk))
-                    {
-                        player.SendCards(desk);
-                        if (player.Cards.Count <= Constants.BoardcastCardNumThreshold)
-                            desk.AddMessageLine($"{player.ToAtCode()} 只剩{player.Cards.Count}张牌啦~");
-
-                        if (desk.SuddenDeathEnabled) desk.AddMessageLine("WARNING: SUDDEN DEATH ENABLED");
-
-                        if (player.PublicCards) desk.AddMessageLine($"明牌:{player.Cards.ToFormatString()}");
-
-                        AnalyzeGiveUpAndMoveNext(desk);
-                        player = desk.CurrentPlayer;
-
-                        desk.BoardcastCards();
-                    }
-                    else
-                    {
-                        desk.AddMessage("无法匹配到你想出的牌哟~");
-                    }
-            }
-
+        private static void RefreshCurrentRule(Desk desk)
+        {
             if (desk.LastSuccessfulSender == desk.CurrentPlayer)
             {
                 desk.CurrentRule = null;
                 desk.LastCards = null;
             }
+        }
 
-            if (desk.CurrentPlayer.Cards.Count == 0)
+        private bool ParseStandardCommand(Desk desk, Player player, string command)
+        {
+            switch (command)
             {
-                PlayerWin(desk, player);
-                return true;
+                case "结束游戏":
+                    desk.AddMessage("CNM");
+                    desk.FinishGame();
+                    return true;
+                case "记牌器":
+                    desk.AddMessage(CardCounter.GenerateCardString(desk));
+                    return true;
+                case "全场牌数":
+                    desk.AddMessage(string.Join(Environment.NewLine,
+                        desk.PlayerList.Select(p => $"{p.ToAtCode()}: {p.Cards.Count}")));
+                    return true;
+                case "弃牌":
+                    player.GiveUp = true;
+                    desk.AddMessage("弃牌成功");
+                    return true;
+                case "托管":
+                    player.HostedEnabled = true;
+                    desk.AddMessage("托管成功");
+                    RunHostedCheck(desk);
+                    return true;
+                case "结束托管":
+                    player.HostedEnabled = false;
+                    desk.AddMessage("结束成功");
+                    return true;
             }
 
             return false;
@@ -164,33 +179,24 @@ namespace CardSharp.GameSteps
         private void RunAutoPassCheck(Desk desk)
         {
             var cp = desk.CurrentPlayer;
+            if (desk.State == GameState.Unknown) return;
+            
             var (exists, _) = Rules.Rules.FirstMatch(cp, desk);
 
             if (!exists)
             {
-                desk.AddMessageLine($"{cp.ToAtCode()} 没有检测到你能出的牌, 已为你自动pass.");
-                Parse(desk, cp, "pass");
+                cp.AddMessage("没有检测到你能出的牌, 你可以pass.");
             }
         }
 
         private bool RunHostedCheck(Desk desk)
         {
             var cp = desk.CurrentPlayer;
-            if (!cp.HostedEnabled) return false;
+            if (!cp.HostedEnabled || desk.State == GameState.Unknown) return false;
 
-            if (desk.LastSuccessfulSender == cp)
-            {
-                desk.CurrentRule = null;
-                desk.LastCards = null;
-            }
+            RefreshCurrentRule(desk);
 
             var (exists, cards) = Rules.Rules.FirstMatch(cp, desk);
-#if DEBUG
-            if (new StackTrace().FrameCount > 500)
-            {
-                Debugger.Break();
-            }
-#endif
             switch (exists)
             {
                 case true:
@@ -223,10 +229,25 @@ namespace CardSharp.GameSteps
                 MoveNext();
             } while (desk.CurrentPlayer.GiveUp);
 
+            CheckGameFinished(desk);
+        }
+
+        private static bool CheckGameFinished(Desk desk)
+        {
             var farmers = desk.Players.Where(p => p.Type == PlayerType.Farmer);
             var landlords = desk.Players.Where(p => p.Type == PlayerType.Landlord);
             if (farmers.All(p => p.GiveUp) || landlords.All(p => p.GiveUp))
+            {
                 desk.FinishGame(desk.Players.First(p => !p.GiveUp));
+                return true;
+            }
+
+            if (desk.CurrentPlayer.Cards.Count == 0) {
+                PlayerWin(desk, desk.CurrentPlayer);
+                return true;
+            }
+
+            return false;
         }
     }
 }

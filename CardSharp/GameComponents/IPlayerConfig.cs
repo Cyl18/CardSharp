@@ -6,5 +6,6 @@ namespace CardSharp.GameComponents
     {
         DateTime LastTime { get; set; }
         int Point { get; set; }
+        string PlayerID { get; }
     }
 }

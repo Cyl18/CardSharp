@@ -71,7 +71,7 @@ namespace CardSharp
             if (!IsValidPlayer(desk, player))
                 return;
 
-            if (_count > 4)
+            if (_count >= 3)
             {
                 desk.AddMessage("你们干嘛呢 我...我不干了!(╯‵□′)╯︵┻━┻");
                 desk.FinishGame();
