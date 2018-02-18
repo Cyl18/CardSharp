@@ -19,8 +19,18 @@ namespace CardSharp.GameSteps
 
         public void Parse(Desk desk, Player player, string command)
         {
-            if (!desk.Players.Contains(player))
+            if (ParseInternal(desk, player, command)) return;
+
+            if (RunHostedCheck(desk))
                 return;
+            if (desk.CurrentRule != null)
+                RunAutoPassCheck(desk);
+        }
+
+        private bool ParseInternal(Desk desk, Player player, string command)
+        {
+            if (!desk.Players.Contains(player))
+                return true;
             if (desk.LastSuccessfulSender == desk.CurrentPlayer)
             {
                 desk.CurrentRule = null;
@@ -32,31 +42,31 @@ namespace CardSharp.GameSteps
                 case "结束游戏":
                     desk.AddMessage("CNM");
                     desk.FinishGame();
-                    break;
+                    return true;
                 case "记牌器":
                     desk.AddMessage(CardCounter.GenerateCardString(desk));
-                    break;
+                    return true;
                 case "全场牌数":
                     desk.AddMessage(string.Join(Environment.NewLine,
                         desk.PlayerList.Select(p => $"{p.ToAtCode()}: {p.Cards.Count}")));
-                    break;
+                    return true;
                 case "弃牌":
                     player.GiveUp = true;
                     desk.AddMessage("弃牌成功");
-                    return;
+                    return true;
                 case "托管":
                     player.HostedEnabled = true;
                     desk.AddMessage("托管成功");
                     RunHostedCheck(desk);
-                    return;
+                    return true;
                 case "结束托管":
                     player.HostedEnabled = false;
                     desk.AddMessage("结束成功");
-                    break;
+                    return true;
             }
 
             if (!IsValidPlayer(desk, player))
-                return;
+                return true;
 
             switch (command)
             {
@@ -105,9 +115,10 @@ namespace CardSharp.GameSteps
                     break;
             }
 
-            if (desk.CurrentPlayer.Cards.Count == 0) {
+            if (desk.CurrentPlayer.Cards.Count == 0)
+            {
                 PlayerWin(desk, player);
-                return;
+                return true;
             }
 
             if (command.StartsWith("出"))
@@ -135,20 +146,19 @@ namespace CardSharp.GameSteps
                     }
             }
 
-            if (desk.LastSuccessfulSender == desk.CurrentPlayer) {
+            if (desk.LastSuccessfulSender == desk.CurrentPlayer)
+            {
                 desk.CurrentRule = null;
                 desk.LastCards = null;
             }
 
-            if (desk.CurrentPlayer.Cards.Count == 0) {
+            if (desk.CurrentPlayer.Cards.Count == 0)
+            {
                 PlayerWin(desk, player);
-                return;
+                return true;
             }
 
-            if (RunHostedCheck(desk))
-                return;
-            if (desk.CurrentRule != null)
-                RunAutoPassCheck(desk);
+            return false;
         }
 
         private void RunAutoPassCheck(Desk desk)
@@ -203,6 +213,11 @@ namespace CardSharp.GameSteps
 
         private void AnalyzeGiveUpAndMoveNext(Desk desk)
         {
+            if (desk.State == GameState.Unknown)
+            {
+                return;
+            }
+
             do
             {
                 MoveNext();
