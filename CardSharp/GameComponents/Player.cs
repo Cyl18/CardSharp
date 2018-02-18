@@ -54,12 +54,12 @@ namespace CardSharp
 #endif
         }
 
-        public string ToAtCodeWithRole()
+        public virtual string ToAtCodeWithRole()
         {
             return $"{RoleToString()}[CQ:at,qq={PlayerId}]";
         }
 
-        private string RoleToString()
+        protected string RoleToString()
         {
             switch (Type)
             {

@@ -8,8 +8,29 @@ namespace CardSharp.GameSteps
 {
     public class StandardParser : ICommandParser
     {
+        private static readonly Random Random = new Random();
+        private static readonly string RandomBotId = Random.Next(1000000).ToString();
+        private static bool _checkedConflict = false;
+
         public void Parse(Desk desk, Player player, string command)
         {
+            if (command.Contains("当前玩家有: ") && !_checkedConflict)
+            {
+                _checkedConflict = true;
+                desk.AddMessage($"我们目前检测到了一些小小的\"机器人冲突\". 输入[关闭机器人{RandomBotId}]来降低这个机器人在此群的地位.");
+            }
+
+            if (command == $"关闭机器人{RandomBotId}")
+            {
+                Desk.ShutedGroups.Add(desk.DeskId);
+                desk.AddMessage($"已经关闭斗地主. 重新恢复为[恢复机器人{RandomBotId}]");
+            }
+            else if (command == $"关闭机器人{RandomBotId}")
+            {
+                Desk.ShutedGroups.RemoveAll(d => d == desk.DeskId);
+                desk.AddMessage("已经重启斗地主.");
+            }
+
             var pconfig = PlayerConfig.GetConfig(player);
             switch (command)
             {

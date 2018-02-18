@@ -16,6 +16,7 @@ namespace CardSharp
         #region Static Members
 
         private static readonly Dictionary<string, Desk> Desks = new Dictionary<string, Desk>();
+        internal static readonly List<string> ShutedGroups = new List<string>();
 
         #endregion
 
@@ -136,7 +137,9 @@ namespace CardSharp
             try
             {
                 var player = GetPlayer(playerid);
-                _currentParser.Parse(this, player, command);
+                if (ShutedGroups.All(g => g != DeskId)) {
+                    _currentParser.Parse(this, player, command);
+                }
                 _standardParser.Parse(this, player, command);
             }
             catch (Exception e)

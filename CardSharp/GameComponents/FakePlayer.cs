@@ -29,5 +29,10 @@ namespace CardSharp.GameComponents
         {
             return $"{PlayerId}";
         }
+
+        public override string ToAtCodeWithRole()
+        {
+            return $"{RoleToString()}-{PlayerId}";
+        }
     }
 }
