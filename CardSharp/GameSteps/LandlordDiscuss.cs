@@ -89,6 +89,8 @@ namespace CardSharp
                 desk.FinishGame();
             }
 
+            if (desk.State == GameState.Unknown) return;
+
             switch (command) {
                 case "y":
                 case "抢":
@@ -114,6 +116,7 @@ namespace CardSharp
                     _count++;
                     break;
             }
+
             if (desk.CurrentPlayer is FakePlayer) {
                 Parse(desk, desk.CurrentPlayer, "不抢");
             }
