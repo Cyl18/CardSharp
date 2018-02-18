@@ -19,7 +19,7 @@ namespace CardSharp
 
         #endregion
 
-        private readonly Dictionary<string, Player> _playersDictionary = new Dictionary<string, Player>();
+        private Dictionary<string, Player> _playersDictionary = new Dictionary<string, Player>();
 
         private readonly StandardParser _standardParser;
 
@@ -114,6 +114,7 @@ namespace CardSharp
             if (Players.Count() != Constants.MaxPlayer)
                 return false;
 
+            RandomizePlayers();
             SendCards();
             SendCardsMessage();
             AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令.");
@@ -215,11 +216,11 @@ namespace CardSharp
                 if (CurrentPlayer.FirstBlood)
                 {
                     CurrentPlayer.FirstBlood = false;
-                    AddMessage($"{CurrentPlayer.ToAtCode()}请开始你的表演");
+                    AddMessage($"{CurrentPlayer.ToAtCodeWithRole()}请开始你的表演");
                 }
                 else
                 {
-                    AddMessageLine($"{CurrentPlayer.ToAtCode()}请出牌");
+                    AddMessageLine($"{CurrentPlayer.ToAtCodeWithRole()}请出牌");
                 }
             else
                 AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCode()}请出牌");
@@ -297,6 +298,13 @@ namespace CardSharp
         {
             AddMessage("游戏结束.");
             Desks.Remove(DeskId);
+        }
+
+        public void RandomizePlayers()
+        {
+            var players = new List<Player>(PlayerList);
+            players.Shuffle();
+            _playersDictionary = players.ToDictionary(player => player.PlayerId);
         }
 
         public void SendToAllPlayers(string message)

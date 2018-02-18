@@ -17,7 +17,7 @@ namespace CardSharp
             var player = desk.GetPlayerFromIndex(CurrentIndex);
             desk.AddMessage($"开始游戏, {player.ToAtCode()}你要抢地主吗?[抢地主/不抢]");
             if (player is FakePlayer) {
-                Parse(desk, player, "抢");
+                Parse(desk, player, "不抢");
             }
         }
 
@@ -103,9 +103,12 @@ namespace CardSharp
                 case "抢你妈的飞旋回踢张大麻子苟枫凌他当妈rbq":
                     MoveNext();
                     desk.AddMessage(
-                        $"{player.ToAtCode()}不抢地主, {desk.GetPlayerFromIndex(CurrentIndex).ToAtCode()}你要抢地主嘛?");
+                        $"{player.ToAtCode()}不抢地主, {desk.CurrentPlayer.ToAtCode()}你要抢地主嘛?");
                     _count++;
                     break;
+            }
+            if (desk.CurrentPlayer is FakePlayer) {
+                Parse(desk, player, "不抢");
             }
         }
     }

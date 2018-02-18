@@ -54,6 +54,23 @@ namespace CardSharp
 #endif
         }
 
+        public string ToAtCodeWithRole()
+        {
+            return $"{RoleToString()}[CQ:at,qq={PlayerId}]";
+        }
+
+        private string RoleToString()
+        {
+            switch (Type)
+            {
+                case PlayerType.Farmer:
+                    return "农民";
+                case PlayerType.Landlord:
+                    return "地主";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
         public void SendCards(Desk desk)
         {

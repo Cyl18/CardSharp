@@ -13,7 +13,7 @@ namespace CardSharp.GameSteps
 
         public void Prepare(Desk desk)
         {
-            desk.AddMessage($"请{desk.CurrentPlayer.ToAtCode()}出牌");
+            desk.AddMessage($"请{desk.CurrentPlayer.ToAtCodeWithRole()}出牌");
             RunHostedCheck(desk);
         }
 
@@ -58,7 +58,7 @@ namespace CardSharp.GameSteps
                         player.SendCards(desk);
                         if (CheckPlayerWin(desk))  return;
                         if (player.Cards.Count <= Constants.BoardcastCardNumThreshold)
-                            desk.AddMessageLine($"{player.ToAtCode()} 只剩{player.Cards.Count}张牌啦~");
+                            desk.AddMessageLine($"{player.ToAtCodeWithRole()} 只剩{player.Cards.Count}张牌啦~");
 
                         if (desk.SuddenDeathEnabled) desk.AddMessageLine("WARNING: SUDDEN DEATH ENABLED");
 
@@ -156,7 +156,7 @@ namespace CardSharp.GameSteps
                     return true;
                 case "全场牌数":
                     desk.AddMessage(string.Join(Environment.NewLine,
-                        desk.PlayerList.Select(p => $"{p.ToAtCode()}: {p.Cards.Count}")));
+                        desk.PlayerList.Select(p => $"{p.ToAtCodeWithRole()}: {p.Cards.Count}")));
                     return true;
                 case "弃牌":
                     player.GiveUp = true;
@@ -200,11 +200,11 @@ namespace CardSharp.GameSteps
             switch (exists)
             {
                 case true:
-                    desk.AddMessageLine($" {cp.ToAtCode()} 托管出牌 {cards.ToFormatString()}");
+                    desk.AddMessageLine($" {cp.ToAtCodeWithRole()} 托管出牌 {cards.ToFormatString()}");
                     Parse(desk, cp, $"出{string.Join("", cards.Select(card => card.ToString()))}");
                     return true;
                 case false:
-                    desk.AddMessageLine($" {cp.ToAtCode()} 托管过牌");
+                    desk.AddMessageLine($" {cp.ToAtCodeWithRole()} 托管过牌");
                     Parse(desk, cp, "pass");
                     return true;
             }
