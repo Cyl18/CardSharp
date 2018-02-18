@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using CardSharp.GameComponents;
 using CardSharp.GameSteps;
 
@@ -15,8 +16,7 @@ namespace CardSharp
             _landlordCards = landlordCards;
             var player = desk.GetPlayerFromIndex(CurrentIndex);
             desk.AddMessage($"开始游戏, {player.ToAtCode()}你要抢地主吗?[抢地主/不抢]");
-            if (player is FakePlayer)
-            {
+            if (player is FakePlayer) {
                 Parse(desk, player, "抢");
             }
         }
@@ -25,11 +25,14 @@ namespace CardSharp
         {
             if (!desk.Players.Contains(player))
                 return;
-            switch (command)
-            {
+            switch (command) {
                 case "加倍":
-                    if (!player.Multiplied)
-                    {
+                    if (desk.Players.Any(p => p is FakePlayer)) {
+                        desk.AddMessage("有机器人玩家, 加倍不可用");
+                        break;
+                    }
+
+                    if (!player.Multiplied) {
                         desk.AddMessage("加倍完成.");
                         desk.Multiplier += 1;
                         player.Multiplied = true;
@@ -37,8 +40,12 @@ namespace CardSharp
 
                     break;
                 case "超级加倍":
-                    if (!player.Multiplied)
-                    {
+                    if (desk.Players.Any(p => p is FakePlayer)) {
+                        desk.AddMessage("有机器人玩家, 加倍不可用");
+                        break;
+                    }
+
+                    if (!player.Multiplied) {
                         desk.AddMessage("超级加倍完成.");
                         desk.Multiplier += 2;
                         player.Multiplied = true;
@@ -46,8 +53,11 @@ namespace CardSharp
 
                     break;
                 case "SUDDEN_DEATH_DUEL_CARD":
-                    if (!player.Multiplied && !desk.SuddenDeathEnabled)
-                    {
+                    if (desk.Players.Any(p => p is FakePlayer)) {
+                        desk.AddMessage("有机器人玩家, 加倍不可用");
+                        break;
+                    }
+                    if (!player.Multiplied && !desk.SuddenDeathEnabled) {
                         desk.AddMessage("SUDDEN DEATH ENABLED.");
                         desk.SuddenDeathEnabled = true;
                         player.Multiplied = true;
@@ -55,8 +65,7 @@ namespace CardSharp
 
                     break;
                 case "明牌":
-                    if (!player.PublicCards)
-                    {
+                    if (!player.PublicCards) {
                         player.PublicCards = true;
                         desk.Multiplier += 1;
                         desk.AddMessage("明牌成功.");
@@ -71,14 +80,12 @@ namespace CardSharp
             if (!IsValidPlayer(desk, player))
                 return;
 
-            if (_count >= 3)
-            {
+            if (_count >= 3) {
                 desk.AddMessage("你们干嘛呢 我...我不干了!(╯‵□′)╯︵┻━┻");
                 desk.FinishGame();
             }
 
-            switch (command)
-            {
+            switch (command) {
                 case "抢":
                 case "抢地主":
                 case "抢他妈的":
