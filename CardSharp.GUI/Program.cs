@@ -16,8 +16,8 @@ namespace CardSharp.GUI
         {
             while (true)
             {
-                //RunTest();
-                RunAutoTest();
+                RunTest();
+                //RunAutoTest();
             }
         }
 

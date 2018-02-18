@@ -135,8 +135,8 @@ namespace CardSharp
         {
             var enumerable = cards;
             var cardnums = enumerable.Select(card => (int) card.Amount);
-            var length = enumerable.Last().Amount + 1;
-            var array = stackalloc int[keepZero ? 15 : length];
+            var length = keepZero ? 15 : enumerable.Last().Amount + 1;
+            var array = stackalloc int[length];
             SetAll0(array, length);
             foreach (var num in cardnums) array[num]++;
             var o = new List<CardGroup>(length);

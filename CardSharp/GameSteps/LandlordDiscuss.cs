@@ -20,9 +20,16 @@ namespace CardSharp
 
         public void Prepare(Desk desk)
         {
+#if DEBUG
+            if (desk.CurrentPlayer is FakePlayer) {
+                Parse(desk, desk.CurrentPlayer, "抢");
+            }
+#else
             if (desk.CurrentPlayer is FakePlayer) {
                 Parse(desk, desk.CurrentPlayer, "不抢");
             }
+#endif
+            
         }
 
         public void Parse(Desk desk, Player player, string command)
