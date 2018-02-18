@@ -33,7 +33,7 @@ namespace CardSharp.Rules
                 return false;
 
             var lastCardList = desk.LastCards?.ToList();
-
+            
             foreach (var rule in RulesList)
                 if (desk.CurrentRule == null || desk.CurrentRule == rule ||
                     rule is RuleBomb && !(desk.CurrentRule is RuleRocket) || rule is RuleRocket)

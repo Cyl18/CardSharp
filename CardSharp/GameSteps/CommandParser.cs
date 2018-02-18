@@ -105,6 +105,11 @@ namespace CardSharp.GameSteps
                     break;
             }
 
+            if (desk.CurrentPlayer.Cards.Count == 0) {
+                PlayerWin(desk, player);
+                return;
+            }
+
             if (command.StartsWith("出"))
             {
                 var cardsCommand = command.Substring(1).ToUpper();
@@ -130,14 +135,14 @@ namespace CardSharp.GameSteps
                     }
             }
 
-            if (desk.CurrentPlayer.Cards.Count == 0) {
-                PlayerWin(desk, player);
-                return;
-            }
-
             if (desk.LastSuccessfulSender == desk.CurrentPlayer) {
                 desk.CurrentRule = null;
                 desk.LastCards = null;
+            }
+
+            if (desk.CurrentPlayer.Cards.Count == 0) {
+                PlayerWin(desk, player);
+                return;
             }
 
             if (RunHostedCheck(desk))

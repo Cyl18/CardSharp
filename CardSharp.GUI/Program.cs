@@ -14,26 +14,24 @@ namespace CardSharp.GUI
     {
         static void Main(string[] args)
         {
-            
+            while (true)
+            {
                 RunTest();
-            
-
+            }
         }
         private static readonly Random Rng = new Random("fork you kamijoutoma".GetHashCode());
         private static void RunTest()
         {
             var desk = Desk.GetOrCreateDesk(Rng.NextDouble().ToString(CultureInfo.InvariantCulture));
             desk.AddPlayer(new Player("1"));
-            desk.AddPlayer(new Player("2"));
-            desk.AddPlayer(new Player("3"));
+            desk.AddPlayer(new FakePlayer(desk));
+            desk.AddPlayer(new FakePlayer(desk));
 
             desk.Start();
 
             Task.Run(() => { ShowMessage(desk); });
             
             ParseMessage(desk);
-            
-            
         }
 
         private static void ParseMessage(Desk desk)
@@ -53,7 +51,7 @@ namespace CardSharp.GUI
                 if (desk.Message != null)
                     ShowMessage(desk, "[Desk]:    ");
                 
-                foreach (var player in desk.Players)
+                foreach (var player in desk.Players.Where(p => !(p is FakePlayer)))
                     ShowMessage(player, $"[{player.PlayerId}]: ");
 
                 Thread.Sleep(10);

@@ -1,6 +1,7 @@
 ﻿using Newbe.Mahua.MahuaEvents;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using CardSharp;
 using CardSharp.GameComponents;
 using Newbe.Mahua;
@@ -21,6 +22,7 @@ namespace Origind.Card.Game.MahuaEvents
             _mahuaApi = mahuaApi;
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void ProcessGroupMessage(GroupMessageReceivedContext context)
         {
             var deskid = context.FromGroup;
