@@ -77,6 +77,8 @@ Powered by Cy.
 [B]|记牌器|：显示每种牌在场上还剩下多少张
 [B]|安静出牌启用|：所有信息都会私聊发送
 [B]|安静出牌禁用|：所有信息不都会私聊发送
+[B]|自动过牌启用|：启用自动过牌
+[B]|自动过牌禁用|：禁用自动过牌
 
 如果崩溃请大家多多包涵，游戏愉快。
 ");
@@ -87,6 +89,14 @@ Powered by Cy.
                 case "安静出牌禁用":
                     desk.Silence = false;
                     break;
+                case "自动过牌启用":
+                    player.AutoPass = true;
+                    desk.AddMessage("Done.");
+                    break;
+                case "自动过牌禁用":
+                    player.AutoPass = false;
+                    desk.AddMessage("Done.");
+                    break;
             }
 
             if (pconfig.IsAdmin) {
@@ -95,6 +105,7 @@ Powered by Cy.
                         desk.FinishGame();
                         break;
                     case "玩家牌":
+                        player.ForceSend = true;
                         player.AddMessage(string.Join(Environment.NewLine, desk.Players.Select(p => $"{p.PlayerId} {p.Cards.ToFormatString()}")));
                         break;
                 }

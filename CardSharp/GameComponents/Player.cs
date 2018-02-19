@@ -9,13 +9,13 @@ namespace CardSharp
         public Player(string playerId)
         {
             PlayerId = playerId;
-            if (!PlayersDictionary.ContainsKey(playerId))
-                PlayersDictionary.Add(playerId, this);
+            
         }
+        
+        public static List<Player> ForceSendPlayers => new List<Player>();
 
-        private static readonly Dictionary<string, Player> PlayersDictionary = new Dictionary<string, Player>();
-        public static List<Player> Players => PlayersDictionary.Values.ToList();
-
+        public bool AutoPass { get; set; }
+        public bool ForceSend { get; set; }
         public string PlayerId { get; }
         public List<Card> Cards { get; internal set; }
         public PlayerType Type { get; internal set; } = PlayerType.Farmer;

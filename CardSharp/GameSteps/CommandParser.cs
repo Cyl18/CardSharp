@@ -184,7 +184,14 @@ namespace CardSharp.GameSteps
 
             if (!exists)
             {
-                cp.AddMessage("没有检测到你能出的牌, 你可以pass.");
+                if (cp.AutoPass)
+                {
+                    Parse(desk, cp, "pass");
+                }
+                else
+                {
+                    cp.AddMessage("没有检测到你能出的牌, 你可以pass.");
+                }
             }
         }
 
