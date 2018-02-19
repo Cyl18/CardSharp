@@ -91,11 +91,6 @@ namespace CardSharp
             if (!IsValidPlayer(desk, player))
                 return;
 
-            if (_count >= 3) {
-                desk.AddMessage("你们干嘛呢 我...我不干了!(╯‵□′)╯︵┻━┻");
-                desk.FinishGame();
-            }
-
             if (desk.State == GameState.Unknown) return;
 
             switch (command) {
@@ -122,6 +117,11 @@ namespace CardSharp
                         $"{player.ToAtCode()}不抢地主, {desk.CurrentPlayer.ToAtCode()}你要抢地主嘛? ");
                     _count++;
                     break;
+            }
+
+            if (_count >= 3) {
+                desk.AddMessage("你们干嘛呢 我...我不干了!(╯‵□′)╯︵┻━┻");
+                desk.FinishGame();
             }
 
             if (desk.CurrentPlayer is FakePlayer) {
