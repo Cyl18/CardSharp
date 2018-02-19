@@ -30,7 +30,7 @@ namespace Origind.Card.Game.MahuaEvents
             var message = context.Message;
             var desk = Desk.GetOrCreateDesk(deskid);
             desk.ParseCommand(playerid, message);
-            desk.PlayerList.Where(player => player.Message != null && !(player is FakePlayer)).ToList().ForEach(player =>
+            Player.Players.Where(player => player.Message != null && !(player is FakePlayer)).ToList().ForEach(player =>
             {
                 _mahuaApi.SendPrivateMessage(player.PlayerId, player.Message);
                 player.ClearMessage();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CardSharp
 {
@@ -8,7 +9,12 @@ namespace CardSharp
         public Player(string playerId)
         {
             PlayerId = playerId;
+            if (!PlayersDictionary.ContainsKey(playerId))
+                PlayersDictionary.Add(playerId, this);
         }
+
+        private static readonly Dictionary<string, Player> PlayersDictionary = new Dictionary<string, Player>();
+        public static List<Player> Players => PlayersDictionary.Values.ToList();
 
         public string PlayerId { get; }
         public List<Card> Cards { get; internal set; }
