@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using CardSharp.GameComponents;
 using Humanizer;
 using Humanizer.Localisation;
@@ -13,34 +14,26 @@ namespace CardSharp.GameSteps
 
         public void Parse(Desk desk, Player player, string command)
         {
-            if (command.Contains("当前玩家有: ") )
-            {
+            if (command.Contains("当前玩家有: ")) {
                 desk.AddMessage($"我们目前检测到了一些小小的\"机器人冲突\". 输入[关闭机器人{RandomBotId}]来降低这个机器人在此群的地位.");
             }
 
-            if (command == $"关闭机器人{RandomBotId}")
-            {
+            if (command == $"关闭机器人{RandomBotId}") {
                 Desk.ShutedGroups.Add(desk.DeskId);
                 desk.AddMessage($"已经关闭斗地主. 重新恢复为[恢复机器人{RandomBotId}]");
-            }
-            else if (command == $"恢复机器人{RandomBotId}")
-            {
+            } else if (command == $"恢复机器人{RandomBotId}") {
                 Desk.ShutedGroups.RemoveAll(d => d == desk.DeskId);
                 desk.AddMessage("已经重启斗地主.");
             }
 
             var pconfig = PlayerConfig.GetConfig(player);
-            switch (command)
-            {
+            switch (command) {
                 case "获取积分":
                     var px = DateTime.Now - pconfig.LastTime;
-                    if (px.TotalSeconds.Seconds() > 12.Hours())
-                    {
+                    if (px.TotalSeconds.Seconds() > 12.Hours()) {
                         pconfig.AddPoint();
                         desk.AddMessage($"领取成功. 你当前积分为{pconfig.Point}");
-                    }
-                    else
-                    {
+                    } else {
                         desk.AddMessage(
                             $"你现在不能这么做. 你可以在{(12.Hours() - px).Humanize(culture: new CultureInfo("zh-CN"), maxUnit: TimeUnit.Hour)}后领取.");
                     }
@@ -94,6 +87,25 @@ Powered by Cy.
                 case "安静出牌禁用":
                     desk.Silence = false;
                     break;
+            }
+
+            if (pconfig.IsAdmin) {
+                switch (command) {
+                    case "结束游戏":
+                        desk.FinishGame();
+                        break;
+                    case "玩家牌":
+                        player.AddMessage(string.Join(Environment.NewLine, desk.Players.Select(p => $"{p.PlayerId} {p.Cards.ToFormatString()}")));
+                        break;
+                }
+
+                if (command.StartsWith("设置积分")) {
+                    var sp = command.Split(" ");
+                    var target = sp[1];
+                    var point = int.Parse(sp[2]);
+                    var cfg = PlayerConfig.GetConfig(new Player(target));
+                    cfg.Point = point;
+                }
             }
         }
     }

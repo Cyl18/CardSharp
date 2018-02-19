@@ -301,8 +301,9 @@ namespace CardSharp
 
         public void FinishGame()
         {
-            AddMessage("游戏结束.");
-            Desks.Remove(DeskId);
+            AddMessage(SuddenDeathEnabled ? "你不能结束游戏." : "游戏结束.");
+            if (!SuddenDeathEnabled)
+                Desks.Remove(DeskId);
         }
 
         public void RandomizePlayers()

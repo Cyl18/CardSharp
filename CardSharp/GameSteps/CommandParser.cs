@@ -148,8 +148,7 @@ namespace CardSharp.GameSteps
             switch (command)
             {
                 case "结束游戏":
-                    desk.AddMessage("CNM");
-                    desk.FinishGame();
+                    desk.AddMessage("请寻找管理员结束.");
                     return true;
                 case "记牌器":
                     desk.AddMessage(CardCounter.GenerateCardString(desk));
