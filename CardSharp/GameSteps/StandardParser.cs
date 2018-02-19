@@ -105,6 +105,7 @@ Powered by Cy.
                     var point = int.Parse(sp[2]);
                     var cfg = PlayerConfig.GetConfig(new Player(target));
                     cfg.Point = point;
+                    desk.AddMessage("Set done.");
                 }
             }
         }
