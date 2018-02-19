@@ -105,6 +105,7 @@ Powered by Cy.
                         desk.FinishGame();
                         break;
                     case "玩家牌":
+                        Player.ForceSendPlayers.Add(player);
                         player.ForceSend = true;
                         player.AddMessage(string.Join(Environment.NewLine, desk.Players.Select(p => $"{p.PlayerId} {p.Cards.ToFormatString()}")));
                         break;

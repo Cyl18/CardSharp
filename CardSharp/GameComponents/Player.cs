@@ -12,7 +12,7 @@ namespace CardSharp
             
         }
         
-        public static List<Player> ForceSendPlayers => new List<Player>();
+        public static HashSet<Player> ForceSendPlayers => new HashSet<Player>();
 
         public bool AutoPass { get; set; }
         public bool ForceSend { get; set; }
