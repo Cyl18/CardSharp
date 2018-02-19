@@ -26,9 +26,10 @@ namespace CardSharp
 
         private ICommandParser _currentParser;
 
-        public Desk(string deskId)
+        public Desk(string deskId, string groupName = "DefaultGroupName")
         {
             DeskId = deskId;
+            GroupName = groupName;
             _currentParser = new WaitingParser();
             _standardParser = new StandardParser();
         }
@@ -64,6 +65,7 @@ namespace CardSharp
         public List<Player> PlayerList => Players.ToList();
 
         public string DeskId { get; }
+        public string GroupName { get; }
 
         public Player LastSuccessfulSender { get; internal set; }
 
@@ -168,12 +170,13 @@ namespace CardSharp
             return list;
         }
 
-        public static Desk GetOrCreateDesk(string deskid)
+        public static Desk GetOrCreateDesk(string deskid, string groupName = "DefaultGroupName")
         {
+            var gname = groupName ?? "DefaultGroupName";
             if (Desks.ContainsKey(deskid))
                 return Desks[deskid];
 
-            var desk = new Desk(deskid);
+            var desk = new Desk(deskid, gname);
             Desks.Add(deskid, desk);
             return desk;
         }
@@ -283,7 +286,7 @@ namespace CardSharp
 #endif
         }
 
-        public void FinishGame(bool force = false)
+        public void FinishGame(bool force = true)
         {
             if (force) {
                 AddMessage("游戏结束.");
@@ -327,7 +330,7 @@ namespace CardSharp
         {
             foreach (var pair in Desks.Where(desk => desk.Value.State == GameState.Gaming))
             {
-                AddMessageLine($"群{pair.Key}正在游戏中");
+                AddMessageLine($"群{pair.Value.GroupName}-{pair.Key}正在游戏中");
             }
         }
     }

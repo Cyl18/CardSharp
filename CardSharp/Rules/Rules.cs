@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using CardSharp.GameComponents;
 
@@ -52,6 +53,18 @@ namespace CardSharp.Rules
                     }
 
             return false;
+        }
+
+        [Pure]
+        public static IRule FirstMatchRule(IEnumerable<Card> cards)
+        {
+            var cg = cards.ToListAndSort().ExtractCardGroups();
+            foreach (var rule in RulesList)
+                    if (rule.IsMatch(cg, null)) {
+                            return rule;
+                    }
+
+            return null;
         }
 
         public static (bool exists, List<Card> cards) FirstMatch(Player player, Desk desk)

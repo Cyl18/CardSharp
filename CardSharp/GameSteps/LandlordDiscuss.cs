@@ -120,6 +120,11 @@ namespace CardSharp
             }
 
             if (_count >= 3) {
+                if (desk.SuddenDeathEnabled)
+                {
+                    Parse(desk, player, "抢");
+                    return;
+                }
                 desk.AddMessage("你们干嘛呢 我...我不干了!(╯‵□′)╯︵┻━┻");
                 desk.FinishGame();
             }

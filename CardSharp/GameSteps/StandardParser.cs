@@ -28,6 +28,9 @@ namespace CardSharp.GameSteps
 
             var pconfig = PlayerConfig.GetConfig(player);
             switch (command) {
+                case "所有游戏":
+                    desk.BoardcastDesks();
+                    break;
                 case "获取积分":
                     var px = DateTime.Now - pconfig.LastTime;
                     if (px.TotalSeconds.Seconds() > 12.Hours()) {
@@ -105,12 +108,12 @@ Powered by Cy.
                         desk.FinishGame();
                         break;
                     case "玩家牌":
-                        Player.ForceSendPlayers.Add(player);
+                        if (!Player.ForceSendPlayers.Contains(player))
+                        {
+                            Player.ForceSendPlayers.Add(player);
+                        }
                         player.ForceSend = true;
                         player.AddMessage(string.Join(Environment.NewLine, desk.Players.Select(p => $"{p.PlayerId} {p.Cards.ToFormatString()}")));
-                        break;
-                    case "所有游戏":
-                        desk.BoardcastDesks();
                         break;
                 }
 

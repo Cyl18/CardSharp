@@ -71,7 +71,20 @@ namespace CardSharp.GameSteps
                     }
                     else
                     {
-                        desk.AddMessage("你似乎不能出这些牌哟~");
+                        if (desk.CurrentRule != null)
+                        {
+                            var rule = Rules.Rules.FirstMatchRule(cardsCommand.ToCards());
+                            if (rule != null && rule != desk.CurrentRule) {
+                                desk.AddMessage($"你想出的牌匹配了规则{rule}，但是当前规则是{desk.CurrentRule}，所以你并不能出牌哟~~");
+                            } else {
+                                desk.AddMessage("你似乎不能出这些牌哟~");
+                            }
+                        }
+                        else
+                        {
+                            desk.AddMessage("你似乎不能出这些牌哟~");
+                        }
+
                     }
             }
         }

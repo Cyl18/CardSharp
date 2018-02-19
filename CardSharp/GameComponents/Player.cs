@@ -12,7 +12,7 @@ namespace CardSharp
             
         }
         
-        public static HashSet<Player> ForceSendPlayers => new HashSet<Player>();
+        public static List<Player> ForceSendPlayers => new List<Player>();
 
         public bool AutoPass { get; set; }
         public bool ForceSend { get; set; }
@@ -80,7 +80,7 @@ namespace CardSharp
 
         public void SendCards(Desk desk)
         {
-            AddMessage($"{desk.DeskId} {Cards.ToFormatString()}");
+            AddMessage($"{desk.DeskId}-{desk.GroupName} {Cards.ToFormatString()}");
         }
     }
 
