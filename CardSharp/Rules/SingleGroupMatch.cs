@@ -7,12 +7,16 @@ namespace CardSharp.Rules
     {
         public static bool IsMatch(List<CardGroup> cards, List<CardGroup> lastCards, int count)
         {
+            if (cards.Count != 1) return false;
+            
             var card1 = cards.First();
 
             if (lastCards == null) return cards.Count == 1 && card1.Count == count; // 单张
 
-            if (cards.Count != 1 || lastCards.Count != 1)
+            if (lastCards.Count != 1)
                 return false; // 只有一组
+
+
             var card2 = lastCards.First();
             return card1.Amount > card2.Amount && // 大小比较
                    card1.Count == count &&
