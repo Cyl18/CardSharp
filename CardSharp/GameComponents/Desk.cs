@@ -46,8 +46,7 @@ namespace CardSharp
                 if (!Desks.ContainsValue(this))
                     return GameState.Unknown;
 
-                switch (_currentParser)
-                {
+                switch (_currentParser) {
                     case WaitingParser _:
                         return GameState.Wait;
                     case LandlordDiscuss _:
@@ -72,7 +71,7 @@ namespace CardSharp
 
         public IRule CurrentRule { get; set; }
 
-        public Player CurrentPlayer => GetPlayerFromIndex(((Samsara) _currentParser).CurrentIndex);
+        public Player CurrentPlayer => GetPlayerFromIndex(((Samsara)_currentParser).CurrentIndex);
 
         public IEnumerable<Card> GeneratePlayCards()
         {
@@ -84,8 +83,7 @@ namespace CardSharp
         [MethodImpl(MethodImplOptions.Synchronized)]
         public bool AddPlayer(Player player)
         {
-            if (Players.Count() >= Constants.MaxPlayer || Players.Contains(player))
-            {
+            if (Players.Count() >= Constants.MaxPlayer || Players.Contains(player)) {
                 AddMessage($"已经加入或人数已满: {player.ToAtCode()}");
                 return false;
             }
@@ -134,16 +132,13 @@ namespace CardSharp
 
         public void ParseCommand(string playerid, string command)
         {
-            try
-            {
+            try {
                 var player = GetPlayer(playerid);
                 if (ShutedGroups.All(g => g != DeskId)) {
                     _currentParser.Parse(this, player, command);
                 }
                 _standardParser.Parse(this, player, command);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 AddMessage($"抱歉 我们在处理你的命令时发生了错误{e}");
             }
         }
@@ -162,11 +157,10 @@ namespace CardSharp
         public static List<Card> GenerateCards()
         {
             var list = new List<Card>();
-            for (var i1 = 0; i1 < 1; i1++)
-            {
+            for (var i1 = 0; i1 < 1; i1++) {
                 for (var i = 0; i < Constants.AmountCardNum; i++)
-                for (var num = 0; num < Constants.AmountCardMax; num++)
-                    list.Add(new Card(num));
+                    for (var num = 0; num < Constants.AmountCardMax; num++)
+                        list.Add(new Card(num));
                 list.Add(new Card(Constants.AmountCardMax)); //鬼
                 list.Add(new Card(Constants.AmountCardMax + 1)); //王
             }
@@ -195,8 +189,7 @@ namespace CardSharp
         private void SendCards()
         {
             var cards = GeneratePlayCards();
-            foreach (var player in Players)
-            {
+            foreach (var player in Players) {
                 var pCards = cards.Take(17 * 1);
                 player.Cards = pCards.ToListAndSort();
                 cards = cards.Skip(17 * 1);
@@ -218,16 +211,12 @@ namespace CardSharp
         public void BoardcastCards()
         {
             if (CurrentRule == null)
-                if (CurrentPlayer.FirstBlood)
-                {
+                if (CurrentPlayer.FirstBlood) {
                     CurrentPlayer.FirstBlood = false;
                     AddMessage($"{CurrentPlayer.ToAtCodeWithRole()}请开始你的表演");
-                }
-                else
-                {
+                } else {
                     AddMessageLine($"{CurrentPlayer.ToAtCodeWithRole()}请出牌");
-                }
-            else
+                } else
                 AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCodeWithRole()}请出牌");
         }
 
@@ -241,8 +230,7 @@ namespace CardSharp
             var landlords = Players.Where(p => p.Type == PlayerType.Landlord);
 
             if (SuddenDeathEnabled)
-                switch (player.Type)
-                {
+                switch (player.Type) {
                     case PlayerType.Farmer:
                         AddMessageLine("农民赢了.");
                         var n1 = landlords.Sum(p => PlayerConfig.GetConfig(p).Point);
@@ -255,10 +243,8 @@ namespace CardSharp
                         landlordDif = n2;
                         farmerDif = 0;
                         break;
-                }
-            else
-                switch (player.Type)
-                {
+                } else
+                switch (player.Type) {
                     case PlayerType.Farmer:
                         AddMessageLine("农民赢了.");
                         landlordDif *= -1;
@@ -271,20 +257,18 @@ namespace CardSharp
 
             var sb = new StringBuilder();
 
-            foreach (var landlord in landlords)
-            {
+            foreach (var landlord in landlords) {
                 sb.AppendLine($"-{landlord.ToAtCode()} {landlordDif}");
                 SaveScore(landlord, landlordDif, player);
             }
 
-            foreach (var farmer in farmers)
-            {
+            foreach (var farmer in farmers) {
                 sb.AppendLine($"-{farmer.ToAtCode()} {farmerDif}");
                 SaveScore(farmer, farmerDif, player);
             }
 
             AddMessage(sb.ToString());
-            FinishGame();
+            FinishGame(true);
         }
 
         private void SaveScore(Player p, int dif, Player playerWinner)
@@ -299,8 +283,13 @@ namespace CardSharp
 #endif
         }
 
-        public void FinishGame()
+        public void FinishGame(bool force = false)
         {
+            if (force) {
+                AddMessage("游戏结束.");
+                Desks.Remove(DeskId);
+                return;
+            }
             AddMessage(SuddenDeathEnabled ? "你不能结束游戏." : "游戏结束.");
             if (!SuddenDeathEnabled)
                 Desks.Remove(DeskId);

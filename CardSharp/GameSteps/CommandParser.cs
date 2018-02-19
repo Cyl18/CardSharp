@@ -213,6 +213,7 @@ namespace CardSharp.GameSteps
 
         private static void PlayerWin(Desk desk, Player player)
         {
+            if (desk.State == GameState.Unknown) return;
             desk.FinishGame(player);
         }
 
@@ -233,6 +234,7 @@ namespace CardSharp.GameSteps
 
         private static bool CheckGameFinished(Desk desk)
         {
+            
             var farmers = desk.Players.Where(p => p.Type == PlayerType.Farmer);
             var landlords = desk.Players.Where(p => p.Type == PlayerType.Landlord);
             if (farmers.All(p => p.GiveUp) || landlords.All(p => p.GiveUp))
