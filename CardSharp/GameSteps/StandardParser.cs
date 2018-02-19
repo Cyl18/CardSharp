@@ -43,7 +43,7 @@ namespace CardSharp.GameSteps
                     desk.AddMessage($"你的积分为 {pconfig.Point}");
                     break;
                 case "重新发牌":
-                    if (desk.State == GameState.StartGame || desk.State == GameState.DiscussLandlord)
+                    if (desk.State == GameState.Gaming || desk.State == GameState.DiscussLandlord)
                         desk.SendCardsMessage();
                     break;
                 case "命令列表":
@@ -108,6 +108,9 @@ Powered by Cy.
                         Player.ForceSendPlayers.Add(player);
                         player.ForceSend = true;
                         player.AddMessage(string.Join(Environment.NewLine, desk.Players.Select(p => $"{p.PlayerId} {p.Cards.ToFormatString()}")));
+                        break;
+                    case "所有游戏":
+                        desk.BoardcastDesks();
                         break;
                 }
 

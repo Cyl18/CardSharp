@@ -52,7 +52,7 @@ namespace CardSharp
                     case LandlordDiscuss _:
                         return GameState.DiscussLandlord;
                     case CommandParser _:
-                        return GameState.StartGame;
+                        return GameState.Gaming;
                 }
 
                 return GameState.Unknown;
@@ -322,6 +322,14 @@ namespace CardSharp
         {
             return !(desk1 == desk2);
         }
+
+        public void BoardcastDesks()
+        {
+            foreach (var pair in Desks.Where(desk => desk.Value.State == GameState.Gaming))
+            {
+                AddMessageLine($"群{pair.Key}正在游戏中");
+            }
+        }
     }
 
 
@@ -329,7 +337,7 @@ namespace CardSharp
     {
         Wait,
         DiscussLandlord,
-        StartGame,
+        Gaming,
         Unknown
     }
 }

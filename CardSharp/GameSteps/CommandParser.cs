@@ -21,6 +21,7 @@ namespace CardSharp.GameSteps
         {
             if (ParseInternal(desk, player, command)) return;
 
+            if (!IsValidPlayer(desk, desk.CurrentPlayer)) return;
             if (RunHostedCheck(desk))
                 return;
             if (desk.CurrentRule != null)
