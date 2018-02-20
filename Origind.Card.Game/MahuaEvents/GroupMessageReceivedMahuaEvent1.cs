@@ -28,7 +28,15 @@ namespace Origind.Card.Game.MahuaEvents
             var deskid = context.FromGroup;
             var playerid = context.FromQq;
             var message = context.Message;
-            var groupName = _mahuaApi.GetGroupsWithModel().Model.FirstOrDefault(g => g.Group == deskid)?.Name;
+            string groupName = null;
+            try
+            {
+                groupName = _mahuaApi.GetGroupsWithModel().Model.FirstOrDefault(g => g.Group == deskid)?.Name;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
             var desk = Desk.GetOrCreateDesk(deskid, groupName);
             desk.ParseCommand(playerid, message);
             desk.PlayerList.Where(player => player.Message != null && !(player is FakePlayer)).ToList().ForEach(player =>

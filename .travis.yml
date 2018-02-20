@@ -13,6 +13,7 @@ deploy:
   file:
     - "CardSharp/bin/Release/CardSharp.dll"
     - "Origind.Card.Game/bin/CQP-All.zip"
+    - "CardSharp.GUI/bin/Release/CardSharp.GUI.exe"
   on:
     repo: Cyl18/CardSharp
   skip_cleanup: true

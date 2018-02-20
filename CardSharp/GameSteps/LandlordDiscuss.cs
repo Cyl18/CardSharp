@@ -26,10 +26,9 @@ namespace CardSharp
             }
 #else
             if (desk.CurrentPlayer is FakePlayer) {
-                Parse(desk, desk.CurrentPlayer, "不抢");
+                Parse(desk, desk.CurrentPlayer, "抢");
             }
 #endif
-            
         }
 
         public void Parse(Desk desk, Player player, string command)
@@ -129,8 +128,8 @@ namespace CardSharp
                 desk.FinishGame();
             }
 
-            if (desk.CurrentPlayer is FakePlayer) {
-                Parse(desk, desk.CurrentPlayer, "不抢");
+            if (desk.CurrentPlayer is FakePlayer && desk.Players.All(p => p.Type == PlayerType.Farmer)) {
+                Parse(desk, desk.CurrentPlayer, "抢");
             }
         }
     }

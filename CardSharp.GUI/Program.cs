@@ -14,10 +14,29 @@ namespace CardSharp.GUI
     {
         static void Main(string[] args)
         {
-            while (true)
-            {
-                RunTest();
-                //RunAutoTest();
+
+
+            while (true) {
+                Console.WriteLine("-CardSharp v0 Test Menu-");
+                Console.WriteLine();
+                Console.WriteLine("1.Play a round");
+                Console.WriteLine("2.Run auto test");
+                Console.Write("Your choice: ");
+                var r = Console.ReadKey();
+                Console.WriteLine();
+                Console.WriteLine();
+                switch (r.Key) {
+                    case ConsoleKey.D1:
+                    case ConsoleKey.NumPad1:
+                        RunTest();
+                        break;
+                    case ConsoleKey.D2:
+                    case ConsoleKey.NumPad2:
+                        RunAutoTest();
+                        break;
+                }
+                Console.WriteLine();
+
             }
         }
 
@@ -30,7 +49,6 @@ namespace CardSharp.GUI
 
             desk.Start();
             Console.WriteLine(desk.Message);
-            Console.ReadLine();
         }
 
         private static readonly Random Rng = new Random("fork you kamijoutoma".GetHashCode());
@@ -44,14 +62,13 @@ namespace CardSharp.GUI
             desk.Start();
 
             Task.Run(() => { ShowMessage(desk); });
-            
+
             ParseMessage(desk);
         }
 
         private static void ParseMessage(Desk desk)
         {
-            while (desk.State != GameState.Unknown)
-            {
+            while (desk.State != GameState.Unknown) {
                 var line = Console.ReadLine();
                 desk.ParseCommand(desk.CurrentPlayer.PlayerId, line);
                 Thread.Sleep(10);
@@ -60,11 +77,10 @@ namespace CardSharp.GUI
 
         private static void ShowMessage(Desk desk)
         {
-            while (desk.State != GameState.Unknown)
-            {
+            while (desk.State != GameState.Unknown) {
                 if (desk.Message != null)
                     ShowMessage(desk, "[Desk]:    ");
-                
+
                 foreach (var player in desk.Players.Where(p => !(p is FakePlayer)))
                     ShowMessage(player, $"[{player.PlayerId}]: ");
 
@@ -74,9 +90,8 @@ namespace CardSharp.GUI
 
         private static void ShowMessage(IMessageSender sender, string id)
         {
-            if (sender.Message!=null)
-            {
-                Console.WriteLine(id+sender.Message);
+            if (sender.Message != null) {
+                Console.WriteLine(id + sender.Message);
                 sender.ClearMessage();
             }
         }

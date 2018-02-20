@@ -223,6 +223,7 @@ namespace CardSharp
                 AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCodeWithRole()}请出牌");
         }
 
+        // this is the worst code than I ever written
         public void FinishGame(Player player)
         {
             var mult = GameComponents.Multiplier.CalcResult(this);
@@ -233,20 +234,23 @@ namespace CardSharp
             var landlords = Players.Where(p => p.Type == PlayerType.Landlord);
 
             if (SuddenDeathEnabled)
+            {
+                AddMessageLine("SDDC duel done.");
+
+                int result = 0;
                 switch (player.Type) {
                     case PlayerType.Farmer:
-                        AddMessageLine("农民赢了.");
-                        var n1 = landlords.Sum(p => PlayerConfig.GetConfig(p).Point);
-                        landlordDif = -n1;
-                        farmerDif = n1 / 2;
+                        AddMessageLine("Winners are farmers.");
+                        result = SaveSddc(farmers, landlords);
                         break;
                     case PlayerType.Landlord:
-                        AddMessageLine("地主赢了.");
-                        var n2 = farmers.Sum(p => PlayerConfig.GetConfig(p).Point);
-                        landlordDif = n2;
-                        farmerDif = 0;
+                        AddMessageLine("Winner is the landlord.");
+                        result = SaveSddc(landlords, farmers);
                         break;
-                } else
+                }
+                AddMessageLine($"SDDC result: {result}.");
+
+            } else {
                 switch (player.Type) {
                     case PlayerType.Farmer:
                         AddMessageLine("农民赢了.");
@@ -257,31 +261,44 @@ namespace CardSharp
                         farmerDif *= -1;
                         break;
                 }
+                var sb = new StringBuilder();
 
-            var sb = new StringBuilder();
+                foreach (var landlord in landlords) {
+                    sb.AppendLine($"-{landlord.ToAtCode()} {landlordDif}");
+                    var playerConfig = PlayerConfig.GetConfig(landlord);
+                    SaveScore(playerConfig, playerConfig.Point + landlordDif);
+                }
 
-            foreach (var landlord in landlords) {
-                sb.AppendLine($"-{landlord.ToAtCode()} {landlordDif}");
-                SaveScore(landlord, landlordDif, player);
+                foreach (var farmer in farmers) {
+                    sb.AppendLine($"-{farmer.ToAtCode()} {farmerDif}");
+                    var playerConfig = PlayerConfig.GetConfig(farmer);
+                    SaveScore(playerConfig, playerConfig.Point + farmerDif);
+                }
+
+                AddMessage(sb.ToString());
             }
-
-            foreach (var farmer in farmers) {
-                sb.AppendLine($"-{farmer.ToAtCode()} {farmerDif}");
-                SaveScore(farmer, farmerDif, player);
-            }
-
-            AddMessage(sb.ToString());
             FinishGame(true);
         }
 
-        private void SaveScore(Player p, int dif, Player playerWinner)
+        private int SaveSddc(IEnumerable<Player> winners, IEnumerable<Player> losers)
+        {
+            var winnersConfig = winners.Select(PlayerConfig.GetConfig).ToList();
+            var losersConfig = losers.Select(PlayerConfig.GetConfig).ToList();
+
+            var score = losersConfig.Sum(player => player.Point);
+            var pscore = score / winners.Count();
+
+            winnersConfig.ForEach(winner => SaveScore(winner, winner.Point + pscore));
+            losersConfig.ForEach(loser => SaveScore(loser, 0));
+
+            return score;
+        }
+
+        private void SaveScore(PlayerConfig p, int value)
         {
 #if !DEBUG
-            var playerConf = PlayerConfig.GetConfig(p);
-            if (SuddenDeathEnabled && playerWinner.Type == PlayerType.Landlord)
-                playerConf.Point = 0;
-            else
-                playerConf.Point += dif;
+            var playerConf = p;
+            playerConf.Point = 0;
             playerConf.Save();
 #endif
         }
