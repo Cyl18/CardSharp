@@ -1,0 +1,24 @@
+{
+    "name": "可爱型",
+    "cards": [
+        "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A",
+        "2", "鬼", "王"
+    ],
+    "rules": {
+        "Rule3": "3带0",
+        "Rule3With1": "3带1",
+        "Rule3With2": "3带2",
+        "Rule4With2": "4带2",
+        "Rule4With4": "4带2对",
+        "RuleAirplain1": "小翼飞机",
+        "RuleAirplain2": "大翼飞机",
+        "RuleAirplane": "飞机",
+        "RuleBomb": "炸弹",
+        "RuleChain": "单顺",
+        "RuleChain2": "双顺",
+        "RuleDouble": "对子",
+        "RuleRocket": "火箭",
+        "RuleSingle": "单张"
+    },
+    "messages": {}
+}
