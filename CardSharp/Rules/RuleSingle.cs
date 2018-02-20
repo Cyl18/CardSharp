@@ -13,11 +13,6 @@ namespace CardSharp.Rules
             return SingleGroupMatch.IsMatch(cardGroups, lastCardGroups, 1);
         }
 
-        public override string ToString()
-        {
-            return "单张";
-        }
-
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
             List<CardGroup> lastCardGroups)
         {

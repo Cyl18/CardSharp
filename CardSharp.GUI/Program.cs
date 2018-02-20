@@ -25,13 +25,11 @@ namespace CardSharp.GUI
                 var r = Console.ReadKey();
                 Console.WriteLine();
                 Console.WriteLine();
-                switch (r.Key) {
-                    case ConsoleKey.D1:
-                    case ConsoleKey.NumPad1:
+                switch (r.KeyChar) {
+                    case '1':
                         RunTest();
                         break;
-                    case ConsoleKey.D2:
-                    case ConsoleKey.NumPad2:
+                    case '2':
                         RunAutoTest();
                         break;
                 }

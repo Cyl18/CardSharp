@@ -44,11 +44,6 @@ namespace CardSharp.Rules
             return true;
         }
 
-        public override string ToString()
-        {
-            return "飞机带大翅膀";
-        }
-
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
             List<CardGroup> lastCardGroups)
         {

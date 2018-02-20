@@ -32,12 +32,6 @@ namespace CardSharp.Rules
             return true;
         }
 
-
-        public override string ToString()
-        {
-            return "单顺";
-        }
-
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
             List<CardGroup> lastCardGroups)
         {

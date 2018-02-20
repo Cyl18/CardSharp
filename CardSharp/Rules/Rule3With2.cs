@@ -15,11 +15,6 @@ namespace CardSharp.Rules
                    lastCardGroups.First(card => card.Count == 3).Amount; // 匹配大小
         }
 
-        public override string ToString()
-        {
-            return "3带2";
-        }
-
         public override (bool exists, List<Card> cards) FirstMatchedCards(List<CardGroup> sourceGroups,
             List<CardGroup> lastCardGroups)
         {

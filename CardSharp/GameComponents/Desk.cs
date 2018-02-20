@@ -40,7 +40,7 @@ namespace CardSharp
         public bool SuddenDeathEnabled { get; internal set; }
 
         public bool Silence { get; internal set; }
-        public dynamic Localization;
+        public dynamic Localization = I18N.Localization.Normal;
 
         public GameState State
         {
