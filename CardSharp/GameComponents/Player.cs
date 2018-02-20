@@ -54,7 +54,7 @@ namespace CardSharp
         public virtual string ToAtCode()
         {
 #if !DEBUG
-            return $"[CQ:at,qq={PlayerId}]";
+            return string.Format("[CQ:at,qq={0}]", PlayerId);
 #else
             return $"{PlayerId}";
 #endif
@@ -62,7 +62,7 @@ namespace CardSharp
 
         public virtual string ToAtCodeWithRole()
         {
-            return $"{RoleToString()}[CQ:at,qq={PlayerId}]";
+            return string.Format("{0}[CQ:at,qq={1}]", RoleToString(), PlayerId);
         }
 
         protected string RoleToString()
@@ -80,7 +80,7 @@ namespace CardSharp
 
         public void SendCards(Desk desk)
         {
-            AddMessage($"{desk.DeskId}-{desk.GroupName} {Cards.ToFormatString()}");
+            AddMessage(string.Format("{0}-{1} {2}", desk.DeskId, desk.GroupName, Cards.ToFormatString()));
         }
     }
 

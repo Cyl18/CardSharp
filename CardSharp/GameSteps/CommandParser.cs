@@ -13,7 +13,7 @@ namespace CardSharp.GameSteps
 
         public void Prepare(Desk desk)
         {
-            desk.AddMessage($"请{desk.CurrentPlayer.ToAtCodeWithRole()}出牌");
+            desk.AddMessage(string.Format("请{0}出牌", desk.CurrentPlayer.ToAtCodeWithRole()));
             RunHostedCheck(desk);
         }
 
@@ -59,11 +59,13 @@ namespace CardSharp.GameSteps
                         player.SendCards(desk);
                         if (CheckPlayerWin(desk))  return;
                         if (player.Cards.Count <= Constants.BoardcastCardNumThreshold)
-                            desk.AddMessageLine($"{player.ToAtCodeWithRole()} 只剩{player.Cards.Count}张牌啦~");
+                            desk.AddMessageLine(string.Format("{0} 只剩{1}张牌啦~", player.ToAtCodeWithRole(),
+                                player.Cards.Count));
 
                         if (desk.SuddenDeathEnabled) desk.AddMessageLine("WARNING: SUDDEN DEATH ENABLED");
 
-                        if (player.PublicCards) desk.AddMessageLine($"明牌:{player.Cards.ToFormatString()}");
+                        if (player.PublicCards) desk.AddMessageLine(string.Format("明牌:{0}",
+                            player.Cards.ToFormatString()));
 
                         AnalyzeGiveUpAndMoveNext(desk);
 
@@ -75,7 +77,8 @@ namespace CardSharp.GameSteps
                         {
                             var rule = Rules.Rules.FirstMatchRule(cardsCommand.ToCards());
                             if (rule != null && rule != desk.CurrentRule) {
-                                desk.AddMessage($"你想出的牌匹配了规则{rule}，但是当前规则是{desk.CurrentRule}，所以你并不能出牌哟~~");
+                                desk.AddMessage(string.Format("你想出的牌匹配了规则{0}，但是当前规则是{1}，所以你并不能出牌哟~~", rule,
+                                    desk.CurrentRule));
                             } else {
                                 desk.AddMessage("你似乎不能出这些牌哟~");
                             }
@@ -169,7 +172,7 @@ namespace CardSharp.GameSteps
                     return true;
                 case "全场牌数":
                     desk.AddMessage(string.Join(Environment.NewLine,
-                        desk.PlayerList.Select(p => $"{p.ToAtCodeWithRole()}: {p.Cards.Count}")));
+                        desk.PlayerList.Select(p => string.Format("{0}: {1}", p.ToAtCodeWithRole(), p.Cards.Count))));
                     return true;
                 case "弃牌":
                     player.GiveUp = true;
@@ -220,11 +223,11 @@ namespace CardSharp.GameSteps
             switch (exists)
             {
                 case true:
-                    desk.AddMessageLine($" {cp.ToAtCodeWithRole()} 托管出牌 {cards.ToFormatString()}");
-                    Parse(desk, cp, $"出{string.Join("", cards.Select(card => card.ToString()))}");
+                    desk.AddMessageLine(string.Format(" {0} 托管出牌 {1}", cp.ToAtCodeWithRole(), cards.ToFormatString()));
+                    Parse(desk, cp, string.Format("出{0}", string.Join("", cards.Select(card => card.ToString()))));
                     return true;
                 case false:
-                    desk.AddMessageLine($" {cp.ToAtCodeWithRole()} 托管过牌");
+                    desk.AddMessageLine(string.Format(" {0} 托管过牌", cp.ToAtCodeWithRole()));
                     Parse(desk, cp, "pass");
                     return true;
             }

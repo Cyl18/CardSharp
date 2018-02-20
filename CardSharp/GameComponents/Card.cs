@@ -127,7 +127,7 @@ namespace CardSharp
 
         public static string ToFormatString(this IEnumerable<Card> cards)
         {
-            return string.Join(string.Empty, cards.Select(card => $"[{card}]"));
+            return string.Join(string.Empty, cards.Select(card => string.Format("[{0}]", card)));
         }
 
         // MUST SORT

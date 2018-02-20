@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using CardSharp.GameComponents;
@@ -15,7 +16,7 @@ namespace CardSharp
         {
             _landlordCards = landlordCards;
             var player = desk.GetPlayerFromIndex(CurrentIndex);
-            desk.AddMessage($"开始游戏, {player.ToAtCode()}你要抢地主吗?[抢地主/不抢]");
+            desk.AddMessage(string.Format("开始游戏, {0}你要抢地主吗?[抢地主/不抢]", player.ToAtCode()));
         }
 
         public void Prepare(Desk desk)
@@ -101,7 +102,8 @@ namespace CardSharp
                     player.Cards.AddRange(_landlordCards);
                     player.Cards.Sort();
                     desk.AddMessage(
-                        $"{player.ToAtCode()}抢地主成功. 为{string.Join("", _landlordCards.Select(card => $"[{card}]"))}");
+                        string.Format("{0}抢地主成功. 为{1}", player.ToAtCode(),
+                            string.Join("", _landlordCards.Select(card => string.Format("[{0}]", card)))));
                     desk.SetLandlord(player);
                     desk.SendCardsMessage();
                     break;
@@ -113,7 +115,7 @@ namespace CardSharp
                 case "抢你妈的飞旋回踢张大麻子苟枫凌他当妈rbq":
                     MoveNext();
                     desk.AddMessage(
-                        $"{player.ToAtCode()}不抢地主, {desk.CurrentPlayer.ToAtCode()}你要抢地主嘛? ");
+                        string.Format("{0}不抢地主, {1}你要抢地主嘛? ", player.ToAtCode(), desk.CurrentPlayer.ToAtCode()));
                     _count++;
                     break;
             }

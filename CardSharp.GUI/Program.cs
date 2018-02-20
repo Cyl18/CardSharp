@@ -82,7 +82,7 @@ namespace CardSharp.GUI
                     ShowMessage(desk, "[Desk]:    ");
 
                 foreach (var player in desk.Players.Where(p => !(p is FakePlayer)))
-                    ShowMessage(player, $"[{player.PlayerId}]: ");
+                    ShowMessage(player, string.Format("[{0}]: ", player.PlayerId));
 
                 Thread.Sleep(10);
             }

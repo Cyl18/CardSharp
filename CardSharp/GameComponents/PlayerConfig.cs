@@ -51,7 +51,7 @@ namespace CardSharp.GameComponents
 
         private static string GetConfigPath(string playerid)
         {
-            return Path.Combine(Constants.ConfigDir, $"{playerid}.json");
+            return Path.Combine(Constants.ConfigDir, string.Format("{0}.json", playerid));
         }
     }
 }

@@ -15,13 +15,13 @@ namespace CardSharp.GameSteps
         public void Parse(Desk desk, Player player, string command)
         {
             if (command.Contains("当前玩家有: ")) {
-                desk.AddMessage($"我们目前检测到了一些小小的\"机器人冲突\". 输入[关闭机器人{RandomBotId}]来降低这个机器人在此群的地位.");
+                desk.AddMessage(string.Format("我们目前检测到了一些小小的\"机器人冲突\". 输入[关闭机器人{0}]来降低这个机器人在此群的地位.", RandomBotId));
             }
 
-            if (command == $"关闭机器人{RandomBotId}") {
+            if (command == string.Format("关闭机器人{0}", RandomBotId)) {
                 Desk.ShutedGroups.Add(desk.DeskId);
-                desk.AddMessage($"已经关闭斗地主. 重新恢复为[恢复机器人{RandomBotId}]");
-            } else if (command == $"恢复机器人{RandomBotId}") {
+                desk.AddMessage(string.Format("已经关闭斗地主. 重新恢复为[恢复机器人{0}]", RandomBotId));
+            } else if (command == string.Format("恢复机器人{0}", RandomBotId)) {
                 Desk.ShutedGroups.RemoveAll(d => d == desk.DeskId);
                 desk.AddMessage("已经重启斗地主.");
             }
@@ -35,15 +35,16 @@ namespace CardSharp.GameSteps
                     var px = DateTime.Now - pconfig.LastTime;
                     if (px.TotalSeconds.Seconds() > 12.Hours()) {
                         pconfig.AddPoint();
-                        desk.AddMessage($"领取成功. 你当前积分为{pconfig.Point}");
+                        desk.AddMessage(string.Format("领取成功. 你当前积分为{0}", pconfig.Point));
                     } else {
                         desk.AddMessage(
-                            $"你现在不能这么做. 你可以在{(12.Hours() - px).Humanize(culture: new CultureInfo("zh-CN"), maxUnit: TimeUnit.Hour)}后领取.");
+                            string.Format("你现在不能这么做. 你可以在{0}后领取.",
+                                (12.Hours() - px).Humanize(culture: new CultureInfo("zh-CN"), maxUnit: TimeUnit.Hour)));
                     }
 
                     break;
                 case "我的信息":
-                    desk.AddMessage($"你的积分为 {pconfig.Point}");
+                    desk.AddMessage(string.Format("你的积分为 {0}", pconfig.Point));
                     break;
                 case "重新发牌":
                     if (desk.State == GameState.Gaming || desk.State == GameState.DiscussLandlord)
@@ -113,7 +114,8 @@ Powered by Cy.
                             Player.ForceSendPlayers.Add(player);
                         }
                         player.ForceSend = true;
-                        player.AddMessage(string.Join(Environment.NewLine, desk.Players.Select(p => $"{p.PlayerId} {p.Cards.ToFormatString()}")));
+                        player.AddMessage(string.Join(Environment.NewLine, desk.Players.Select(p =>
+                            string.Format("{0} {1}", p.PlayerId, p.Cards.ToFormatString()))));
                         break;
                 }
 

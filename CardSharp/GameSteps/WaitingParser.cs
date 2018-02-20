@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CardSharp.GameComponents;
 
 namespace CardSharp.GameSteps
@@ -14,7 +15,7 @@ namespace CardSharp.GameSteps
                 case "法克忒薄": // By Charlie Jiang
                     var point = PlayerConfig.GetConfig(player).Point;
                     if (point <= 0)
-                        desk.AddMessage($"你的积分不足以进行游戏! 你现在有{point}点积分.");
+                        desk.AddMessage(string.Format("你的积分不足以进行游戏! 你现在有{0}点积分.", point));
                     else
                         desk.AddPlayer(player);
                     break;

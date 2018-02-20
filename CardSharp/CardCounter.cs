@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -28,7 +29,7 @@ namespace CardSharp
             for (var index = 0; index < counts.Length; index++)
             {
                 var count = counts[index];
-                sb.AppendLine($"[{new Card(index)}]: {count}");
+                sb.AppendLine(string.Format("[{0}]: {1}", new Card(index), count));
             }
 
             return sb.ToString();

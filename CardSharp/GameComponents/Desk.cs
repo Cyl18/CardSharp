@@ -86,21 +86,21 @@ namespace CardSharp
         public bool AddPlayer(Player player)
         {
             if (Players.Count() >= Constants.MaxPlayer || Players.Contains(player)) {
-                AddMessage($"已经加入或人数已满: {player.ToAtCode()}");
+                AddMessage(string.Format("已经加入或人数已满: {0}", player.ToAtCode()));
                 return false;
             }
 
             _playersDictionary.Add(player.PlayerId, player);
-            AddMessageLine($"加入成功: {player.ToAtCode()}");
-            AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
+            AddMessageLine(string.Format("加入成功: {0}", player.ToAtCode()));
+            AddMessage(string.Format("当前玩家有: {0}", string.Join(", ", Players.Select(p => p.ToAtCode()))));
             return true;
         }
 
         public void RemovePlayer(Player player)
         {
-            AddMessageLine($"移除成功: {player.ToAtCode()}");
+            AddMessageLine(string.Format("移除成功: {0}", player.ToAtCode()));
             _playersDictionary.Remove(player.PlayerId);
-            AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
+            AddMessage(string.Format("当前玩家有: {0}", string.Join(", ", Players.Select(p => p.ToAtCode()))));
         }
 
         public Player GetPlayer(string playerid)
@@ -141,7 +141,7 @@ namespace CardSharp
                 }
                 _standardParser.Parse(this, player, command);
             } catch (Exception e) {
-                AddMessage($"抱歉 我们在处理你的命令时发生了错误{e}");
+                AddMessage(string.Format("抱歉 我们在处理你的命令时发生了错误{0}", e));
             }
         }
 
@@ -216,11 +216,12 @@ namespace CardSharp
             if (CurrentRule == null)
                 if (CurrentPlayer.FirstBlood) {
                     CurrentPlayer.FirstBlood = false;
-                    AddMessage($"{CurrentPlayer.ToAtCodeWithRole()}请开始你的表演");
+                    AddMessage(string.Format("{0}请开始你的表演", CurrentPlayer.ToAtCodeWithRole()));
                 } else {
-                    AddMessageLine($"{CurrentPlayer.ToAtCodeWithRole()}请出牌");
+                    AddMessageLine(string.Format("{0}请出牌", CurrentPlayer.ToAtCodeWithRole()));
                 } else
-                AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCodeWithRole()}请出牌");
+                AddMessage(string.Format("{0}-{1} {2}请出牌", CurrentRule.ToString(), LastCards.ToFormatString(),
+                    CurrentPlayer.ToAtCodeWithRole()));
         }
 
         // this is the worst code than I ever written
@@ -248,7 +249,7 @@ namespace CardSharp
                         result = SaveSddc(landlords, farmers);
                         break;
                 }
-                AddMessageLine($"SDDC result: {result}.");
+                AddMessageLine(string.Format("SDDC result: {0}.", result));
 
             } else {
                 switch (player.Type) {
@@ -264,13 +265,13 @@ namespace CardSharp
                 var sb = new StringBuilder();
 
                 foreach (var landlord in landlords) {
-                    sb.AppendLine($"-{landlord.ToAtCode()} {landlordDif}");
+                    sb.AppendLine(string.Format("-{0} {1}", landlord.ToAtCode(), landlordDif));
                     var playerConfig = PlayerConfig.GetConfig(landlord);
                     SaveScore(playerConfig, playerConfig.Point + landlordDif);
                 }
 
                 foreach (var farmer in farmers) {
-                    sb.AppendLine($"-{farmer.ToAtCode()} {farmerDif}");
+                    sb.AppendLine(string.Format("-{0} {1}", farmer.ToAtCode(), farmerDif));
                     var playerConfig = PlayerConfig.GetConfig(farmer);
                     SaveScore(playerConfig, playerConfig.Point + farmerDif);
                 }
@@ -345,7 +346,7 @@ namespace CardSharp
         {
             foreach (var pair in Desks.Where(desk => desk.Value.State == GameState.Gaming))
             {
-                AddMessageLine($"群{pair.Value.GroupName}-{pair.Key}正在游戏中");
+                AddMessageLine(string.Format("群{0}-{1}正在游戏中", pair.Value.GroupName, pair.Key));
             }
         }
     }
