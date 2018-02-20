@@ -32,6 +32,7 @@ namespace CardSharp
             GroupName = groupName;
             _currentParser = new WaitingParser();
             _standardParser = new StandardParser();
+            
         }
 
         public int Multiplier { get; internal set; }
@@ -39,6 +40,7 @@ namespace CardSharp
         public bool SuddenDeathEnabled { get; internal set; }
 
         public bool Silence { get; internal set; }
+        public dynamic Localization;
 
         public GameState State
         {

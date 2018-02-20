@@ -13,7 +13,7 @@ namespace CardSharp.GameSteps
 
         public void Prepare(Desk desk)
         {
-            desk.AddMessage(string.Format("请{0}出牌", desk.CurrentPlayer.ToAtCodeWithRole()));
+            desk.AddMessage(string.Format(desk.Localization.messages.wait_submit, desk.CurrentPlayer.ToAtCodeWithRole()));
             RunHostedCheck(desk);
         }
 

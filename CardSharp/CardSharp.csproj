@@ -114,5 +114,11 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CardSharp.I18N\CardSharp.I18N.csproj">
+      <Project>{7c7b94d8-9aaf-4d78-888e-42788404976e}</Project>
+      <Name>CardSharp.I18N</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
