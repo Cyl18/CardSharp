@@ -296,11 +296,9 @@ namespace CardSharp
 
         private void SaveScore(PlayerConfig p, int value)
         {
-#if !DEBUG
             var playerConf = p;
-            playerConf.Point = 0;
+            playerConf.Point = value;
             playerConf.Save();
-#endif
         }
 
         public void FinishGame(bool force = true)
