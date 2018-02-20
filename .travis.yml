@@ -6,6 +6,7 @@ install:
 script:
 - xbuild /p:Configuration=Release CardSharp.sln
 - "./pack.sh"
+- "./packgame.sh"
 deploy:
   provider: releases
   api_key:
@@ -13,7 +14,7 @@ deploy:
   file:
     - "CardSharp/bin/Release/CardSharp.dll"
     - "Origind.Card.Game/bin/CQP-All.zip"
-    - "CardSharp.GUI/bin/Release/CardSharp.GUI.exe"
+    - "CardSharp.GUI/bin/CardSharp.GUI.zip"
   on:
     repo: Cyl18/CardSharp
   skip_cleanup: true

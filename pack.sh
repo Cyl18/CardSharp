@@ -21,3 +21,5 @@ cp ../../NewbeLibs/Framework/* .
 cd ..
 
 zip -r CQP-All.zip CQP
+
+cd ../..
