@@ -14,7 +14,7 @@ namespace CardSharp
 
         public static bool IsValidCardString(this string source)
         {
-            return Regex.IsMatch(source, "([2-9]|10|A|王|鬼|J|Q|K).*");
+            return Regex.IsMatch(source, "^([2-9]|10|A|王|鬼|J|Q|K).*$");
         }
 
         public static IEnumerable<Card> ToCards(this string source)
@@ -23,18 +23,21 @@ namespace CardSharp
             for (var index = 0; index < source.Length; index++)
             {
                 var chara = source[index];
-                if (int.TryParse(chara.ToString(), out var num))
+                if (chara >= '0' && chara <= '9')
+                {
+                    var num = chara - '0';
                     if (num >= 3 && num <= 9)
                     {
                         yield return new Card(num - px);
                         continue;
                     }
-                    else if (num == 1)
+                    if (num == 1)
                     {
                         index++;
                         yield return new Card(Constants.Cards.C10);
                         continue;
                     }
+                }
 
                 switch (chara)
                 {

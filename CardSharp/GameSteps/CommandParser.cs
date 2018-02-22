@@ -100,6 +100,7 @@ namespace CardSharp.GameSteps
             if (command.StartsWith("出"))
             {
                 desk.AddMessage("出的命令已经被替换为直接出牌. 如<出34567>被替换为<34567>");
+                command = command.Substring(1);
             }
             var cardsCommand = command.ToUpper();
             if (cardsCommand.IsValidCardString())
