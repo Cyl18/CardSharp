@@ -12,10 +12,10 @@ namespace CardSharp.GameSteps
                 case "上桌":
                 case "fork table":
                 case "法克忒薄": // By Charlie Jiang
-                    var point = PlayerConfig.GetConfig(player).Point;
-                    if (point <= 0)
-                        desk.AddMessage($"你的积分不足以进行游戏! 你现在有{point}点积分.");
-                    else
+                    //var point = PlayerConfig.GetConfig(player).Point;
+                    //if (point <= 0)
+                    //    desk.AddMessage($"你的积分不足以进行游戏! 你现在有{point}点积分.");
+                    //else
                         desk.AddPlayer(player);
                     break;
                 case "下桌":
@@ -39,6 +39,13 @@ namespace CardSharp.GameSteps
                     if (desk.Players.Any(p => p is FakePlayer))
                         desk.RemovePlayer(desk.Players.First(p=> p is FakePlayer));
                     break;
+            }
+
+            if (command.StartsWith("开始游戏 "))
+            {
+                var seed = int.Parse(command.Substring(5));
+                if (desk.PlayerList.Count == 3)
+                    desk.Start(seed);
             }
         }
     }

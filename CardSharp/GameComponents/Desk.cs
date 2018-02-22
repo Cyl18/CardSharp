@@ -82,6 +82,13 @@ namespace CardSharp
             return list;
         }
 
+        public IEnumerable<Card> GeneratePlayCards(int seed)
+        {
+            var list = GenerateCards();
+            list.Shuffle(seed);
+            return list;
+        }
+
         [MethodImpl(MethodImplOptions.Synchronized)]
         public bool AddPlayer(Player player)
         {
@@ -117,6 +124,19 @@ namespace CardSharp
 
             RandomizePlayers();
             SendCards();
+            SendCardsMessage();
+            AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令.");
+            return true;
+        }
+
+        public bool Start(int seed)
+        {
+            if (State != GameState.Wait)
+                return false;
+            if (Players.Count() != Constants.MaxPlayer)
+                return false;
+            
+            SendCards(seed);
             SendCardsMessage();
             AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令.");
             return true;
@@ -192,6 +212,20 @@ namespace CardSharp
         private void SendCards()
         {
             var cards = GeneratePlayCards();
+            foreach (var player in Players) {
+                var pCards = cards.Take(17 * 1);
+                player.Cards = pCards.ToListAndSort();
+                cards = cards.Skip(17 * 1);
+            }
+
+            var landlordDiscuss = new LandlordDiscuss(cards, this);
+            _currentParser = landlordDiscuss;
+            landlordDiscuss.Prepare(this);
+        }
+
+        private void SendCards(int seed)
+        {
+            var cards = GeneratePlayCards(seed);
             foreach (var player in Players) {
                 var pCards = cards.Take(17 * 1);
                 player.Cards = pCards.ToListAndSort();

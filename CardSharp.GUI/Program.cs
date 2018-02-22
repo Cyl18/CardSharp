@@ -34,21 +34,68 @@ namespace CardSharp.GUI
                     case ConsoleKey.NumPad2:
                         RunAutoTest();
                         break;
+                    case ConsoleKey.D3:
+                    case ConsoleKey.NumPad3:
+                        SeedGen();
+                        break;
                 }
                 Console.WriteLine();
 
             }
         }
 
+        private static void SeedGen()
+        {
+            var cards = Desk.GenerateCards();
+
+            Parallel.For(0, int.MaxValue, i =>
+            {
+                var list = new List<Card>(cards);
+                list.Shuffle(i);
+
+                var pCard1 = list.Take(17).ToListAndSort().ExtractCardGroups();
+                var pCard2 = list.Skip(17).Take(17).ToListAndSort().ExtractCardGroups();
+                var pCard3 = list.Skip(17*2).Take(17).ToListAndSort().ExtractCardGroups();
+                var count = 0;
+                foreach (var cardGroup in pCard1)
+                {
+                    if (cardGroup.Count == 4)
+                    {
+                        count++;
+                    }
+                }
+
+                foreach (var cardGroup in pCard2) {
+                    if (cardGroup.Count == 4) {
+                        count++;
+                    }
+                }
+
+                foreach (var cardGroup in pCard3) {
+                    if (cardGroup.Count == 4) {
+                        count++;
+                    }
+                }
+
+                if (count > 5)
+                {
+                    Console.WriteLine($"Bomb count: {count}, seed {i} ");
+                }
+            });
+        }
+
+        private static int _count;
         private static void RunAutoTest()
         {
+            var sw = Stopwatch.StartNew();
             var desk = Desk.GetOrCreateDesk(Rng.NextDouble().ToString(CultureInfo.InvariantCulture));
             desk.AddPlayer(new FakePlayer(desk));
             desk.AddPlayer(new FakePlayer(desk));
             desk.AddPlayer(new FakePlayer(desk));
 
             desk.Start();
-            Console.WriteLine(desk.Message);
+            _count++;
+            Console.WriteLine($"Test successful: {_count}\tUsed {sw.ElapsedMilliseconds}ms.");
         }
 
         private static readonly Random Rng = new Random("fork you kamijoutoma".GetHashCode());
