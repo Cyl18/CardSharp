@@ -31,7 +31,7 @@ namespace Origind.Card.Game.MahuaEvents
             string groupName = null;
             try
             {
-                groupName = _mahuaApi.GetGroupsWithModel().Model.FirstOrDefault(g => g.Group == deskid)?.Name;
+                groupName = "群";
             }
             catch (Exception e)
             {
