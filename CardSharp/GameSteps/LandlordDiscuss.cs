@@ -15,7 +15,7 @@ namespace CardSharp
         {
             _landlordCards = landlordCards;
             var player = desk.GetPlayerFromIndex(CurrentIndex);
-            desk.AddMessage($"开始游戏, {player.ToAtCode()}喵你要抢地主吗?[抢地主/不抢]");
+            desk.AddMessage($"开始游戏, {player.ToAtCode()}你要抢地主吗?[抢地主/不抢]");
         }
 
         public void Prepare(Desk desk)
@@ -38,12 +38,12 @@ namespace CardSharp
             switch (command) {
                 case "加倍":
                     if (desk.Players.Any(p => p is FakePlayer)) {
-                        desk.AddMessage("有机器猫玩家, 加倍不可用喵~");
+                        desk.AddMessage("有机器人玩家, 加倍不可用");
                         break;
                     }
 
                     if (!player.Multiplied) {
-                        desk.AddMessage("加倍成功了喵~");
+                        desk.AddMessage("加倍完成.");
                         desk.Multiplier += 1;
                         player.Multiplied = true;
                     }
@@ -51,12 +51,12 @@ namespace CardSharp
                     break;
                 case "超级加倍":
                     if (desk.Players.Any(p => p is FakePlayer)) {
-                        desk.AddMessage("有机器猫玩家, 加倍不可用喵~");
+                        desk.AddMessage("有机器人玩家, 加倍不可用");
                         break;
                     }
 
                     if (!player.Multiplied) {
-                        desk.AddMessage("超级加倍成功了喵~不过喵酱你确定要这么做?");
+                        desk.AddMessage("超级加倍完成.");
                         desk.Multiplier += 2;
                         player.Multiplied = true;
                     }
@@ -64,11 +64,11 @@ namespace CardSharp
                     break;
                 case "SUDDEN_DEATH_DUEL_CARD":
                     if (desk.Players.Any(p => p is FakePlayer)) {
-                        desk.AddMessage("有机器猫玩家, 死亡决斗不可用喵~");
+                        desk.AddMessage("有机器人玩家, 加倍不可用");
                         break;
                     }
                     if (!player.Multiplied && !desk.SuddenDeathEnabled) {
-                        desk.AddMessage("SUDDEN CATTTTT DEATH ENABLED.");
+                        desk.AddMessage("SUDDEN DEATH ENABLED.");
                         desk.SuddenDeathEnabled = true;
                         player.Multiplied = true;
                     }
@@ -78,7 +78,7 @@ namespace CardSharp
                     if (!player.PublicCards) {
                         player.PublicCards = true;
                         desk.Multiplier += 1;
-                        desk.AddMessage("明牌成功了喵~这样就可以光明正大的偷窥喵酱的牌了~");
+                        desk.AddMessage("明牌成功.");
                     }
 
                     break;
@@ -96,28 +96,24 @@ namespace CardSharp
                 case "y":
                 case "抢":
                 case "抢地主":
-                case "抢地主喵":
                 case "抢他妈的":
-                case "抢他喵的":
                 case "抢这个鸡毛掸子": // 应irol的要求. 开心就好啦.
                     player.Cards.AddRange(_landlordCards);
                     player.Cards.Sort();
                     desk.AddMessage(
-                        $"{player.ToAtCode()}抢了地主喵~ 地主卡牌是{string.Join("", _landlordCards.Select(card => $"[{card}]的喵~"))}");
+                        $"{player.ToAtCode()}抢地主成功. 为{string.Join("", _landlordCards.Select(card => $"[{card}]"))}");
                     desk.SetLandlord(player);
                     desk.SendCardsMessage();
                     break;
                 case "n":
                 case "不":
                 case "不抢":
-                case "不抢喵":
                 case "抢你妈":
-                case "抢你喵":
                 case "抢个鸡毛掸子": // 应LG的要求。你开心就好
                 case "抢你妈的飞旋回踢张大麻子苟枫凌他当妈rbq":
                     MoveNext();
                     desk.AddMessage(
-                        $"{player.ToAtCode()}不想抢地主喵~ {desk.CurrentPlayer.ToAtCode()}你要抢地主嘛喵? ");
+                        $"{player.ToAtCode()}不抢地主, {desk.CurrentPlayer.ToAtCode()}你要抢地主嘛? ");
                     _count++;
                     break;
             }
@@ -128,7 +124,7 @@ namespace CardSharp
                     Parse(desk, player, "抢");
                     return;
                 }
-                desk.AddMessage("没有人抢地主喵...我不干了!(╯‵□′)╯︵┻━┻");
+                desk.AddMessage("你们干嘛呢 我...我不干了!(╯‵□′)╯︵┻━┻");
                 desk.FinishGame();
             }
 
