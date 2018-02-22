@@ -15,15 +15,15 @@ namespace CardSharp.GameSteps
         public void Parse(Desk desk, Player player, string command)
         {
             if (command.Contains("当前玩家有: ")) {
-                desk.AddMessage($"我们目前检测到了一些小小的\"机器人冲突\". 输入[关闭机器人{RandomBotId}]来降低这个机器人在此群的地位.");
+                desk.AddMessage($"好好好像还有其他的机器猫酱? 喵们可以输入[关闭机器人{RandomBotId}]来关闭我的哦~");
             }
 
             if (command == $"关闭机器人{RandomBotId}") {
                 Desk.ShutedGroups.Add(desk.DeskId);
-                desk.AddMessage($"已经关闭斗地主. 重新恢复为[恢复机器人{RandomBotId}]");
+                desk.AddMessage($"关闭了斗地主猫酱呜..喵酱们要是想我的话，输入[恢复机器人{RandomBotId}]就可以再找到我的喵~");
             } else if (command == $"恢复机器人{RandomBotId}") {
                 Desk.ShutedGroups.RemoveAll(d => d == desk.DeskId);
-                desk.AddMessage("已经重启斗地主.");
+                desk.AddMessage("斗地主喵回来了~.");
             }
 
             var pconfig = PlayerConfig.GetConfig(player);
@@ -34,16 +34,23 @@ namespace CardSharp.GameSteps
                 case "获取积分":
                     var px = DateTime.Now - pconfig.LastTime;
                     if (px.TotalSeconds.Seconds() > 12.Hours()) {
-                        pconfig.AddPoint();
-                        desk.AddMessage($"领取成功. 你当前积分为{pconfig.Point}");
+                        if (Random.Next(8) >= 5)
+                        {
+                            pconfig.AddPoint();
+                            desk.AddMessage($"不给你积分!嘛既然你想要的话, 那就给你添加好了~你现在有{pconfig.Point}分了喵");
+                        }
+                        else
+                        {
+                            desk.AddMessage("不给不给就不给喵~哼~哄哄人家就给~");
+                        }
                     } else {
                         desk.AddMessage(
-                            $"你现在不能这么做. 你可以在{(12.Hours() - px).Humanize(culture: new CultureInfo("zh-CN"), maxUnit: TimeUnit.Hour)}后领取.");
+                            $"你只需要给长者续命{(12.Hours() - px).Humanize(culture: new CultureInfo("zh-CN"), maxUnit: TimeUnit.Hour)}后就可以获取积分了喵~");
                     }
 
                     break;
                 case "我的信息":
-                    desk.AddMessage($"你的积分为 {pconfig.Point}");
+                    desk.AddMessage($"你当前的积分为{pconfig.Point}喵~");
                     break;
                 case "重新发牌":
                     if (desk.State == GameState.Gaming || desk.State == GameState.DiscussLandlord)
@@ -52,7 +59,7 @@ namespace CardSharp.GameSteps
                 case "命令列表":
                     desk.AddMessage(@"=    命令列表    =
 
-/////没牌的直接添加机器人好友(有牌的最好也添加)机器人会自动同意请求\\\\\
+/////没牌的直接添加我好友喵~(有牌的最好也添加)机器喵会自动同意请求的喵~\\\\\
 Powered by Cy.
 命令说明：
          带有[D]的命令 还未开发完成
@@ -64,7 +71,7 @@ Powered by Cy.
 [R]|过|不出|不要|出你妈|要你妈|pass|passs|passss|passsss|passsssssssssssssssss|：过牌
 [R]|抢地主|抢他妈的|：抢地主
 [R]|不抢|抢你妈|抢个鸡毛掸子|：不抢地主
-[R]|开始游戏|：准备环节→开始游戏
+[R]|开始吸猫|开始游戏|：准备环节→开始游戏
 [R]|重新发牌|:不是重置牌！是会把你的牌通过私聊再发一次！ 
 [R]|加倍|:加倍或超级加倍在一局游戏中只能使用一次
 [R]|超级加倍|:加倍再加倍
@@ -82,8 +89,10 @@ Powered by Cy.
 [B]|安静出牌禁用|：所有信息不都会私聊发送
 [B]|自动过牌启用|：启用自动过牌
 [B]|自动过牌禁用|：禁用自动过牌
+[B]|添加机器猫|添加机器人|: 添加一只机器猫酱和你玩♂耍
+[B]|移除机器猫|移除机器人|: 移除一只机器猫酱
 
-如果崩溃请大家多多包涵，游戏愉快。
+如果崩溃的话就找cy/lg/cj好了喵~
 ");
                     break;
                 case "安静出牌启用":
@@ -94,11 +103,11 @@ Powered by Cy.
                     break;
                 case "自动过牌启用":
                     player.AutoPass = true;
-                    desk.AddMessage("Done.");
+                    desk.AddMessage("好了喵~");
                     break;
                 case "自动过牌禁用":
                     player.AutoPass = false;
-                    desk.AddMessage("Done.");
+                    desk.AddMessage("好了喵~");
                     break;
             }
 
@@ -123,7 +132,7 @@ Powered by Cy.
                     var point = int.Parse(sp[2]);
                     var cfg = PlayerConfig.GetConfig(new Player(target));
                     cfg.Point = point;
-                    desk.AddMessage("Set done.");
+                    desk.AddMessage("钦定完毕了喵~");
                     cfg.Save();
                 }
             }

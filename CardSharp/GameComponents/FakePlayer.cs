@@ -19,7 +19,7 @@ namespace CardSharp.GameComponents
         {
             while (true)
             {
-                var name = $"机器人{Rng.Next(100)}";
+                var name = $"机器猫{Rng.Next(100)}";
                 if (desk.Players.Any(p => p.PlayerId == name)) continue;
                 return name;
             }

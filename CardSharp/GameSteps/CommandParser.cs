@@ -13,7 +13,7 @@ namespace CardSharp.GameSteps
 
         public void Prepare(Desk desk)
         {
-            desk.AddMessage($"请{desk.CurrentPlayer.ToAtCodeWithRole()}出牌");
+            desk.AddMessage($"请{desk.CurrentPlayer.ToAtCodeWithRole()}喵出牌~");
             RunHostedCheck(desk);
         }
 
@@ -87,7 +87,7 @@ namespace CardSharp.GameSteps
                 case "出你妈":
                 case "要你妈":
                     if (desk.CurrentRule == null) {
-                        desk.AddMessage("为什么会这样呢...为什么你不出牌呢...");
+                        desk.AddMessage("你要过牌?不行不行,现在可是你的表演时间喵~");
                     } else {
                         AnalyzeGiveUpAndMoveNext(desk);
                         RefreshCurrentRule(desk);
@@ -99,7 +99,7 @@ namespace CardSharp.GameSteps
 
             if (command.StartsWith("出"))
             {
-                desk.AddMessage("出的命令已经被替换为直接出牌. 如<出34567>被替换为<34567>");
+                desk.AddMessage("出的命令已经被替换为直接出牌了喵~ 如<出34567>被替换为<34567>~");
                 command = command.Substring(1);
             }
             var cardsCommand = command.ToUpper();
@@ -115,7 +115,7 @@ namespace CardSharp.GameSteps
                         desk.AddMessageLine("WARNING: SUDDEN DEATH ENABLED");
 
                     if (player.PublicCards)
-                        desk.AddMessageLine($"明牌:{player.Cards.ToFormatString()}");
+                        desk.AddMessageLine($"明牌喵:{player.Cards.ToFormatString()}");
 
                     AnalyzeGiveUpAndMoveNext(desk);
                     RefreshCurrentRule(desk);
@@ -124,12 +124,12 @@ namespace CardSharp.GameSteps
                     if (desk.CurrentRule != null) {
                         var rule = Rules.Rules.FirstMatchRule(cardsCommand.ToCards());
                         if (rule != null && rule != desk.CurrentRule) {
-                            desk.AddMessage($"你想出的牌匹配了规则{rule}，但是当前规则是{desk.CurrentRule}，所以你并不能出牌哟~~");
+                            desk.AddMessage($"你想出的牌匹配了规则{rule}，但是呢，当前规则是{desk.CurrentRule}，所以你并不能出牌喵~");
                         } else {
-                            desk.AddMessage("你似乎不能出这些牌哟~");
+                            desk.AddMessage("你好像不能出这些牌喵~");
                         }
                     } else {
-                        desk.AddMessage("你似乎不能出这些牌哟~");
+                        desk.AddMessage("你似乎不能出这些牌喵~");
                     }
 
                 }
@@ -160,7 +160,7 @@ namespace CardSharp.GameSteps
         {
             switch (command) {
                 case "结束游戏":
-                    desk.AddMessage("请寻找管理员结束.");
+                    desk.AddMessage("你不能结束的呢...请寻找管理员喵...");
                     return true;
                 case "记牌器":
                     desk.AddMessage(CardCounter.GenerateCardString(desk));
@@ -171,16 +171,16 @@ namespace CardSharp.GameSteps
                     return true;
                 case "弃牌":
                     player.GiveUp = true;
-                    desk.AddMessage("弃牌成功");
+                    desk.AddMessage("弃牌成功了喵~");
                     return true;
                 case "托管":
                     player.HostedEnabled = true;
-                    desk.AddMessage("托管成功");
+                    desk.AddMessage("托管成功了喵~你可以输入“结束托管”来结束~");
                     RunHostedCheck(desk);
                     return true;
                 case "结束托管":
                     player.HostedEnabled = false;
-                    desk.AddMessage("结束成功");
+                    desk.AddMessage("结束成功了喵~");
                     return true;
             }
 
@@ -199,7 +199,7 @@ namespace CardSharp.GameSteps
                 if (cp.AutoPass) {
                     Parse(desk, cp, "pass");
                 } else {
-                    cp.AddMessage("没有检测到你能出的牌, 你可以pass.");
+                    cp.AddMessage("你好像不能出牌的呢...要不要过喵");
                 }
             }
         }

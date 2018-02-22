@@ -93,21 +93,21 @@ namespace CardSharp
         public bool AddPlayer(Player player)
         {
             if (Players.Count() >= Constants.MaxPlayer || Players.Contains(player)) {
-                AddMessage($"已经加入或人数已满: {player.ToAtCode()}");
+                AddMessage($"已经加入或喵数已满: {player.ToAtCode()}");
                 return false;
             }
 
             _playersDictionary.Add(player.PlayerId, player);
-            AddMessageLine($"加入成功: {player.ToAtCode()}");
-            AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
+            AddMessageLine($"{player.ToAtCode()} 加入成功了喵~");
+            AddMessage($"当前喵有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
             return true;
         }
 
         public void RemovePlayer(Player player)
         {
-            AddMessageLine($"移除成功: {player.ToAtCode()}");
+            AddMessageLine($"{player.ToAtCode()} 走了喵~下次再来玩喵~");
             _playersDictionary.Remove(player.PlayerId);
-            AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
+            AddMessage($"当前喵有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
         }
 
         public Player GetPlayer(string playerid)
@@ -125,7 +125,7 @@ namespace CardSharp
             RandomizePlayers();
             SendCards();
             SendCardsMessage();
-            AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令.");
+            AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令喵~");
             return true;
         }
 
@@ -138,7 +138,7 @@ namespace CardSharp
             
             SendCards(seed);
             SendCardsMessage();
-            AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令.");
+            AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令喵~");
             return true;
         }
 
@@ -161,7 +161,7 @@ namespace CardSharp
                 }
                 _standardParser.Parse(this, player, command);
             } catch (Exception e) {
-                AddMessage($"抱歉 我们在处理你的命令时发生了错误{e}");
+                AddMessage($"抱歉了喵..我们在处理你的命令时发生了错误QAQ{e}");
             }
         }
 
@@ -250,11 +250,11 @@ namespace CardSharp
             if (CurrentRule == null)
                 if (CurrentPlayer.FirstBlood) {
                     CurrentPlayer.FirstBlood = false;
-                    AddMessage($"{CurrentPlayer.ToAtCodeWithRole()}请开始你的表演");
+                    AddMessage($"{CurrentPlayer.ToAtCodeWithRole()}喵酱表演一下喵~");
                 } else {
-                    AddMessageLine($"{CurrentPlayer.ToAtCodeWithRole()}请出牌");
+                    AddMessageLine($"{CurrentPlayer.ToAtCodeWithRole()}请出牌喵~");
                 } else
-                AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCodeWithRole()}请出牌");
+                AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCodeWithRole()}请出牌喵~");
         }
 
         // this is the worst code than I ever written
@@ -274,11 +274,11 @@ namespace CardSharp
                 int result = 0;
                 switch (player.Type) {
                     case PlayerType.Farmer:
-                        AddMessageLine("Winners are farmers.");
+                        AddMessageLine("Winners are FA♂rmers.");
                         result = SaveSddc(farmers, landlords);
                         break;
                     case PlayerType.Landlord:
-                        AddMessageLine("Winner is the landlord.");
+                        AddMessageLine("Winner is the Dungeon♂Master.");
                         result = SaveSddc(landlords, farmers);
                         break;
                 }
@@ -287,11 +287,11 @@ namespace CardSharp
             } else {
                 switch (player.Type) {
                     case PlayerType.Farmer:
-                        AddMessageLine("农民赢了.");
+                        AddMessageLine("农民喵赢了~");
                         landlordDif *= -1;
                         break;
                     case PlayerType.Landlord:
-                        AddMessageLine("地主赢了.");
+                        AddMessageLine("地主喵赢了~");
                         farmerDif *= -1;
                         break;
                 }
@@ -338,11 +338,11 @@ namespace CardSharp
         public void FinishGame(bool force = true)
         {
             if (force) {
-                AddMessage("游戏结束.");
+                AddMessage("游戏结束喵~常来玩喵~");
                 Desks.Remove(DeskId);
                 return;
             }
-            AddMessage(SuddenDeathEnabled ? "你不能结束游戏." : "游戏结束.");
+            AddMessage(SuddenDeathEnabled ? "你不能结束游戏喵~" : "游戏结束喵~常来玩喵~");
             if (!SuddenDeathEnabled)
                 Desks.Remove(DeskId);
         }
@@ -379,7 +379,7 @@ namespace CardSharp
         {
             foreach (var pair in Desks.Where(desk => desk.Value.State == GameState.Gaming))
             {
-                AddMessageLine($"群{pair.Value.GroupName}-{pair.Key}正在游戏中");
+                AddMessageLine($"喵群{pair.Value.GroupName}-{pair.Key}正在游戏喵~");
             }
         }
     }
