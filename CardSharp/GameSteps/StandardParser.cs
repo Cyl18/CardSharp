@@ -14,7 +14,7 @@ namespace CardSharp.GameSteps
 
         public void Parse(Desk desk, Player player, string command)
         {
-            if (command.Contains("当前玩家有: ")) {
+            if (command.Contains("当前玩家有: ") && !command.Contains("UNO")) {
                 desk.AddMessage($"我们目前检测到了一些小小的\"机器人冲突\". 输入[关闭机器人{RandomBotId}]来降低这个机器人在此群的地位.");
             }
 
