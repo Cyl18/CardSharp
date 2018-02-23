@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -21,6 +22,7 @@ namespace CardSharp.GUI
                 Console.WriteLine();
                 Console.WriteLine("1.Play a round");
                 Console.WriteLine("2.Run auto test");
+                Console.WriteLine("3.Generate fucking seeds");
                 Console.Write("Your choice: ");
                 var r = Console.ReadKey();
                 Console.WriteLine();
@@ -44,19 +46,32 @@ namespace CardSharp.GUI
             }
         }
 
+        static volatile int total = 0;
+        static volatile int valid = 0;
         private static void SeedGen()
         {
             var cards = Desk.GenerateCards();
 
-            Parallel.For(0, int.MaxValue, i =>
+            File.Delete("seeds.txt");
+            ThreadPool.SetMinThreads(16, 16);
+            ThreadPool.SetMaxThreads(64, 64);
+            var startTime = DateTime.Now;
+            
+            Parallel.For(0, int.MaxValue, new ParallelOptions { MaxDegreeOfParallelism = 64 }, i =>
             {
+                total++;
                 var list = new List<Card>(cards);
                 list.Shuffle(i);
 
-                var pCard1 = list.Take(17).ToListAndSort().ExtractCardGroups();
-                var pCard2 = list.Skip(17).Take(17).ToListAndSort().ExtractCardGroups();
-                var pCard3 = list.Skip(17*2).Take(17).ToListAndSort().ExtractCardGroups();
+                var cards1 = list.Take(17).ToListAndSort();
+                var pCard1 = cards1.ExtractCardGroups();
+                var cards2 = list.Skip(17).Take(17).ToListAndSort();
+                var pCard2 = cards2.ExtractCardGroups();
+                var cards3 = list.Skip(17 * 2).Take(17).ToListAndSort();
+                var pCard3 = cards3.ExtractCardGroups();
                 var count = 0;
+                var doubleKingCount = 0;
+                var doubleKing = false;
                 foreach (var cardGroup in pCard1)
                 {
                     if (cardGroup.Count == 4)
@@ -77,9 +92,41 @@ namespace CardSharp.GUI
                     }
                 }
 
+                foreach (var card in cards1)
+                    if (card.Type == CardType.King)
+                        doubleKingCount++;
+                if (doubleKingCount == 2)
+                {
+                    doubleKing = true;
+                    goto x;
+                }
+
+                doubleKingCount = 0;
+                foreach (var card in cards2)
+                    if (card.Type == CardType.King)
+                        doubleKingCount++;
+                if (doubleKingCount == 2)
+                {
+                    doubleKing = true;
+                    goto x;
+                }
+                
+                doubleKingCount = 0;
+                foreach (var card in cards3)
+                    if (card.Type == CardType.King)
+                        doubleKingCount++;
+                if (doubleKingCount == 2)
+                    doubleKing = true;
+
+                x:
                 if (count > 5)
                 {
-                    Console.WriteLine($"Bomb count: {count}, seed {i} ");
+                    valid++;
+                    Console.ForegroundColor = doubleKing ? ConsoleColor.Yellow : ConsoleColor.White;
+                    var t = (DateTime.Now - startTime).TotalMilliseconds;
+                    var str = $"Bomb count: {count}, seed {i} , doubleKing {doubleKing}, TotalCount {total}, validCount{valid}, time {t/60}s, totalSpeed {total / t}/ms, validS {valid / t * 1000 * 60}/min\r\n";
+                    File.AppendAllText("seeds.txt", str);
+                    Console.Write(str);
                 }
             });
         }
