@@ -19,7 +19,7 @@ namespace CardSharp.GameComponents
         }
 
         public string PlayerID { get; }
-        public int Point { get; set; }
+        public long Point { get; set; }
         public DateTime LastTime { get; set; }
 
         private bool _isAdmin = false;
