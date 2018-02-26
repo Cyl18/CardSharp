@@ -12,10 +12,10 @@ namespace CardSharp.GameSteps
                 case "上桌":
                 case "fork table":
                 case "法克忒薄": // By Charlie Jiang
-                    //var point = PlayerConfig.GetConfig(player).Point;
-                    //if (point <= 0)
-                    //    desk.AddMessage($"你的积分不足以进行游戏! 你现在有{point}点积分.");
-                    //else
+                    var point = PlayerConfig.GetConfig(player).Point;
+                    if (point <= -100000)
+                        desk.AddMessage($"CNM 这里是CY 你们的印钞厂停业了.");
+                    else
                         desk.AddPlayer(player);
                     break;
                 case "下桌":
@@ -41,7 +41,7 @@ namespace CardSharp.GameSteps
                     break;
             }
 
-            if (command.StartsWith("开始游戏 "))
+            if (command.StartsWith("开始游戏 ") && PlayerConfig.GetConfig(player).IsAdmin)
             {
                 var seed = int.Parse(command.Substring(5));
                 if (desk.PlayerList.Count == 3)

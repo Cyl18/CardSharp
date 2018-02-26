@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Numerics;
+using Newtonsoft.Json;
 
 namespace CardSharp.GameComponents
 {
@@ -9,4 +11,5 @@ namespace CardSharp.GameComponents
         string PlayerID { get; }
         bool IsAdmin { get; }
     }
+    
 }
