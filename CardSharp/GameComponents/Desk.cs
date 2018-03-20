@@ -215,9 +215,9 @@ namespace CardSharp
             foreach (var player in Players) {
                 var pCards = cards.Take(17 * 1);
                 if (player.Cards == null)
-                    player.Cards = cards.ToListAndSort();
+                    player.Cards = pCards.ToListAndSort();
                 else
-                    player.Cards.AddRange(cards.ToListAndSort());
+                    player.Cards.AddRange(pCards);
                 cards = cards.Skip(17 * 1);
             }
 
@@ -231,7 +231,10 @@ namespace CardSharp
             var cards = GeneratePlayCards(seed);
             foreach (var player in Players) {
                 var pCards = cards.Take(17 * 1);
-                player.Cards = pCards.ToListAndSort();
+                if (player.Cards == null)
+                    player.Cards = pCards.ToListAndSort();
+                else
+                    player.Cards.AddRange(pCards);
                 cards = cards.Skip(17 * 1);
             }
 
