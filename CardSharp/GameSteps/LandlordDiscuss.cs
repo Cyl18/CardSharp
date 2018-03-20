@@ -35,6 +35,16 @@ namespace CardSharp
         {
             if (!desk.Players.Contains(player))
                 return;
+            if (command.StartsWith("牌数"))
+            {
+                if (command.Split(" ").Length == 2)
+                {
+                    var cardnum = long.Parse(command.Split(" ")[1]);
+                    for (long i = 0; i < cardnum; i++)
+                        desk.SendCards();
+                    desk.SendCardsMessage();
+                }
+            }
             switch (command) {
                 case "加倍":
                     if (desk.Players.Any(p => p is FakePlayer)) {
@@ -58,6 +68,36 @@ namespace CardSharp
                     if (!player.Multiplied) {
                         desk.AddMessage("超级加倍完成.");
                         desk.Multiplier += 2;
+                        player.Multiplied = true;
+                    }
+                    
+                    break;
+                case "减倍":
+                    if (desk.Players.Any(p => p is FakePlayer))
+                    {
+                        desk.AddMessage("有机器人玩家, 减倍不可用");
+                        break;
+                    }
+
+                    if (!player.Multiplied)
+                    {
+                        desk.AddMessage("减倍完成.");
+                        desk.Multiplier -= 1;
+                        player.Multiplied = true;
+                    }
+
+                    break;
+                case "超级减倍":
+                    if (desk.Players.Any(p => p is FakePlayer))
+                    {
+                        desk.AddMessage("有机器人玩家, 加倍不可用");
+                        break;
+                    }
+
+                    if (!player.Multiplied)
+                    {
+                        desk.AddMessage("超级减倍完成.");
+                        desk.Multiplier -= 2;
                         player.Multiplied = true;
                     }
 

@@ -209,12 +209,15 @@ namespace CardSharp
                 base.AddMessage(msg);
         }
 
-        private void SendCards()
+        public void SendCards()
         {
             var cards = GeneratePlayCards();
             foreach (var player in Players) {
                 var pCards = cards.Take(17 * 1);
-                player.Cards = pCards.ToListAndSort();
+                if (player.Cards == null)
+                    player.Cards = cards.ToListAndSort();
+                else
+                    player.Cards.AddRange(cards.ToListAndSort());
                 cards = cards.Skip(17 * 1);
             }
 
