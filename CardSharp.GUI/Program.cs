@@ -15,7 +15,7 @@ namespace CardSharp.GUI
     {
         static void Main(string[] args)
         {
-
+            RunTest();
 
             while (true) {
                 Console.WriteLine("-CardSharp v0 Test Menu-");
@@ -139,7 +139,6 @@ namespace CardSharp.GUI
             desk.AddPlayer(new FakePlayer(desk));
             desk.AddPlayer(new FakePlayer(desk));
             desk.AddPlayer(new FakePlayer(desk));
-
             desk.Start();
             _count++;
             Console.WriteLine($"Test successful: {_count}\tUsed {sw.ElapsedMilliseconds}ms.");

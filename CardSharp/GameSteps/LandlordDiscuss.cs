@@ -35,16 +35,6 @@ namespace CardSharp
         {
             if (!desk.Players.Contains(player))
                 return;
-            if (command.StartsWith("牌数"))
-            {
-                if (command.Split(" ").Length == 2)
-                {
-                    var cardnum = long.Parse(command.Split(" ")[1]);
-                    for (long i = 0; i < cardnum; i++)
-                        desk.SendCards();
-                    desk.SendCardsMessage();
-                }
-            }
             switch (command) {
                 case "加倍":
                     if (desk.Players.Any(p => p is FakePlayer)) {
