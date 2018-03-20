@@ -10,7 +10,7 @@ namespace CardSharp.GameComponents
             if (!Directory.Exists(Constants.ConfigDir)) Directory.CreateDirectory(Constants.ConfigDir);
         }
 
-        public PlayerConfig(string playerid, int point = default, DateTime lastTime = default, bool isAdmin = default )
+        public PlayerConfig(string playerid, long point = default, DateTime lastTime = default, bool isAdmin = default )
         {
             PlayerID = playerid ?? throw new ArgumentNullException(nameof(playerid));
             Point = point;
@@ -19,7 +19,7 @@ namespace CardSharp.GameComponents
         }
 
         public string PlayerID { get; }
-        public int Point { get; set; }
+        public long Point { get; set; }
         public DateTime LastTime { get; set; }
 
         private bool _isAdmin = false;

@@ -274,7 +274,7 @@ namespace CardSharp
             {
                 AddMessageLine("SDDC duel done.");
 
-                int result = 0;
+                long result = 0;
                 switch (player.Type) {
                     case PlayerType.Farmer:
                         AddMessageLine("Winners are farmers.");
@@ -317,7 +317,7 @@ namespace CardSharp
             FinishGame(true);
         }
 
-        private int SaveSddc(IEnumerable<Player> winners, IEnumerable<Player> losers)
+        private long SaveSddc(IEnumerable<Player> winners, IEnumerable<Player> losers)
         {
             var winnersConfig = winners.Select(PlayerConfig.GetConfig).ToList();
             var losersConfig = losers.Select(PlayerConfig.GetConfig).ToList();
@@ -331,7 +331,7 @@ namespace CardSharp
             return score;
         }
 
-        private void SaveScore(PlayerConfig p, int value)
+        private void SaveScore(PlayerConfig p, long value)
         {
             var playerConf = p;
             playerConf.Point = value;

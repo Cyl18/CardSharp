@@ -18,9 +18,9 @@ namespace CardSharp.GameComponents
             }
         }
 
-        public static int CalcResult(Desk desk)
+        public static long CalcResult(Desk desk)
         {
-            return (int) Math.Pow(2, desk.Multiplier) * Constants.BaseScore;
+            return (long) Math.Pow(2, desk.Multiplier) * Constants.BaseScore;
         }
     }
 }
