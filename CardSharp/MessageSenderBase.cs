@@ -39,7 +39,7 @@ namespace CardSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddMessageLine(string msg = "")
         {
-            if (Message?.EndsWith(Environment.NewLine) != true)
+            if (Message?.EndsWith(Environment.NewLine) == false)
             {
                 AddMessage(Environment.NewLine);
             }

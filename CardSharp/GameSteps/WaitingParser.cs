@@ -18,26 +18,31 @@ namespace CardSharp.GameSteps
                     else
                         desk.AddPlayer(player);
                     break;
+
                 case "下桌":
                     desk.RemovePlayer(player);
                     break;
+
                 case "开始游戏":
                     if (desk.Players.All(p => p is FakePlayer))
                     {
                         desk.AddMessage("仨机器人可不行哟~");
                         return;
                     }
+
                     if (desk.PlayerList.Count == 3)
                         desk.Start();
                     else
                         desk.AddMessage("人数不够.");
                     break;
+
                 case "添加机器人":
                     desk.AddPlayer(new FakePlayer(desk));
                     break;
+
                 case "移除机器人":
                     if (desk.Players.Any(p => p is FakePlayer))
-                        desk.RemovePlayer(desk.Players.First(p=> p is FakePlayer));
+                        desk.RemovePlayer(desk.Players.First(p => p is FakePlayer));
                     break;
             }
 

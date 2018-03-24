@@ -7,9 +7,9 @@ namespace CardSharp.Rules
     {
         public override bool IsMatch(List<CardGroup> cardGroups, List<CardGroup> lastCardGroups)
         {
-            if (cardGroups.Count != 2) // 必须两组
+            if (cardGroups.Count != 3) // 必须两组
                 return false;
-            if (!(cardGroups.Any(card => card.Count == 4) && cardGroups.Any(card => card.Count == 2))) // 匹配牌形
+            if (!(cardGroups.Any(card => card.Count == 4) && cardGroups.Count(card => card.Count == 1) == 2)) // 匹配牌形
                 return false;
             return lastCardGroups == null || cardGroups.First(card => card.Count == 4).Amount >
                    lastCardGroups.First(card => card.Count == 4).Amount; // 匹配大小

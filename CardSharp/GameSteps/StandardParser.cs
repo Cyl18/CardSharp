@@ -14,41 +14,53 @@ namespace CardSharp.GameSteps
 
         public void Parse(Desk desk, Player player, string command)
         {
-            if (command.Contains("当前玩家有: ") && !command.Contains("UNO")) {
+            if (command.Contains("当前玩家有: ") && !command.Contains("UNO"))
+            {
                 desk.AddMessage($"我们目前检测到了一些小小的\"机器人冲突\". 输入[关闭机器人{RandomBotId}]来降低这个机器人在此群的地位.");
             }
 
-            if (command == $"关闭机器人{RandomBotId}") {
+            if (command == $"关闭机器人{RandomBotId}")
+            {
                 Desk.ShutedGroups.Add(desk.DeskId);
                 desk.AddMessage($"已经关闭斗地主. 重新恢复为[恢复机器人{RandomBotId}]");
-            } else if (command == $"恢复机器人{RandomBotId}") {
+            }
+            else if (command == $"恢复机器人{RandomBotId}")
+            {
                 Desk.ShutedGroups.RemoveAll(d => d == desk.DeskId);
                 desk.AddMessage("已经重启斗地主.");
             }
 
             var pconfig = PlayerConfig.GetConfig(player);
-            switch (command) {
+            switch (command)
+            {
                 case "所有游戏":
                     desk.BoardcastDesks();
                     break;
+
                 case "获取积分":
                     var px = DateTime.Now - pconfig.LastTime;
-                    if (px.TotalSeconds.Seconds() > 12.Hours()) {
+                    if (px.TotalSeconds.Seconds() > 12.Hours())
+                    {
                         pconfig.AddPoint();
                         desk.AddMessage($"领取成功. 你当前积分为{pconfig.Point}");
-                    } else {
+                    }
+                    else
+                    {
                         desk.AddMessage(
                             $"你现在不能这么做. 你可以在{(12.Hours() - px).Humanize(culture: new CultureInfo("zh-CN"), maxUnit: TimeUnit.Hour)}后领取.");
                     }
 
                     break;
+
                 case "我的信息":
                     desk.AddMessage($"你的积分为 {pconfig.Point}");
                     break;
+
                 case "重新发牌":
                     if (desk.State == GameState.Gaming || desk.State == GameState.DiscussLandlord)
                         desk.SendCardsMessage();
                     break;
+
                 case "命令列表":
                     desk.AddMessage(@"=    命令列表    =
 
@@ -66,7 +78,7 @@ Unpowered by LG.
 [R]|抢地主|抢他妈的|：抢地主
 [R]|不抢|抢你妈|抢个鸡毛掸子|：不抢地主
 [R]|开始游戏|：准备环节→开始游戏
-[R]|重新发牌|:不是重置牌！是会把你的牌通过私聊再发一次！ 
+[R]|重新发牌|:不是重置牌！是会把你的牌通过私聊再发一次！
 [R]|加倍|:加倍或超级加倍在一局游戏中只能使用一次
 [R]|超级加倍|:加倍再加倍
 [B]|减倍|:减倍或超级减倍在一局游戏中只能使用一次
@@ -89,27 +101,34 @@ Unpowered by LG.
 如果崩溃请大家多多包涵，游戏愉快。
 ");
                     break;
+
                 case "安静出牌启用":
                     desk.Silence = true;
                     break;
+
                 case "安静出牌禁用":
                     desk.Silence = false;
                     break;
+
                 case "自动过牌启用":
                     player.AutoPass = true;
                     desk.AddMessage("Done.");
                     break;
+
                 case "自动过牌禁用":
                     player.AutoPass = false;
                     desk.AddMessage("Done.");
                     break;
             }
 
-            if (pconfig.IsAdmin) {
-                switch (command) {
+            if (pconfig.IsAdmin)
+            {
+                switch (command)
+                {
                     case "结束游戏":
                         desk.FinishGame();
                         break;
+
                     case "玩家牌":
                         if (!Player.ForceSendPlayers.Contains(player))
                         {
@@ -120,7 +139,8 @@ Unpowered by LG.
                         break;
                 }
 
-                if (command.StartsWith("设置积分")) {
+                if (command.StartsWith("设置积分"))
+                {
                     var sp = command.Split(" ");
                     var target = sp[1];
                     var point = int.Parse(sp[2]);
@@ -128,6 +148,16 @@ Unpowered by LG.
                     cfg.Point = point;
                     desk.AddMessage("Set done.");
                     cfg.Save();
+                }
+
+                if (command.StartsWith("Sudo"))
+                {
+                    var sp = command.Split(' ');
+                    var target = sp[1];
+                    var cmd = sp[2];
+                    desk.AddMessageLine("[Begin sudo execution block]");
+                    desk.ParseCommand(target, cmd);
+                    desk.AddMessage(Environment.NewLine + "[End sudo execution block]");
                 }
             }
         }
