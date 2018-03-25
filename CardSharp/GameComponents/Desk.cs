@@ -18,7 +18,7 @@ namespace CardSharp
         private static readonly Dictionary<string, Desk> Desks = new Dictionary<string, Desk>();
         internal static readonly List<string> ShutedGroups = new List<string>();
 
-        #endregion
+        #endregion Static Members
 
         private Dictionary<string, Player> _playersDictionary = new Dictionary<string, Player>();
 
@@ -47,11 +47,14 @@ namespace CardSharp
                 if (!Desks.ContainsValue(this))
                     return GameState.Unknown;
 
-                switch (_currentParser) {
+                switch (_currentParser)
+                {
                     case WaitingParser _:
                         return GameState.Wait;
+
                     case LandlordDiscuss _:
                         return GameState.DiscussLandlord;
+
                     case CommandParser _:
                         return GameState.Gaming;
                 }
@@ -92,7 +95,8 @@ namespace CardSharp
         [MethodImpl(MethodImplOptions.Synchronized)]
         public bool AddPlayer(Player player)
         {
-            if (Players.Count() >= Constants.MaxPlayer || Players.Contains(player)) {
+            if (Players.Count() >= Constants.MaxPlayer || Players.Contains(player))
+            {
                 AddMessage($"已经加入或人数已满: {player.ToAtCode()}");
                 return false;
             }
@@ -135,7 +139,7 @@ namespace CardSharp
                 return false;
             if (Players.Count() != Constants.MaxPlayer)
                 return false;
-            
+
             SendCards(seed);
             SendCardsMessage();
             AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令.");
@@ -154,13 +158,17 @@ namespace CardSharp
 
         public void ParseCommand(string playerid, string command)
         {
-            try {
+            try
+            {
                 var player = GetPlayer(playerid);
-                if (ShutedGroups.All(g => g != DeskId)) {
+                if (ShutedGroups.All(g => g != DeskId))
+                {
                     _currentParser.Parse(this, player, command);
                 }
                 _standardParser.Parse(this, player, command);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 AddMessage($"抱歉 我们在处理你的命令时发生了错误{e}");
             }
         }
@@ -179,7 +187,8 @@ namespace CardSharp
         public static List<Card> GenerateCards()
         {
             var list = new List<Card>();
-            for (var i1 = 0; i1 < 1; i1++) {
+            for (var i1 = 0; i1 < 1; i1++)
+            {
                 for (var i = 0; i < Constants.AmountCardNum; i++)
                     for (var num = 0; num < Constants.AmountCardMax; num++)
                         list.Add(new Card(num));
@@ -212,7 +221,8 @@ namespace CardSharp
         public void SendCards()
         {
             var cards = GeneratePlayCards();
-            foreach (var player in Players) {
+            foreach (var player in Players)
+            {
                 var pCards = cards.Take(17 * 1);
                 if (player.Cards == null)
                     player.Cards = pCards.ToListAndSort();
@@ -229,7 +239,8 @@ namespace CardSharp
         private void SendCards(int seed)
         {
             var cards = GeneratePlayCards(seed);
-            foreach (var player in Players) {
+            foreach (var player in Players)
+            {
                 var pCards = cards.Take(17 * 1);
                 if (player.Cards == null)
                     player.Cards = pCards.ToListAndSort();
@@ -254,18 +265,27 @@ namespace CardSharp
         public void BoardcastCards()
         {
             if (CurrentRule == null)
-                if (CurrentPlayer.FirstBlood) {
+                if (CurrentPlayer.FirstBlood)
+                {
                     CurrentPlayer.FirstBlood = false;
                     AddMessage($"{CurrentPlayer.ToAtCodeWithRole()}请开始你的表演");
-                } else {
+                }
+                else
+                {
                     AddMessageLine($"{CurrentPlayer.ToAtCodeWithRole()}请出牌");
-                } else
+                }
+            else
                 AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCodeWithRole()}请出牌");
         }
 
         // this is the worst code than I ever written
         public void FinishGame(Player player)
         {
+            foreach (var player1 in Players)
+            {
+                AddMessageLine($"{player1.ToAtCodeWithRole()} {player1.Cards.ToFormatString()}");
+            }
+
             var mult = GameComponents.Multiplier.CalcResult(this);
             var farmerDif = mult;
             var landlordDif = mult * 2;
@@ -278,24 +298,29 @@ namespace CardSharp
                 AddMessageLine("SDDC duel done.");
 
                 long result = 0;
-                switch (player.Type) {
+                switch (player.Type)
+                {
                     case PlayerType.Farmer:
                         AddMessageLine("Winners are farmers.");
                         result = SaveSddc(farmers, landlords);
                         break;
+
                     case PlayerType.Landlord:
                         AddMessageLine("Winner is the landlord.");
                         result = SaveSddc(landlords, farmers);
                         break;
                 }
                 AddMessageLine($"SDDC result: {result}.");
-
-            } else {
-                switch (player.Type) {
+            }
+            else
+            {
+                switch (player.Type)
+                {
                     case PlayerType.Farmer:
                         AddMessageLine("农民赢了.");
                         landlordDif *= -1;
                         break;
+
                     case PlayerType.Landlord:
                         AddMessageLine("地主赢了.");
                         farmerDif *= -1;
@@ -303,13 +328,15 @@ namespace CardSharp
                 }
                 var sb = new StringBuilder();
 
-                foreach (var landlord in landlords) {
+                foreach (var landlord in landlords)
+                {
                     sb.AppendLine($"-{landlord.ToAtCode()} {landlordDif}");
                     var playerConfig = PlayerConfig.GetConfig(landlord);
                     SaveScore(playerConfig, playerConfig.Point + landlordDif);
                 }
 
-                foreach (var farmer in farmers) {
+                foreach (var farmer in farmers)
+                {
                     sb.AppendLine($"-{farmer.ToAtCode()} {farmerDif}");
                     var playerConfig = PlayerConfig.GetConfig(farmer);
                     SaveScore(playerConfig, playerConfig.Point + farmerDif);
@@ -343,7 +370,8 @@ namespace CardSharp
 
         public void FinishGame(bool force = true)
         {
-            if (force) {
+            if (force)
+            {
                 AddMessage("游戏结束.");
                 Desks.Remove(DeskId);
                 return;
@@ -370,7 +398,6 @@ namespace CardSharp
             return Equals(obj as Desk);
         }
 
-
         public static bool operator ==(Desk desk1, Desk desk2)
         {
             return EqualityComparer<Desk>.Default.Equals(desk1, desk2);
@@ -389,7 +416,6 @@ namespace CardSharp
             }
         }
     }
-
 
     public enum GameState
     {

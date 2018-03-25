@@ -45,15 +45,16 @@ namespace Origind.Card.Game.MahuaEvents
                 player.ClearMessage();
             });
 
-            Player.ForceSendPlayers.Where(player => player.Message != null && player.ForceSend).ToList().ForEach(player => {
+            Player.ForceSendPlayers.Where(player => player.Message != null && player.ForceSend).ToList().ForEach(player =>
+            {
                 _mahuaApi.SendPrivateMessage(player.PlayerId, player.Message);
                 player.ClearMessage();
                 player.ForceSend = false;
             });
 
-            if (desk.Message!=null)
+            if (desk.Message != null)
             {
-                _mahuaApi.SendGroupMessage(deskid, desk.Message);
+                _mahuaApi.SendGroupMessage(deskid, desk.Message.Trim());
                 desk.ClearMessage();
             }
         }
