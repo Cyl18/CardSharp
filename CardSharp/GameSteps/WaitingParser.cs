@@ -54,6 +54,15 @@ namespace CardSharp.GameSteps
                 if (desk.PlayerList.Count == 3)
                     desk.Start(seed);
             }
+            if (command.StartsWith("表演开屎") && PlayerConfig.GetConfig(player).IsAdmin){
+                if (desk.Players.Any()){
+                    desk.AddMessage("有玩家了不可以使用");
+                    return;
+                }
+
+                for(int i = 0; i < 3; i++) desk.AddPlayer(new FakePlayer(desk));
+                desk.Start();
+            }
         }
     }
 }
