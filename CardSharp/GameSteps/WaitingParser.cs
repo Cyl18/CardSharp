@@ -56,7 +56,7 @@ namespace CardSharp.GameSteps
             }
             if (command.StartsWith("表演开屎") && PlayerConfig.GetConfig(player).IsAdmin){
                 if (desk.Players.Any()){
-                    desk.AddMessage("有玩家了不可以使用");
+                    desk.AddMessage("有玩家了不可以使用.");
                     return;
                 }
 
