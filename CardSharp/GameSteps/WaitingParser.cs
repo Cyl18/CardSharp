@@ -15,6 +15,8 @@ namespace CardSharp.GameSteps
                     var point = PlayerConfig.GetConfig(player).Point;
                     if (point <= -100000)
                         desk.AddMessage($"CNM 这里是CY 你们的印钞厂停业了.");
+                    elesif (point <= 0)
+                        desk.AddMessage("您输光了/您没输入过‘获取积分’.")
                     else
                         desk.AddPlayer(player);
                     break;
