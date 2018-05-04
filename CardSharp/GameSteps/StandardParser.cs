@@ -143,7 +143,7 @@ Unpowered by LG.
                 {
                     var sp = command.Split(" ");
                     var target = sp[1];
-                    var point = int.Parse(sp[2]);
+                    var point = long.Parse(sp[2]);
                     var cfg = PlayerConfig.GetConfig(new Player(target));
                     cfg.Point = point;
                     desk.AddMessage("Set done.");
