@@ -15,6 +15,8 @@ namespace CardSharp.GameSteps
                     var point = PlayerConfig.GetConfig(player).Point;
                     if (point <= -100000)
                         desk.AddMessage($"CNM 这里是CY 你们的印钞厂停业了.");
+                    else if (point <= 0)
+                        desk.AddMessage("您输光了/您没输入过‘获取积分’.");
                     else
                         desk.AddPlayer(player);
                     break;
@@ -51,6 +53,15 @@ namespace CardSharp.GameSteps
                 var seed = int.Parse(command.Substring(5));
                 if (desk.PlayerList.Count == 3)
                     desk.Start(seed);
+            }
+            if (command.StartsWith("表演开屎") && PlayerConfig.GetConfig(player).IsAdmin){
+                if (desk.Players.Any()){
+                    desk.AddMessage("有玩家了不可以使用.");
+                    return;
+                }
+
+                for(int i = 0; i < 3; i++) desk.AddPlayer(new FakePlayer(desk));
+                desk.Start();
             }
         }
     }

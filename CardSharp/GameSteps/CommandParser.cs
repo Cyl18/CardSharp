@@ -184,15 +184,10 @@ namespace CardSharp.GameSteps
                         desk.PlayerList.Select(p => $"{p.ToAtCodeWithRole()}: {p.Cards.Count}")));
                     return true;
 
-                case "弃牌":
-                    if (desk.Players.Count(p => p is FakePlayer) == 2)
-                    {
-                        desk.AddMessage("你觉得这样好玩么?");
-                        return true;
-                    }
-                    player.GiveUp = true;
-                    desk.AddMessage("弃牌成功");
-                    return true;
+                //case "弃牌":
+                    //player.GiveUp = true;
+                    //desk.AddMessage("弃牌成功");
+                    //return true;
 
                 case "托管":
                     if (desk.Players.Count(p => p is FakePlayer) == 2)
