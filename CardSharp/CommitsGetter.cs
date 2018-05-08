@@ -14,13 +14,9 @@ namespace CardSharp
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var wc = new WebClient { Encoding = Encoding.UTF8 };
-            return wc.DownloadString("https://api.github.com/repos/Cyl18/CardSharp/commits").JsonDeserialize<CommitDatas>().CommitData;
+            wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
+            return wc.DownloadString("https://api.github.com/repos/Cyl18/CardSharp/commits").JsonDeserialize<CommitData[]>();
         }
-    }
-
-    public class CommitDatas
-    {
-        public CommitData[] CommitData { get; set; }
     }
 
     public class CommitData
