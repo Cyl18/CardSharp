@@ -124,18 +124,11 @@ Unpowered by LG.
                     break;
 
                 case "排行榜":
-                    var configs = Directory.GetFiles(Constants.ConfigDir)
-                        .Select(File.ReadAllText)
-                        .Select(PlayerConfig.FromJson)
-                        .OrderByDescending(conf => conf.Point)
-                        .Take(10);
-                    var sb = new StringBuilder();
-                    sb.AppendLine("积分排行榜: ");
-                    foreach (var config in configs)
-                        sb.AppendLine($"{(config.IsAdmin ? "**" : "")}{config.PlayerID}-{config.ToAtCode()}: {config.Point}");
+                    ScoreBoard(desk);
+                    break;
 
-                    desk.AddMessage(sb.ToString());
-
+                case "最近更新":
+                    Commits(desk);
                     break;
             }
 
@@ -178,6 +171,33 @@ Unpowered by LG.
                     desk.AddMessage(Environment.NewLine + "[End sudo execution block]");
                 }
             }
+        }
+
+        private static void Commits(Desk desk)
+        {
+            var updates = CommitsGetter.Get()
+                .Take(6);
+            var sb2 = new StringBuilder();
+            sb2.AppendLine("最近的6次更新: ");
+            foreach (var data in updates)
+                sb2.AppendLine($"{data.commit.author.date}:{data.commit.author.name} {data.commit.message}");
+
+            desk.AddMessage(sb2.ToString());
+        }
+
+        private static void ScoreBoard(Desk desk)
+        {
+            var configs = Directory.GetFiles(Constants.ConfigDir)
+                .Select(File.ReadAllText)
+                .Select(PlayerConfig.FromJson)
+                .OrderByDescending(conf => conf.Point)
+                .Take(10);
+            var sb = new StringBuilder();
+            sb.AppendLine("积分排行榜: ");
+            foreach (var config in configs)
+                sb.AppendLine($"{(config.IsAdmin ? "**" : "")}{config.PlayerID}-{config.ToAtCode()}: {config.Point}");
+
+            desk.AddMessage(sb.ToString());
         }
     }
 }
