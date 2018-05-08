@@ -10,7 +10,7 @@ namespace CardSharp.GameComponents
             if (!Directory.Exists(Constants.ConfigDir)) Directory.CreateDirectory(Constants.ConfigDir);
         }
 
-        public PlayerConfig(string playerid, long point = default, DateTime lastTime = default, bool isAdmin = default )
+        public PlayerConfig(string playerid, long point = default, DateTime lastTime = default, bool isAdmin = default)
         {
             PlayerID = playerid ?? throw new ArgumentNullException(nameof(playerid));
             Point = point;
@@ -23,6 +23,7 @@ namespace CardSharp.GameComponents
         public DateTime LastTime { get; set; }
 
         private bool _isAdmin = false;
+
         public bool IsAdmin
         {
             get => PlayerID == "775942303" || _isAdmin;
@@ -33,13 +34,21 @@ namespace CardSharp.GameComponents
         {
             var path = GetConfigPath(player.PlayerId);
             return File.Exists(path)
-                ? File.ReadAllText(path).JsonDeserialize<PlayerConfig>()
+                ? FromJson(File.ReadAllText(path))
                 : new PlayerConfig(player.PlayerId);
         }
 
         public void Save()
         {
-            File.WriteAllText(GetConfigPath(PlayerID), this.ToJsonString());
+            if (uint.TryParse(PlayerID, out var _)) // e.g. 机器人233
+            {
+                File.WriteAllText(GetConfigPath(PlayerID), this.ToJsonString());
+            }
+        }
+
+        public string ToAtCode()
+        {
+            return $"[CQ:at,qq={PlayerID}]";
         }
 
         public void AddPoint()
@@ -48,6 +57,8 @@ namespace CardSharp.GameComponents
             LastTime = DateTime.Now;
             Save();
         }
+
+        public static PlayerConfig FromJson(string json) => json.JsonDeserialize<PlayerConfig>();
 
         private static string GetConfigPath(string playerid)
         {

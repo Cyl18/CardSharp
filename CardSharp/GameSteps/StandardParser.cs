@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 using CardSharp.GameComponents;
 using Humanizer;
 using Humanizer.Localisation;
@@ -118,6 +121,21 @@ Unpowered by LG.
                 case "自动过牌禁用":
                     player.AutoPass = false;
                     desk.AddMessage("Done.");
+                    break;
+
+                case "排行榜":
+                    var configs = Directory.GetFiles(Constants.ConfigDir)
+                        .Select(File.ReadAllText)
+                        .Select(PlayerConfig.FromJson)
+                        .OrderByDescending(conf => conf.Point)
+                        .Take(10);
+                    var sb = new StringBuilder();
+                    sb.AppendLine("积分排行榜: ");
+                    foreach (var config in configs)
+                        sb.AppendLine($"{(config.IsAdmin ? "**" : "")}{config.PlayerID}-{config.ToAtCode()}: {config.Point}");
+
+                    desk.AddMessage(sb.ToString());
+
                     break;
             }
 
