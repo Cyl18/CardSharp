@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using CardSharp.GameComponents;
 using Humanizer;
@@ -44,8 +45,15 @@ namespace CardSharp.GameSteps
                     var px = DateTime.Now - pconfig.LastTime;
                     if (px.TotalSeconds.Seconds() > 12.Hours())
                     {
-                        pconfig.AddPoint();
-                        desk.AddMessage($"领取成功. 你当前积分为{pconfig.Point}");
+                        if (pconfig.Point > 50000)
+                        {
+                            desk.AddMessage($"你超过了领取积分的上限");
+                        }
+                        else
+                        {
+                            pconfig.AddPoint();
+                            desk.AddMessage($"领取成功. 你当前积分为{pconfig.Point}");
+                        }
                     }
                     else
                     {
@@ -130,6 +138,10 @@ Unpowered by LG.
                 case "最近更新":
                     Commits(desk);
                     break;
+
+                case "最后更新":
+                    LatestUpdate(desk);
+                    break;
             }
 
             if (pconfig.IsAdmin)
@@ -147,6 +159,10 @@ Unpowered by LG.
                         }
                         player.ForceSend = true;
                         player.AddMessage(string.Join(Environment.NewLine, desk.Players.Select(p => $"{p.PlayerId} {p.Cards.ToFormatString()}")));
+                        break;
+
+                    case "更新CardSharp":
+                        Update(desk);
                         break;
                 }
 
@@ -171,6 +187,32 @@ Unpowered by LG.
                     desk.AddMessage(Environment.NewLine + "[End sudo execution block]");
                 }
             }
+        }
+
+        private void LatestUpdate(Desk desk)
+        {
+            var data = ReleaseGetter.Get();
+            desk.AddMessage($"更新时间为: {data.assets.First().updated_at}");
+        }
+
+        private void Update(Desk desk)
+        {
+            const string path = "Origind.Card.Game\\CardSharp.dll";
+            const string filename = "CardSharp.dll";
+            try
+            {
+                File.Delete(path);
+            }
+            catch (Exception e)
+            {
+                desk.AddMessage($"删除文件时发生错误 {e}");
+                return;
+            }
+            var data = ReleaseGetter.Get();
+            var wc = new WebClient();
+            wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
+            wc.DownloadFile(data.assets.First(asset => asset.name == filename).browser_download_url, path);
+            desk.AddMessage($"文件下载完成.");
         }
 
         private static void Commits(Desk desk)
