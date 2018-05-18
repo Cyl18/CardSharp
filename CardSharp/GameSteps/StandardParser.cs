@@ -44,16 +44,9 @@ namespace CardSharp.GameSteps
                 case "获取积分":
                     var px = DateTime.Now - pconfig.LastTime;
                     if (px.TotalSeconds.Seconds() > 12.Hours())
-                    {
-                        if (pconfig.Point > 50000)
-                        {
-                            desk.AddMessage($"你超过了领取积分的上限");
-                        }
-                        else
-                        {
-                            pconfig.AddPoint();
-                            desk.AddMessage($"领取成功. 你当前积分为{pconfig.Point}");
-                        }
+                    {  
+                        pconfig.AddPoint();
+                        desk.AddMessage($"领取成功. 你当前积分为{pconfig.Point}");   
                     }
                     else
                     {
