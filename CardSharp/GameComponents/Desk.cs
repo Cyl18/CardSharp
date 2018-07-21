@@ -104,6 +104,7 @@ namespace CardSharp
             if(Players.Contains(player))
             {
                 AddMessage($"{player.ToAtCode()} 你已经加入啦！");
+                return false;
             }
 
             _playersDictionary.Add(player.PlayerId, player);
