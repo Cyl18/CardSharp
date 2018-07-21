@@ -120,7 +120,7 @@ namespace CardSharp.GameSteps
                         desk.AddMessageLine("WARNING: SUDDEN DEATH ENABLED");
 
                     if (player.PublicCards)
-                        desk.AddMessageLine($"明牌:{player.Cards.ToFormatString()}");
+                        desk.AddMessageLine($"明牌: {player.Cards.ToFormatString()}");
 
                     AnalyzeGiveUpAndMoveNext(desk);
                     RefreshCurrentRule(desk);

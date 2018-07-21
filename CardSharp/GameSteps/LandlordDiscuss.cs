@@ -15,7 +15,7 @@ namespace CardSharp
         {
             _landlordCards = landlordCards;
             var player = desk.GetPlayerFromIndex(CurrentIndex);
-            desk.AddMessage($"开始游戏, {player.ToAtCode()}你要抢地主吗?[抢地主/不抢]");
+            desk.AddMessage($"开始游戏, {player.ToAtCode()}你要抢地主吗?");
         }
 
         public void Prepare(Desk desk)
@@ -43,7 +43,7 @@ namespace CardSharp
                     }
 
                     if (!player.Multiplied) {
-                        desk.AddMessage("加倍完成.");
+                        desk.AddMessage("好的。");
                         desk.Multiplier += 1;
                         player.Multiplied = true;
                     }
@@ -56,7 +56,7 @@ namespace CardSharp
                     }
 
                     if (!player.Multiplied) {
-                        desk.AddMessage("超级加倍完成.");
+                        desk.AddMessage("您牛逼。");
                         desk.Multiplier += 2;
                         player.Multiplied = true;
                     }
@@ -86,7 +86,7 @@ namespace CardSharp
 
                     if (!player.Multiplied)
                     {
-                        desk.AddMessage("超级减倍完成.");
+                        desk.AddMessage("您牛逼.");
                         desk.Multiplier -= 2;
                         player.Multiplied = true;
                     }
@@ -108,7 +108,7 @@ namespace CardSharp
                     if (!player.PublicCards) {
                         player.PublicCards = true;
                         desk.Multiplier += 1;
-                        desk.AddMessage("明牌成功.");
+                        desk.AddMessage("您可真牛逼。");
                     }
 
                     break;
@@ -131,7 +131,7 @@ namespace CardSharp
                     player.Cards.AddRange(_landlordCards);
                     player.Cards.Sort();
                     desk.AddMessage(
-                        $"{player.ToAtCode()}抢地主成功. 为{string.Join("", _landlordCards.Select(card => $"[{card}]"))}");
+                        $"{player.ToAtCode()}抢了地主. 底牌有{string.Join("", _landlordCards.Select(card => $"[{card}]"))}");
                     desk.SetLandlord(player);
                     desk.SendCardsMessage();
                     break;
@@ -143,7 +143,7 @@ namespace CardSharp
                 case "抢你妈的飞旋回踢张大麻子苟枫凌他当妈rbq":
                     MoveNext();
                     desk.AddMessage(
-                        $"{player.ToAtCode()}不抢地主, {desk.CurrentPlayer.ToAtCode()}你要抢地主嘛? ");
+                        $"{player.ToAtCode()}不抢地主, {desk.CurrentPlayer.ToAtCode()}你要抢地主吗? ");
                     _count++;
                     break;
             }

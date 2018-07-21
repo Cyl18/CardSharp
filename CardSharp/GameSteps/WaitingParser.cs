@@ -16,7 +16,9 @@ namespace CardSharp.GameSteps
                     if (point <= -100000)
                         desk.AddMessage($"CNM 这里是CY 你们的印钞厂停业了.");
                     else if (point <= -2000)
-                        desk.AddMessage("您输光了/您没输入过'获取积分'.");
+                        desk.AddMessage("你输光了.");
+                    else if (point == 0)
+                        desk.AddMessage("你没输入过'领取积分'");
                     else
                         desk.AddPlayer(player);
                     break;
@@ -26,9 +28,10 @@ namespace CardSharp.GameSteps
                     break;
 
                 case "开始游戏":
-                    if (desk.Players.All(p => p is FakePlayer))
+                    if (desk.Players.Count(p => p is FakePlayer) >= 2)
                     {
-                        desk.AddMessage("仨机器人可不行哟~");
+                        desk.AddMessageLine("游戏要和朋友一起玩才好玩嘛！如果你想看机器人打架 可以@管理员 '表演开始'.");
+                        
                         return;
                     }
 

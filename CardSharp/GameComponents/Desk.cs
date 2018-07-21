@@ -95,23 +95,28 @@ namespace CardSharp
         [MethodImpl(MethodImplOptions.Synchronized)]
         public bool AddPlayer(Player player)
         {
-            if (Players.Count() >= Constants.MaxPlayer || Players.Contains(player))
+            if (Players.Count() >= Constants.MaxPlayer)
             {
-                AddMessage($"已经加入或人数已满: {player.ToAtCode()}");
+                AddMessage($"{player.ToAtCode()} 人数已经满了!");
                 return false;
             }
 
+            if(Players.Contains(player))
+            {
+                AddMessage($"{player.ToAtCode()} 你已经加入啦！");
+            }
+
             _playersDictionary.Add(player.PlayerId, player);
-            AddMessageLine($"加入成功: {player.ToAtCode()}");
-            AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
+            AddMessageLine($"加入成功了: {player.ToAtCode()}");
+            AddMessage($"当前玩家有这些: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
             return true;
         }
 
         public void RemovePlayer(Player player)
         {
-            AddMessageLine($"移除成功: {player.ToAtCode()}");
+            AddMessageLine($"{player.ToAtCode()} 移除完成.");
             _playersDictionary.Remove(player.PlayerId);
-            AddMessage($"当前玩家有: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
+            AddMessage($"当前玩家有这些: {string.Join(", ", Players.Select(p => p.ToAtCode()))}");
         }
 
         public Player GetPlayer(string playerid)
@@ -129,7 +134,7 @@ namespace CardSharp
             RandomizePlayers();
             SendCards();
             SendCardsMessage();
-            AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令.");
+            AddMessage("现在你可以使用 [加倍/明牌] 之类的指令.");
             return true;
         }
 
@@ -142,7 +147,7 @@ namespace CardSharp
 
             SendCards(seed);
             SendCardsMessage();
-            AddMessage("现在可以使用 [加倍/超级加倍/明牌] 之类的命令.");
+            AddMessage("本次游戏由种子生成。\r\n现在你可以使用 [加倍/明牌] 之类的指令.");
             return true;
         }
 
@@ -265,20 +270,20 @@ namespace CardSharp
         public void BoardcastCards()
         {
             if (CurrentRule == null)
-                if (CurrentPlayer.FirstBlood)
+                if (CurrentPlayer.FirstBlood && CurrentPlayer.Type != PlayerType.Landlord)
                 {
                     CurrentPlayer.FirstBlood = false;
-                    AddMessage($"{CurrentPlayer.ToAtCodeWithRole()}请开始你的表演");
+                    AddMessage($"{CurrentPlayer.ToAtCodeWithRole()} 请开始你的表演.");
                 }
                 else
                 {
-                    AddMessageLine($"{CurrentPlayer.ToAtCodeWithRole()}请出牌");
+                    AddMessageLine($"{CurrentPlayer.ToAtCodeWithRole()} 该你出牌了.");
                 }
             else
-                AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCodeWithRole()}请出牌");
+                AddMessage($"{CurrentRule.ToString()}-{LastCards.ToFormatString()} {CurrentPlayer.ToAtCodeWithRole()} 请出牌.");
         }
-
-        // this is the worst code than I ever written
+        
+        // fork that.
         public void FinishGame(Player player)
         {
             foreach (var player1 in Players)
@@ -317,12 +322,12 @@ namespace CardSharp
                 switch (player.Type)
                 {
                     case PlayerType.Farmer:
-                        AddMessageLine("农民赢了.");
+                        AddMessageLine("农民赢啦!");
                         landlordDif *= -1;
                         break;
 
                     case PlayerType.Landlord:
-                        AddMessageLine("地主赢了.");
+                        AddMessageLine("地主赢啦!");
                         farmerDif *= -1;
                         break;
                 }
@@ -376,7 +381,7 @@ namespace CardSharp
                 Desks.Remove(DeskId);
                 return;
             }
-            AddMessage(SuddenDeathEnabled ? "你不能结束游戏." : "游戏结束.");
+            AddMessage(SuddenDeathEnabled ? "你不能结束游戏." : "游 戏 结 束.");
             if (!SuddenDeathEnabled)
                 Desks.Remove(DeskId);
         }
