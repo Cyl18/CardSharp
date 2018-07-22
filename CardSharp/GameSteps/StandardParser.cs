@@ -49,6 +49,9 @@ namespace CardSharp.GameSteps
                         if (pconfig.Point > 10000)
                         {
                             desk.AddMessage($"你*没有权限*领取低保资金.");
+                        }else if (pconfig.Point < -10000)
+                        {
+                            pconfig.AddPoint(-pconfig.Point + Constants.PointAdd);
                         }
                         else
                         {

@@ -58,6 +58,13 @@ namespace CardSharp.GameComponents
             Save();
         }
 
+        public void AddPoint(long point)
+        {
+            Point += point;
+            LastTime = DateTime.Now;
+            Save();
+        }
+
         public static PlayerConfig FromJson(string json) => json.JsonDeserialize<PlayerConfig>();
 
         private static string GetConfigPath(string playerid)

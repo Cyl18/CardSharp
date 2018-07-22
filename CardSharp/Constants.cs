@@ -6,7 +6,7 @@
         public const int AmountCardNum = 4; /*每种牌4张*/
         public const int MaxPlayer = 3; /*最多3人*/
         public const string ConfigDir = "CardSharp";
-        public const long PointAdd = 10000;
+        public const long PointAdd = 20000;
         public const long BaseScore = 1000;
         public const int BoardcastCardNumThreshold = 5;
 
